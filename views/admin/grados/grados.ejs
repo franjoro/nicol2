@@ -1,0 +1,210 @@
+<%- include('../partials/header.ejs'); %>
+<div id="layoutSidenav_content">
+    <main>
+        <header class="page-header page-header-dark bg-primary pb-10">
+            <div class="container-xl px-4">
+                <div class="page-header-content pt-4">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto mt-4">
+                            <h1 class="page-header-title">
+                                <div class="page-header-icon"><i data-feather="archive"></i></div>
+                                Grados
+                            </h1>
+                            <div class="page-header-subtitle">Visualiza todos los grados registrados, asigna materias y maestros a cada grado.</div>
+                             <!-- Selector de año-->
+                             <div class="pt-4">
+                                <label for="exampleFormControlSelect1">Selecciona el año que quieres visualizar</label>
+                                <div class="input-group input-group-joined">
+                                    <span class="input-group-text">
+                                        <i data-feather="calendar"></i>
+                                    </span>
+                                    <select class="form-control form-control-solid" id="exampleFormControlSelect1">
+                                        <option>2018</option>
+                                        <option>2019</option>
+                                        <option>2020</option>
+                                        <option>2021</option>
+                                    </select>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main page content-->
+        <div class="container-xl px-4 mt-n10">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header p-5">
+                    Grados
+                    <button class="btn btn-md btn-warning" type="button">Agregar Grado</button>
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Área</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Área</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Octavo B</td>
+                                <td>Tercer Ciclo</td>
+                                <td>
+                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+<%- include('../partials/footer.ejs'); %>

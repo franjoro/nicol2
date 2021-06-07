@@ -1,4 +1,113 @@
-    <%- include('../partials/header'); %>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <%- include('../partials/footer'); %>
+    <%- include('./partials/header.ejs'); %>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-primary pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="home"></i></div>
+                                    Bienvenido/a
+                                </h1>
+                                <div class="page-header-subtitle">En este espacio puedes visualizar tus accesos rápidos e información relevante para ti</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="row">
+                    <div class="col-xl-4 mb-4">
+                        <!-- Dashboard example card 1-->
+                        <a class="card lift h-100" href="#!">
+                            <div class="card-body d-flex justify-content-center flex-column">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="me-3">
+                                        <i class="feather-xl text-primary mb-3" data-feather="edit"></i>
+                                        <h5>Ver notas</h5>
+                                        <div class="text-muted small">Visualiza las notas por código de alumno</div>
+                                    </div>
+                                    <img src="/static/assets/img/illustrations/grades.svg" alt="..." style="width: 8rem" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-4 mb-4">
+                        <!-- Dashboard example card 2-->
+                        <a class="card lift h-100" href="#!">
+                            <div class="card-body d-flex justify-content-center flex-column">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="me-3">
+                                        <i class="feather-xl text-warning mb-3" data-feather="clipboard"></i>
+                                        <h5>Reporte de notas</h5>
+                                        <div class="text-muted small">Genera el reporte de notas de forma rápida</div>
+                                    </div>
+                                    <img src="/static/assets/img/illustrations/student.svg" alt="..." style="width: 8rem" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-4 mb-4">
+                        <!-- Dashboard example card 3-->
+                        <a class="card lift h-100" href="#!">
+                            <div class="card-body d-flex justify-content-center flex-column">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="me-3">
+                                        <i class="feather-xl text-teal mb-3" data-feather="check-circle"></i>
+                                        <h5>Códigos aplicados</h5>
+                                        <div class="text-muted small">Genera un reporte de códigos aplicados</div>
+                                    </div>
+                                    <img src="/static/assets/img/illustrations/teaching.svg" alt="..." style="width: 8rem" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <h4 class="mb-0 mt-5">Información relevante</h4>
+                <hr class="mt-2 mb-4" />
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <!-- Billing card 1-->
+                        <div class="card card-icon">
+                            <div class="row no-gutters">
+                                <div class="col-auto card-icon-aside bg-warning">
+                                    <i class="text-light" data-feather="book-open"></i>
+                                </div>
+                                <div class="col">
+                                    <div class="card-body">
+                                        <h1 class="card-title">230</h5>
+                                        <p class="card-text">Estudiantes Registrados</p>
+                                        <a class="text-arrow-icon small text-warning" href="#!">
+                                            Ver todos los estudiantes
+                                            <i data-feather="arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                         <div class="card card-icon">
+                            <div class="row no-gutters">
+                                <div class="col-auto card-icon-aside bg-teal">
+                                    <i class="text-light" data-feather="book"></i>
+                                </div>
+                                <div class="col">
+                                    <div class="card-body">
+                                        <h1 class="card-title">45</h5>
+                                        <p class="card-text">Maestros registrados</p>
+                                        <a class="text-arrow-icon small text-teal" href="#!">
+                                            Ver todos los estudiantes
+                                            <i data-feather="arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    <%- include('./partials/footer.ejs'); %>
