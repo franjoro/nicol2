@@ -2,21 +2,25 @@ var express = require('express');
 const admin = require('../../controllers/admin/admin.controller');
 var router = express.Router();
 
-//Rutas 
+// DIRECCIONES DE RUTEO
 const rutaGrados = require('./grados.router');
+const rutaYears = require('./years.router');
+const rutaMaterias = require('./materias.router');
+const rutaAreas = require('./areas.router');
+const rutaEstudiantes = require('./estudiantes.router');
 
 
 /* GET Inicio del admin */
-router.get('/',  admin.main);
+router.get('/', admin.main);
 
-/* GET Inicio del admin */
-router.get('/areas',  admin.areas);
-router.get('/codigos',  admin.codigos);
-router.get('/materias',  admin.materias);
-router.get('/years',  admin.years);
 
+router.get('/codigos', admin.codigos);
 
 /* USE especificar las rutas competentes a los grados */
-router.use('/grados', rutaGrados );
+router.use('/years', rutaYears);
+router.use('/grados', rutaGrados);
+router.use('/materias', rutaMaterias);
+router.use('/areas', rutaAreas);
+router.use('/estudiante', rutaEstudiantes);
 
 module.exports = router;

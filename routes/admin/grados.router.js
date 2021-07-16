@@ -8,8 +8,11 @@ var router = express.Router();
 /* GET Pantalla principal de grados */
 router.get('/',  grados.main);
 
-
-/* GET Pantalla de asignación de grados        !PENDIENTE PONER VARIABLE ID DE GRADO EN LA RUTA */
+/* GET Pantalla principal de grados */
 router.get('/detalle',  grados.detalleGrado);
+
+/* POST Agregar nuevo modelo */
+// router.post('/',  grados.addNewModelo);
+
 
 module.exports = router;
