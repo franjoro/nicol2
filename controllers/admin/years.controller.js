@@ -1,8 +1,15 @@
 const years = {};
 const pool = require("../../models/db");
 
-years.main = (req, res) => {
-  res.render("./admin/catalogos/years/years");
+years.main =async (req, res) => {
+  try {
+    const years = await pool.query("SELECT year, IF(estado = 1 , 'Activo','Inactivo') AS estadoText , estado AS estadoID FROM year");
+    console.log(years);
+    res.render("./admin/catalogos/years/years" , years);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, error }); 
+  }
 };
 
 years.createNewYear = async (req, res) => {

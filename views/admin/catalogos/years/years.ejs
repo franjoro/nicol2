@@ -1,88 +1,114 @@
-      
 <%- include('../../partials/header.ejs'); %>
 <div id="layoutSidenav_content">
-                <main>
-                    <header class="page-header page-header-dark bg-primary pb-10">
-                        <div class="container-xl px-4">
-                            <div class="page-header-content pt-4">
-                                <div class="row align-items-center justify-content-between">
-                                    <div class="col-auto mt-4">
-                                        <h1 class="page-header-title">
-                                            <div class="page-header-icon"><i data-feather="calendar"></i></div>
-                                            Años
-                                        </h1>
-                                        <div class="page-header-subtitle">Visualiza el catálogo de años disponibles</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                    <!-- Main page content-->
-                    <div class="container-xl px-4 mt-n10">
-                        <div class="card card-header-actions mb-4">
-                            <div class="card-header p-5">
-                                Años
-                                <button class="btn btn-md btn-warning" type="button" data-toggle="modal" data-target="#agregarAno">Agregar año</button>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-hover">
-                                    <thead>
-                                      <tr>
-                                        <th scope="col">Año</th>
-                                        <th scope="col">Acciones</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <th scope="row">2019</th>
-                                        <td>
-                                            <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">2020</th>
-                                        <td>
-                                            <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">2021</th>
-                                        <td>
-                                            <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                            </div>
-                        </div>
-                    </div>
-                      
-                </main>
+  <main>
+    <header class="page-header page-header-dark bg-primary pb-10">
+      <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+          <div class="row align-items-center justify-content-between">
+            <div class="col-auto mt-4">
+              <h1 class="page-header-title">
+                <div class="page-header-icon">
+                  <i data-feather="calendar"></i>
+                </div>
+                Años
+              </h1>
+              <div class="page-header-subtitle">
+                Visualiza el catálogo de años disponibles
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Main page content-->
+    <div class="container-xl px-4 mt-n10">
+      <div class="card card-header-actions mb-4">
+        <div class="card-header p-5">
+          Años
+          <button
+            class="btn btn-md btn-warning"
+            type="button"
+            data-toggle="modal"
+            data-target="#agregarAno"
+          >
+            Agregar año
+          </button>
+        </div>
+        <div class="card-body">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Año</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
 
 
-                <div class="modal fade" id="agregarAno" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="agregarAno">Agregar Año</h5>
-                          <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i data-feather="x"></i></span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                  <label for="exampleInputEmail1">Nombre</label>
-                                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                  <small id="emailHelp" class="form-text text-muted">Si edita un año, asegurese que sea un año válido</small>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                          <button type="button" class="btn btn-primary">Guardar</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <%- include('../../partials/footer.ejs'); %>
+            <% years.forEach %>
+              <tr>
+                <th scope="row">2019</th>
+                <td> Estado </td>
+                <td>
+                  <button class="btn btn-danger">
+                    <i class="me-2" data-feather="trash-2"></i>Eliminar
+                  </button>
+                </td>
+              </tr>
+            <%%>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div
+    class="modal fade"
+    id="agregarAno"
+    tabindex="-1"
+    aria-labelledby="agregarAno"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="agregarAno">Agregar Año</h5>
+          <button
+            type="button"
+            class="btn btn-light"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true"><i data-feather="x"></i></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Nombre</label>
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+              />
+              <small id="emailHelp" class="form-text text-muted"
+                >Si edita un año, asegurese que sea un año válido</small
+              >
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include('../../partials/footer.ejs'); %>
+</div>
