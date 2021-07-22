@@ -1,0 +1,63 @@
+<%- include('../partials/header.ejs'); %>
+<div id="layoutSidenav_content">
+    <main>
+        <header class="page-header page-header-dark bg-primary pb-10">
+            <div class="container-xl px-4">
+                <div class="page-header-content pt-4">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto mt-4">
+                            <h1 class="page-header-title">
+                                <div class="page-header-icon"><i data-feather="user"></i></div>
+                                Directorio de estudiantes
+                            </h1>
+                            <div class="page-header-subtitle">Visualiza toda la información de los alumnos.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main page content-->
+        <div class="container-xl px-4 mt-n10">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header p-5">
+                    Directorio de alumnos
+                    <button class="btn btn-md btn-warning" type="button">Agregar alumno</button>
+                </div>
+                <div class="card-body">
+                    <table id="tableGrados" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Carnet</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Genero</th>
+                                <th>Fecha de nacimiento</th>
+                                <th>Email</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <% alumnos.forEach((alummno)=> {  
+                            let Genero = 'Hombre';
+                            if(!alummno.Genero) Genero = 'Mujer';
+                            %>
+                            <tr>
+                                <td><%= alummno.Carnet %></td>
+                                <td><%= alummno.Nombre %></td>
+                                <td><%= alummno.Apellido %></td>
+                                <td><%= Genero %></td>
+                                <td><%= alummno.FechaNac %></td>
+                                <td><%= alummno.Email %></td>
+                                <td>
+                                    <button class="btn btn-primary  btn-sm"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                    <button class="btn btn-danger btn-sm"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                </td>
+                            </tr>
+                        <%} )%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+<%- include('../partials/footer.ejs'); %>

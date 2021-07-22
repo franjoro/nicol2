@@ -1,8 +1,15 @@
 const areas = {};
 const pool = require("../../models/db");
 
-areas.main = (req , res) => {
-    res.render('./admin/catalogos/areas/areas');
+areas.main = async (req , res) => {
+    try {
+        const areas = await pool.query("SELECT * FROM areas");
+        res.render('./admin/catalogos/areas/areas', {areas});  
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error }); 
+    }
+
 };
 
 areas.addNew = async (req , res) => {

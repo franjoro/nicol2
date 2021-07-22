@@ -40,24 +40,23 @@
               <tr>
                 <th scope="col">Año</th>
                 <th scope="col">Estado</th>
+                <th scope="col">Bimestre Activo</th>
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody>
-
-
-            <% years.forEach %>
+            <% years.forEach( (year)=> {   %>
               <tr>
-                <th scope="row">2019</th>
-                <td> Estado </td>
-                <td>
+                <th scope="row"><%= year.year %></th>
+                <td class="text-<%= year.color %>"><%= year.estadoText %></td>
+                <td scope="row">Bimestre #<%= year.bimestreActivo %></td>
+                <td style="width: 30%;">
                   <button class="btn btn-danger">
                     <i class="me-2" data-feather="trash-2"></i>Eliminar
                   </button>
                 </td>
               </tr>
-            <%%>
-
+            <%})%>
             </tbody>
           </table>
         </div>
@@ -86,18 +85,17 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
+          <form id="formYear">
             <div class="form-group">
-              <label for="exampleInputEmail1">Nombre</label>
+              <label for="exampleInputEmail1">Nombre del año</label>
               <input
                 type="email"
                 class="form-control"
-                id="exampleInputEmail1"
+                id="yearInputId"
+                name="yearName"
+                placeholder="Ejemplo: 2021"
                 aria-describedby="emailHelp"
               />
-              <small id="emailHelp" class="form-text text-muted"
-                >Si edita un año, asegurese que sea un año válido</small
-              >
             </div>
           </form>
         </div>
@@ -105,10 +103,11 @@
           <button type="button" class="btn btn-danger" data-dismiss="modal">
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-primary" id="btnGuardarForm">Guardar</button>
         </div>
       </div>
     </div>
   </div>
   <%- include('../../partials/footer.ejs'); %>
-</div>
+  <script src="/static/js/alertas.js"></script>
+  <script src="/static/js/admin/catalogos/years/years.js"></script>

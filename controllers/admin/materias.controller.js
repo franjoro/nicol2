@@ -1,9 +1,15 @@
 const materias = {};
+const pool = require("../../models/db");
 
 
-materias.main = (req , res) => {
-    res.render('./admin/catalogos/materias/materia');
-
+materias.main = async (req , res) => {
+    try {
+        const { [0] : materias  , [1] : areas  }  = await Promise.all(  [pool.query("SELECT id, Nombre, (SELECT Nombre FROM areas WHERE id =  modelomaterias.idArea) AS areaNombre , idArea FROM modelomaterias") , pool.query("SELECT * FROM areas") ] );
+        res.render('./admin/catalogos/materias/materia' , {materias , areas});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error }); 
+    }
 };
 
 

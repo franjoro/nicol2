@@ -1,9 +1,15 @@
 const estudiantes = {};
 const pool = require("../../models/db");
 
-// estudiantes.main = (req , res) => {
-//     // res.render('./admin/catalogos/areas/areas');
-// };
+estudiantes.main = async (req , res) => {
+    try {
+        const alumnos = await pool.query("SELECT * FROM alumnos");
+        res.render('./admin/estudiantes/estudiantes' , {alumnos});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error }); 
+    }
+};
 
 estudiantes.addNew = async (req , res) => {
     try {

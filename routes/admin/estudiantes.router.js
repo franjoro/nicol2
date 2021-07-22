@@ -6,7 +6,7 @@ var router = express.Router();
 
 
 /* GET Pantalla principal de estudiantes */
-// router.get('/',  estudiantes.main);
+router.get('/',  estudiantes.main);
 
 /* POST ingresar nuevo estudiante */
 router.post('/',  estudiantes.addNew);

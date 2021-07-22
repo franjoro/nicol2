@@ -21,6 +21,6 @@ router.use('/years', rutaYears);
 router.use('/grados', rutaGrados);
 router.use('/materias', rutaMaterias);
 router.use('/areas', rutaAreas);
-router.use('/estudiante', rutaEstudiantes);
+router.use('/estudiantes', rutaEstudiantes);
 
 module.exports = router;
