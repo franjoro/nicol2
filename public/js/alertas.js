@@ -8,6 +8,14 @@ alertas.newErrorMessage = (data = "user_error") => {
     });
 };
   
+alertas.errorLogin = () => {
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "Usuario o contraseña incorrectos, por favor verifica la información " 
+  });
+};
+
 alertas.loaderAlert = () => {
     Swal.fire({
       title: "Por favor, Espere",

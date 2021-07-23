@@ -12,7 +12,7 @@ main.main = function(req, res) {
 main.signin = async (req, res) => {
     try {
       // verificamos si existe el usuario y traemos data en caso si
-      const {usuario}  = req.body ;
+      const {usuario , password}  = req.body ;
       const data = await pool.query(
         "SELECT Username,Password,Estado,Role FROM usuarios WHERE Username = ? ",
        [usuario]
@@ -24,7 +24,7 @@ main.signin = async (req, res) => {
       if (!data[0].Estado)
         return res.status(400).json({ error: "ERROR_ESTADO", status: false });
       // Verificamos contraseña
-      if (!(await desincriptar(req.body.password, data[0].Password)))
+      if (!(await desincriptar(password, data[0].Password)))
         return res.status(400).json({ error: "ERROR_PASSWORD", status: false });
       // Creamos JWT
       const { Nombre, Role } = data[0];

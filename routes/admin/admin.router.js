@@ -10,15 +10,15 @@ const rutaAreas = require('./areas.router');
 const rutaEstudiantes = require('./estudiantes.router');
 const rutaUsuarios = require('./usuarios.router');
 const rutaMaestros = require('./maestros.router');
-
-
-/* GET Inicio del admin */
-router.get('/', admin.main);
+const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
 router.get('/codigos', admin.codigos);
 
 /* USE especificar las rutas competentes a los grados */
+
+router.use(authCheckAdmin);
+router.get('/', admin.main);
 router.use('/years', rutaYears);
 router.use('/grados', rutaGrados);
 router.use('/materias', rutaMaterias);

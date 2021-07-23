@@ -8,11 +8,37 @@ auth.firmar = (data) => {
   return token;
 };
 
-auth.authcheck = (req, res, next) => {
+auth.authCheckAdmin = (req, res, next) => {
   let token = req.cookies.token;
   try {
     const data = jwt.verify(token, process.env.JWTPASS);
-    if (data.data.Role === 3 || data.data.Role === 4)
+    if (data.data.Role != 1)
+      throw new Error("ROLE_INVALID");
+    next();
+  } catch (error) {
+    res.redirect("/");
+    return error;
+  }
+};
+
+auth.authCheckAlumnos = (req, res, next) => {
+  let token = req.cookies.token;
+  try {
+    const data = jwt.verify(token, process.env.JWTPASS);
+    if (data.data.Role != 2)
+      throw new Error("ROLE_INVALID");
+    next();
+  } catch (error) {
+    res.redirect("/");
+    return error;
+  }
+};
+
+auth.authCheckMaestros = (req, res, next) => {
+  let token = req.cookies.token;
+  try {
+    const data = jwt.verify(token, process.env.JWTPASS);
+    if (data.data.Role != 3)
       throw new Error("ROLE_INVALID");
     next();
   } catch (error) {

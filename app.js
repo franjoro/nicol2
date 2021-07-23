@@ -3,8 +3,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const indexRouter = require('./routes/main.router');
-const admin = require('./routes/admin/admin.router');
 const app = express();
 const winston = require('./config/winston');
 
@@ -16,11 +14,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/static", express.static(`${__dirname}/public`));
+
+
+// variables de rutas
+const indexRouter = require('./routes/main.router');
+const admin = require('./routes/admin/admin.router');
+const alumnos = require('./routes/alumnos/alumnos.router');
+const maestros = require('./routes/maestros/maestros.router');
+
+// Asignar rutas
 app.use('/', indexRouter);
 app.use('/admin', admin);
-
-
-
+app.use('/alumnos', alumnos);
+app.use('/maestros', maestros);
 
 
 
