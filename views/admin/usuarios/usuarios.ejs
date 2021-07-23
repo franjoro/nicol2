@@ -8,10 +8,10 @@
                             <div class="col-auto mt-4">
                                 <h1 class="page-header-title">
                                     <div class="page-header-icon"><i data-feather="user"></i></div>
-                                    Directorio de estudiantes
+                                    Directorio de usuarios
                                 </h1>
                                 <div class="page-header-subtitle">
-                                    Visualiza toda la información de los alumnos.
+                                    Visualiza los usuarios con acceso a la plataforma y los permisos asignados.
                                 </div>
                             </div>
                         </div>
@@ -22,57 +22,39 @@
             <div class="container-xl px-4 mt-n10">
                 <div class="card card-header-actions mb-4">
                     <div class="card-header p-5">
-                        Directorio de alumnos
-                        <div>
+                        Directorio de usuarios
                             <button class="btn btn-md btn-warning" type="button">
-                                Agregar alumno
+                                Crear usuario administrador
                             </button>
-                            <button class="btn btn-md btn-success" type="button">
-                                Descargar reporte
-                            </button>
-                        </div>
                     </div>
                     <div class="card-body">
                         <table id="datatable">
                             <thead>
                                 <tr>
-                                    <th>Carnet</th>
-                                    <th>Nombres</th>
-                                    <th>Apellidos</th>
-                                    <th>Genero</th>
-                                    <th>Fecha de nacimiento</th>
-                                    <th>Email</th>
+                                    <th>Usuario</th>
+                                    <th>Role</th>
+                                    <th>Estado</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% alumnos.forEach((alummno)=> { let Genero = 'Hombre';
-                                    if(!alummno.Genero) Genero = 'Mujer'; %>
+                                <% usuarios.forEach((usuario)=> { %>
                                     <tr>
                                         <td>
-                                            <%= alummno.Carnet %>
+                                            <%= usuario.Username %>
                                         </td>
                                         <td>
-                                            <%= alummno.Nombre %>
+                                            <%= usuario.RoleText %>
                                         </td>
                                         <td>
-                                            <%= alummno.Apellido %>
+                                            <%= usuario.Estado %>
                                         </td>
-                                        <td>
-                                            <%= Genero %>
-                                        </td>
-                                        <td>
-                                            <%= alummno.FechaNac %>
-                                        </td>
-                                        <td>
-                                            <%= alummno.Email %>
-                                        </td>
-                                        <td>
+                                        <td class="col-md-4">
                                             <button class="btn btn-primary btn-sm">
-                                                <i class="me-2" data-feather="edit"></i>Editar
+                                                <i class="me-2" data-feather="edit"></i>Ver permisos
                                             </button>
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="me-2" data-feather="trash-2"></i>Eliminar
+                                            <button class="btn btn-info btn-sm">
+                                                <i class="me-2" data-feather="edit"></i>Editar
                                             </button>
                                         </td>
                                     </tr>
