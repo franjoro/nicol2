@@ -9,6 +9,7 @@ const rutaMaterias = require('./materias.router');
 const rutaAreas = require('./areas.router');
 const rutaEstudiantes = require('./estudiantes.router');
 const rutaUsuarios = require('./usuarios.router');
+const rutaMaestros = require('./maestros.router');
 
 
 /* GET Inicio del admin */
@@ -24,5 +25,6 @@ router.use('/materias', rutaMaterias);
 router.use('/areas', rutaAreas);
 router.use('/estudiantes', rutaEstudiantes);
 router.use('/usuarios', rutaUsuarios);
+router.use('/maestros', rutaMaestros);
 
 module.exports = router;

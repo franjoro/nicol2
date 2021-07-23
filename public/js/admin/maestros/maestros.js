@@ -1,34 +1,33 @@
-$("#formEstudiantes").submit(async function (e) {
+$("#formMaestros").submit(async function (e) {
     e.preventDefault();
     const data = $(this).serialize();
     try {
         alertas.loaderAlert();
         const query = await $.ajax({
             type: "POST",
-            url: "/admin/estudiantes",
+            url: "/admin/maestros",
             data: data,
         });
-        if (query.status) {$('#agregarAlumno').modal('hide') ; $("#formEstudiantes")[0].reset(); swal.close(); return loadTable(); }
+        if (query.status) {$('#modalMaestros').modal('hide') ; $("#formMaestros")[0].reset(); swal.close(); return loadTable(); }
     } catch (error) {
         console.log(error);
-        if (error.responseJSON.error == "CARNET_EXISTENTE") return alertas.newErrorMessage('Carnet dúplicado');
+        if (error.responseJSON.error == "CORREO_EXISTENTE") return alertas.newErrorMessage('Correo electrónico duplicado');
         return alertas.newErrorMessage();
     }
 });
 
 $("#btnGuardar").click(() => {
-    if (!$("#Carnet").val() || !$("#Nombre").val() || !$("#Apellido").val() || !$("#Genero").val() || !$("#FechaNac").val() || !$("#Email").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
-    $("#formEstudiantes").submit();
+    if (!$("#Nombre").val() || !$("#Apellido").val()  || !$("#Genero").val() || !$("#FechaNac").val() || !$("#Email").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+    $("#formMaestros").submit();
 });
 
 const loadTable = () => {
     $("#datatable").DataTable().destroy();
     $("#datatable").DataTable({
-        ajax: "/admin/estudiantes/table",
+        ajax: "/admin/maestros/table",
         columns: [
-            { data: "Carnet" },
-            { data: "Nombre" },
-            { data: "Apellido" },
+            { data: "Nombres" },
+            { data: "Apellidos" },
             { data: "Genero" },
             { data: "FechaNac" },
             { data: "Email" },

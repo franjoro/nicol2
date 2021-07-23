@@ -14,19 +14,18 @@ usuarios.main = async (req, res) => {
     }
 };
 
-
-// const addUserFunction = ({ user, passwordPlain, role, permisos = "" } )
+usuarios.adddUsuarioFunction =  ( async data =>{
+    const { user, passwordPlain, role, permisos = JSON.stringify({allPermisos : true}) } = data;
+    const password = await encriptar(passwordPlain);
+    await pool.query(
+        "INSERT INTO usuarios(Username, Password, Role , Estado , Permisos) VALUES(?,?,?,1,?)",[user, password , role , permisos ]
+        );
+});
 
 
 usuarios.addUsuario = async (req, res) => {
     try {
-        const { user, passwordPlain, role, permisos } = req.body;
-        const { [0]: {cantidad} } = await pool.query("SELECT COUNT(*) AS cantidad FROM usuarios WHERE Username = ? " , [user]);
-        if(cantidad) return res.status(400).json({ status: false, error:"USER_EXIST" });
-        const password = await encriptar(passwordPlain);
-        await pool.query(
-            "INSERT INTO usuarios(Username, Password, Role , Estado , Permisos) VALUES(?,?,?,1,?)",[user, password , role , permisos ]
-            );
+        usuarios.adddUsuarioFunction(req.body);
         return res.json({status : true});
     } catch (err) {
         if (err.sqlState)return res.status(400).json({ error: "SQL ERROR", data: err.sqlMessage });
