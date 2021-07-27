@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-07-2021 a las 23:30:36
+-- Tiempo de generación: 27-07-2021 a las 16:01:12
 -- Versión del servidor: 10.4.19-MariaDB
 -- Versión de PHP: 7.3.28
 
@@ -71,7 +71,7 @@ CREATE TABLE `alumnos` (
 --
 
 INSERT INTO `alumnos` (`Carnet`, `Nombre`, `Apellido`, `Genero`, `FechaNac`, `Email`) VALUES
-('LR192720', 'Franklin Alejandro', 'López Ramírez', 0, '18/08/1998', 'fral_98@outlook.com');
+('LR192720', 'Jhon ', 'Doe', 0, '1998-08-18', 'email@email.com');
 
 -- --------------------------------------------------------
 
@@ -89,7 +89,9 @@ CREATE TABLE `areas` (
 --
 
 INSERT INTO `areas` (`id`, `Nombre`) VALUES
-(1, 'Ciencias naturales');
+(2, 'DESARROLLO DEL PENSAMIENTO LÓGICO Y CUENTÍFICO'),
+(3, 'DESARROLLO PESONAL, SOCIAL Y EMOCIONAL'),
+(4, 'DESARROLLO DE LAS HABILIDADES DE LA COMUNICACIÓN Y EL TALENTO ARTISTICO Y CULTURAL');
 
 -- --------------------------------------------------------
 
@@ -112,7 +114,31 @@ INSERT INTO `bimestres` (`id`, `Estado`, `Role`, `idYear`) VALUES
 (1, 1, 1, 2021),
 (2, 0, 2, 2021),
 (3, 0, 3, 2021),
-(4, 0, 4, 2021);
+(4, 0, 4, 2021),
+(5, 0, 1, 2020),
+(6, 0, 2, 2020),
+(7, 0, 3, 2020),
+(8, 0, 4, 2020);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ciclos`
+--
+
+CREATE TABLE `ciclos` (
+  `id` int(11) NOT NULL,
+  `Nombre` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `isParvularia` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `ciclos`
+--
+
+INSERT INTO `ciclos` (`id`, `Nombre`, `isParvularia`) VALUES
+(3, 'Bachilerato', 0),
+(4, 'Parvularia', 1);
 
 -- --------------------------------------------------------
 
@@ -151,6 +177,7 @@ CREATE TABLE `codigo_alumno` (
 CREATE TABLE `grados` (
   `id` int(11) NOT NULL,
   `nombre` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `idCiclo` int(11) NOT NULL,
   `idYear` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -158,8 +185,10 @@ CREATE TABLE `grados` (
 -- Volcado de datos para la tabla `grados`
 --
 
-INSERT INTO `grados` (`id`, `nombre`, `idYear`) VALUES
-(1, 'Sexto Grado A', 2021);
+INSERT INTO `grados` (`id`, `nombre`, `idCiclo`, `idYear`) VALUES
+(2, 'Decimo A', 3, 2021),
+(3, 'Decimo B', 3, 2021),
+(4, 'Decimo C', 3, 2021);
 
 -- --------------------------------------------------------
 
@@ -177,13 +206,6 @@ CREATE TABLE `grado_alumno` (
   `Conducta4` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `grado_alumno`
---
-
-INSERT INTO `grado_alumno` (`id`, `idGrado`, `idAlumno`, `Conducta1`, `Conducta2`, `Conducta3`, `Conducta4`) VALUES
-(1, 1, 'LR192720', 100, 100, 100, 100);
-
 -- --------------------------------------------------------
 
 --
@@ -192,12 +214,19 @@ INSERT INTO `grado_alumno` (`id`, `idGrado`, `idAlumno`, `Conducta1`, `Conducta2
 
 CREATE TABLE `maestros` (
   `id` int(11) NOT NULL,
-  `Nombre` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `Nombres` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `Apellidos` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `Genero` int(11) NOT NULL,
   `FechaNac` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
   `Email` varchar(50) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `maestros`
+--
+
+INSERT INTO `maestros` (`id`, `Nombres`, `Apellidos`, `Genero`, `FechaNac`, `Email`) VALUES
+(1, 'Anielka', 'Ruiz', 1, '0001-01-01', 'anielka.ruiz@cssjb.edu.ni');
 
 -- --------------------------------------------------------
 
@@ -226,13 +255,6 @@ CREATE TABLE `materia_grado` (
   `EstadoAct3` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `materia_grado`
---
-
-INSERT INTO `materia_grado` (`id`, `idModeloMateria`, `idGrado`, `EstadoAct1`, `EstadoAct2`, `EstadoAct3`) VALUES
-(1, 1, 1, 1, 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -250,7 +272,8 @@ CREATE TABLE `modelomaterias` (
 --
 
 INSERT INTO `modelomaterias` (`id`, `Nombre`, `idArea`) VALUES
-(1, 'Ciencias sociales', 1);
+(2, 'Matematicas', 2),
+(3, 'Ciencias Naturales', 2);
 
 -- --------------------------------------------------------
 
@@ -273,11 +296,20 @@ CREATE TABLE `notas` (
 
 CREATE TABLE `usuarios` (
   `Username` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `Password` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `Password` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `Role` int(11) NOT NULL,
   `Estado` int(11) NOT NULL,
   `Permisos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`Permisos`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`Username`, `Password`, `Role`, `Estado`, `Permisos`) VALUES
+('admin', '$2b$10$1WHMLPqRsOx.9jLMCiGYsu/NSeMAif8g6Ga7SLDxhIlC9TLQYm2ea', 1, 1, '{\"allPermisos\":true}'),
+('anielka.ruiz@cssjb.edu.ni', '$2b$10$nVqjBTcpH.Sk/pBlmYYa7eJ6vg1Cq/disHgRbJiiZptQTAfZp3gfq', 3, 1, '{\"allPermisos\":false,\"matricula\":false}'),
+('LR192720', '$2b$10$1ky5eRkVi4TduH0g1fG2g.T8DvuqYseTMGWTGSS6sAz543IoXK1gm', 2, 1, '{\"allPermisos\":true}');
 
 -- --------------------------------------------------------
 
@@ -296,6 +328,7 @@ CREATE TABLE `year` (
 --
 
 INSERT INTO `year` (`year`, `estado`, `bimestreActivo`) VALUES
+(2020, 0, 4),
 (2021, 1, 1);
 
 --
@@ -334,6 +367,12 @@ ALTER TABLE `bimestres`
   ADD KEY `idYear` (`idYear`);
 
 --
+-- Indices de la tabla `ciclos`
+--
+ALTER TABLE `ciclos`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `codigos`
 --
 ALTER TABLE `codigos`
@@ -350,7 +389,8 @@ ALTER TABLE `codigo_alumno`
 --
 ALTER TABLE `grados`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idYear` (`idYear`);
+  ADD KEY `grados_ibfk_2` (`idYear`),
+  ADD KEY `idCiclo` (`idCiclo`);
 
 --
 -- Indices de la tabla `grado_alumno`
@@ -385,7 +425,7 @@ ALTER TABLE `materia_grado`
 --
 ALTER TABLE `modelomaterias`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idArea` (`idArea`);
+  ADD KEY `modelomaterias_ibfk_1` (`idArea`);
 
 --
 -- Indices de la tabla `notas`
@@ -425,12 +465,18 @@ ALTER TABLE `acumulados`
 -- AUTO_INCREMENT de la tabla `areas`
 --
 ALTER TABLE `areas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `bimestres`
 --
 ALTER TABLE `bimestres`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `ciclos`
+--
+ALTER TABLE `ciclos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
@@ -449,7 +495,7 @@ ALTER TABLE `codigo_alumno`
 -- AUTO_INCREMENT de la tabla `grados`
 --
 ALTER TABLE `grados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `grado_alumno`
@@ -461,7 +507,7 @@ ALTER TABLE `grado_alumno`
 -- AUTO_INCREMENT de la tabla `maestros`
 --
 ALTER TABLE `maestros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `maestros_materias`
@@ -479,7 +525,7 @@ ALTER TABLE `materia_grado`
 -- AUTO_INCREMENT de la tabla `modelomaterias`
 --
 ALTER TABLE `modelomaterias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `notas`
@@ -501,7 +547,8 @@ ALTER TABLE `bimestres`
 -- Filtros para la tabla `grados`
 --
 ALTER TABLE `grados`
-  ADD CONSTRAINT `grados_ibfk_2` FOREIGN KEY (`idYear`) REFERENCES `year` (`year`);
+  ADD CONSTRAINT `grados_ibfk_2` FOREIGN KEY (`idYear`) REFERENCES `year` (`year`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `grados_ibfk_3` FOREIGN KEY (`idCiclo`) REFERENCES `ciclos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `grado_alumno`
@@ -521,7 +568,7 @@ ALTER TABLE `materia_grado`
 -- Filtros para la tabla `modelomaterias`
 --
 ALTER TABLE `modelomaterias`
-  ADD CONSTRAINT `modelomaterias_ibfk_1` FOREIGN KEY (`idArea`) REFERENCES `areas` (`id`);
+  ADD CONSTRAINT `modelomaterias_ibfk_1` FOREIGN KEY (`idArea`) REFERENCES `areas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
