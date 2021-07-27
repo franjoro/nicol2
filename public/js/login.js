@@ -4,6 +4,7 @@ $("#loginForm").submit(async function (e) {
     alertas.loaderAlert();
     try {
       const data = await $.ajax({ url: "/", type: "POST", data: t });
+      console.log(data);
       if(data.status){
           // CAMBIAR RUTAS
           if(data.role  === 1) window.location.replace('/admin');

@@ -5,14 +5,14 @@ const grados = require('../../controllers/admin/grados.controller');
 var router = express.Router();
 
 
-/* GET Pantalla principal de grados */
-router.get('/',  grados.main);
 
 /* GET Pantalla principal de grados */
-router.get('/detalle',  grados.detalleGrado);
+router.get('/detalle/:idGrado',  grados.detalleGrado);
 
 /* POST Agregar nuevo modelo */
-// router.post('/',  grados.addNewModelo);
+router.post('/',  grados.addNewGrado);
 
+/* GET Pantalla principal de grados */
+router.get('/:year?',  grados.main);
 
 module.exports = router;

@@ -1,0 +1,99 @@
+<%- include('../../partials/header.ejs'); %>
+  <div id="layoutSidenav_content">
+    <main>
+      <header class="page-header page-header-dark bg-primary pb-10">
+        <div class="container-xl px-4">
+          <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-auto mt-4">
+                <h1 class="page-header-title">
+                  <div class="page-header-icon">
+                    <i data-feather="clipboard"></i>
+                  </div>
+                  Ciclos educativos
+                </h1>
+                <div class="page-header-subtitle">
+                  Visualiza el catálogo de ciclos educativos
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Main page content-->
+      <div class="container-xl px-4 mt-n10">
+        <div class="card card-header-actions mb-4">
+          <div class="card-header p-5">
+            Ciclos
+            <button class="btn btn-md btn-warning" type="button" data-toggle="modal" data-target="#modalCiclo">
+              Agregar nuevo ciclo
+            </button>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Ciclo</th>
+                  <th scope="col">Tipo de evaluación</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% ciclos.forEach( (ciclo)=>{ %>
+                  <tr>
+                    <th scope="row"><%= ciclo.Nombre %></th>
+                    <th scope="row"><%= ciclo.evaluacion %></th>
+                    <td scope="row" class="col-md-4">
+                      <button class="btn btn-primary me-2">
+                        <i class="me-2" data-feather="edit"></i>Editar
+                      </button>
+                      <button class="btn btn-danger">
+                        <i class="me-2" data-feather="trash-2"></i>Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <%})%>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <div class="modal fade" id="modalCiclo" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="agregarAno">Agregar Áreas</h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formCiclo">
+              <div class="form-group mb-2">
+                <label >Nombre</label>
+                <input type="text" class="form-control" id="cicloName" name="cicloName" />
+              </div>
+              <div class="form-group mt-2">
+                <label >Evaluaciones de tipo : </label>
+                <select name="isParvularia"  id="isParvularia"  class="form-control" > 
+                  <option selected disabled>Seleccione forma de evaluar</option>
+                  <option value="1">Cualitativas ( Se evalúa por cualidades )</option>
+                  <option value="0">Cuantitativas ( Se evalúan por cantidades )</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardar">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../../partials/footer.ejs'); %>
+      <script src="/static/js/alertas.js"></script>
+      <script src="/static/js/admin/catalogos/ciclos/ciclos.js"></script>

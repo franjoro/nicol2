@@ -19,10 +19,9 @@
                                         <i data-feather="calendar"></i>
                                     </span>
                                     <select class="form-control form-control-solid" id="exampleFormControlSelect1">
-                                        <option>2018</option>
-                                        <option>2019</option>
-                                        <option>2020</option>
-                                        <option>2021</option>
+                                        <% years.forEach( year=> {%>
+                                        <option><%= year.year%></option>
+                                        <%  })  %>
                                     </select>
                                 </div>
                              </div>
@@ -36,175 +35,79 @@
             <div class="card card-header-actions mb-4">
                 <div class="card-header p-5">
                     Grados
-                    <button class="btn btn-md btn-warning" type="button">Agregar Grado</button>
+                    <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
+                    data-target="#modalGrados">Agregar Grado</button>
                 </div>
                 <div class="card-body">
                     <table id="tableGrados" class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Área</th>
+                                <th>Ciclo educativo</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Área</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
+                            <% grados.forEach( grado=> {%>
                             <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
+                                <td><%= grado.nombre%></td>
+                                <td><%= grado.ciclo %></td>
+                                <td class="col-md-6">
+                                    <a  href="/admin/grados/detalle/<%= grado.id %>" class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar materias y alumnos</a>
                                     <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Octavo B</td>
-                                <td>Tercer Ciclo</td>
-                                <td>
-                                    <button class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar</button>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            
-                            
+                            <%  })  %>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </main>
+
+
+    <div class="modal fade" id="modalGrados" tabindex="-1"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar grado en año activo</h5>
+                    <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i data-feather="x"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formGrados">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>Nombre</label>
+                                <input type="text" class="form-control" id="NombreCurso" name="NombreCurso"
+                                    autocomplete="off" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Ciclo educativo </label>
+                                <select class="form-control" name="idCiclo" id="idCiclo">
+                                    <option selected disabled>Seleccione ciclo</option>
+                                    <% ciclos.forEach( ciclo=> {%>
+                                        <option value="<%= ciclo.id %>"><%= ciclo.Nombre%></option>
+                                    <%  })  %>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <small><b>Nota:</b> Los grados agregados serán asignados al año activo </small>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnGuardar">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 <%- include('../partials/footer.ejs'); %>
+<script src="/static/js/alertas.js"></script>
+<script src="/static/js/admin/grados/grados.js"></script>

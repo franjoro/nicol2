@@ -10,7 +10,7 @@
                 <div class="page-header-icon">
                   <i data-feather="archive"></i>
                 </div>
-                Octavo B - Año 2021
+                <%= datosGrado.nombre %> - Año <%= datosGrado.idYear %>
               </h1>
               <div class="page-header-subtitle">
                 Visualiza información general del grado, materias asignadas y
@@ -36,7 +36,7 @@
               <i data-feather="archive"></i>
               <div class="ms-4">
                 <div class="text-xs text-muted">Nombre</div>
-                <div class="small">Octavo B</div>
+                <div class="small"><%= datosGrado.nombre %> </div>
               </div>
             </div>
           </div>
@@ -46,8 +46,8 @@
             <div class="d-flex align-items-center">
               <i data-feather="file-text"></i>
               <div class="ms-4">
-                <div class="text-xs text-muted">Área</div>
-                <div class="small">Tercer Ciclo</div>
+                <div class="text-xs text-muted">Ciclo educativo</div>
+                <div class="small"><%= datosGrado.ciclo %> </div>
               </div>
             </div>
           </div>
@@ -58,7 +58,7 @@
               <i data-feather="calendar"></i>
               <div class="ms-4">
                 <div class="text-xs text-muted">Año en que se imparte</div>
-                <div class="small">2021</div>
+                <div class="small"><%= datosGrado.idYear %> </div>
               </div>
             </div>
           </div>

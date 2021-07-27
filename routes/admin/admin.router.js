@@ -10,6 +10,7 @@ const rutaAreas = require('./areas.router');
 const rutaEstudiantes = require('./estudiantes.router');
 const rutaUsuarios = require('./usuarios.router');
 const rutaMaestros = require('./maestros.router');
+const rutaciclos = require('./ciclos.router');
 const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
@@ -26,5 +27,6 @@ router.use('/areas', rutaAreas);
 router.use('/estudiantes', rutaEstudiantes);
 router.use('/usuarios', rutaUsuarios);
 router.use('/maestros', rutaMaestros);
+router.use('/ciclos', rutaciclos);
 
 module.exports = router;
