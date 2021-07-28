@@ -11,10 +11,9 @@ const rutaEstudiantes = require('./estudiantes.router');
 const rutaUsuarios = require('./usuarios.router');
 const rutaMaestros = require('./maestros.router');
 const rutaciclos = require('./ciclos.router');
+const rutaCodigos= require('./codigos.router');
 const { authCheckAdmin  } = require('../../middlewares/auth');
 
-
-router.get('/codigos', admin.codigos);
 
 /* USE especificar las rutas competentes a los grados */
 
@@ -28,5 +27,6 @@ router.use('/estudiantes', rutaEstudiantes);
 router.use('/usuarios', rutaUsuarios);
 router.use('/maestros', rutaMaestros);
 router.use('/ciclos', rutaciclos);
+router.use('/codigos', rutaCodigos);
 
 module.exports = router;

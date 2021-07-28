@@ -32,7 +32,7 @@
             </button>
           </div>
           <div class="card-body">
-            <table class="table table-hover">
+            <table id="datatable">
               <thead>
                 <tr>
                   <th scope="col">Código</th>
@@ -41,9 +41,10 @@
                 </tr>
               </thead>
               <tbody>
+                <% codigos.forEach( codigo=> {  %>
                 <tr>
-                  <th scope="row">Platica en calses</th>
-                  <td scope="row">-2</td>
+                  <th scope="row"><%= codigo.Codigo %></th>
+                  <td scope="row"><%= codigo.valor %></td>
                   <td scoper="row" class="col-md-4">
                     <button class="btn btn-primary me-2">
                       <i class="me-2" data-feather="edit"></i>Editar
@@ -52,6 +53,7 @@
                       <i class="me-2" data-feather="trash-2"></i>Eliminar
                     </button>
                   </td>
+                <%})%>
                 </tr>
               </tbody>
             </table>
@@ -70,18 +72,18 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="formCodigos">
               <div class="row mb-3">
                 <div class="col-md-12">
                   <label for="codigoInput">Texto del código</label>
-                  <input type="email" class="form-control" id="codigoInput"  placeholder="Ejemplo: Platica mucho en clase"/>
+                  <input type="email" required class="form-control" id="codigoInput" name="codigoInput"  placeholder="Ejemplo: Platica mucho en clase"/>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-md-6">
                   <label for="selectCodigo">Acción</label>
-                  <select name="accionCodigo" class="form-control" id="selectCodigo">
+                  <select name="accionCodigo" required class="form-control" id="selectCodigo">
                     <option selected disabled> Seleccione acción del código</option>
                     <option value="+">El código SUMARA</option>
                     <option value="-">El código RESTARA</option>
@@ -89,7 +91,7 @@
                 </div>
                 <div class="col-md-6">
                   <label for="exampleInputEmail1">Valor</label>
-                  <input type="number" min="0" class="form-control" id="exampleInputEmail1" value="0" />
+                  <input type="number" min="0" required class="form-control" id="value" name="valor" placeholder="0" />
                 </div>
               </div>
 
@@ -99,10 +101,11 @@
             <button type="button" class="btn btn-danger" data-dismiss="modal">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary">Guardar</button>
+            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
           </div>
         </div>
       </div>
     </div>
     <%- include('../../partials/footer.ejs'); %>
-  </div>
+  <script src="/static/js/alertas.js"></script>
+  <script src="/static/js/admin/catalogos/codigos/codigos.js"></script>
