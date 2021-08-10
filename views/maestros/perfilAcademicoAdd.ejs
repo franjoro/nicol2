@@ -27,7 +27,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form id="formPerfil">
+                        <% if(Role != 3) {%>
+                        <form id="formPerfil" >
                             <input type="hidden" name="idUnion" id="idUnion" value="<%= idUnion %>">
                             <input type="hidden" name="Role" id="Role" value="<%= Role %>">
                             <div class="row">
@@ -111,6 +112,35 @@
                                 <button class="btn btn-success float-right" id="btnGuardar"> <i
                                         data-feather="check"></i> Ingresar actividad</button>
                             </div>
+                        <% }else{ %>
+                            <form id="formPerfil" >
+                                <input type="hidden" name="idUnion" id="idUnion" value="<%= idUnion %>">
+                                <input type="hidden" name="Role" id="Role" value="<%= Role %>">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span>Titulo:</span>
+                                        <textarea name="titulo" class="form-control" id="titulo"></textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>¿Que se evaluara en el examen? </span>
+                                        <textarea name="descripcion" class="form-control" id="descripcion"></textarea>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="acumulados[]" value="Examen">
+                                <input type="hidden" name="acumulados[]" value="Examen">
+                                <input type="hidden" name="valor[]" id="val1" value="40">
+                                <input type="hidden" name="valor[]" id="val1" value="40">
+                                <input type="hidden" name="cantidadAcumulados"  value="1">
+
+
+                            </form>
+                            <div class="d-flex flex-row-reverse mt-2">
+                                <button class="btn btn-success float-right" id="btnGuardarExamen"> <i
+                                        data-feather="check"></i> Ingresar Examen</button>
+                            </div>
+                        <% } %>
+
                     </div>
                 </div>
             </div>

@@ -59,6 +59,10 @@ router.get('/notas/:idUnion', maestros.notasActividades);
 // GET Muestra a los alumnos pertenecientes al grado
 router.get('/notasAdd/:idUnion/:Role', maestros.notasAlumnos);
 
+// POST Ingreso de notas;
+router.post('/notasAdd/', maestros.notasAdd );
+
+
 
 // =============================================== FIN INGRESO DE NOTAS
 

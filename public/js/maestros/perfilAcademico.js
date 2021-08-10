@@ -36,11 +36,14 @@ const makeCalculo = (()=> {
 
 $("#btnGuardar").click( ()=>{
     const total = makeCalculo();
-    if(total !== 30) return alertas.newErrorMessage("La sumatoria total no concuerda con el valor de la actividad");
+    if(total !== 30 ) return alertas.newErrorMessage("La sumatoria total no concuerda con el valor de la actividad");
     if(!$("#titulo").val() || !$("#descripcion").val() || !$("#texto1").val() ||  !$("#val1").val() ) return alertas.newErrorMessage("No se permiten espacios vacíos");
-
     $("#formPerfil").submit();
+});
 
+$("#btnGuardarExamen").click( ()=>{
+    if(!$("#titulo").val() || !$("#descripcion").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+    $("#formPerfil").submit();
 });
 
 $(document).on("blur","input", function(){

@@ -18,11 +18,8 @@
             </header>
             <!-- Main page content-->
             <div class="container-fluid px-4 mt-n10">
-
                 <div class="row">
-
                     <div class="col-lg-9">
-
                         <div class="card card-header-actions mb-4">
                             <div class="card-header p-5">
                                 <div>
@@ -39,12 +36,12 @@
                                             <th>Nombres</th>
                                             <th>Apellidos</th>
                                             <% acumulados.forEach( acu => { %>
-                                                <th>Nota <%= acu.Porcentaje %></th>
+                                                <th class="acumulado" data-valor="<%= acu.Porcentaje %>">Nota <%= acu.Porcentaje %></th>
                                             <%  })%>  
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% alumnos.forEach( alumno=> { %>
+                                        <% dataOrdenada.forEach( alumno=> { %>
                                             <tr>
                                                 <td>
                                                     <%= alumno.Carnet %>
@@ -55,9 +52,16 @@
                                                 <td>
                                                     <%= alumno.Apellido %>
                                                 </td>
-                                                <% acumulados.forEach( acu => { %>
+                                                <% alumno.Nota.forEach( (nota, i) => { %>
                                                 <td>
-                                                    <input type="tel" class="inputNota form-control form-control-sm" name="" id="">
+                                                    <input type="number"
+                                                     data-limite="<%= acumulados[i].Porcentaje %>" 
+                                                     data-exist="<%= alumno.isExist[i] %>" 
+                                                     data-idnota="<%= alumno.idNota[i] %>" 
+                                                     data-idacumulado="<%= acumulados[i].id %>" 
+                                                     data-alumno="<%= alumno.Carnet %>" 
+
+                                                     class="inputNota form-control" min="0" name="notas[]" value="<%= nota %>" id="">
                                                 </td>
                                                 <%  })%>  
                                             </tr>
@@ -85,11 +89,11 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
-
             </div>
         </main>
+
+
         <%- include('footer.maestros.ejs'); %>
+        <script src="/static/js/alertas.js"></script>
+        <script src="/static/js/maestros/notas.js"></script>
