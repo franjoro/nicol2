@@ -1,0 +1,120 @@
+<%- include('header.maestros.ejs'); %>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="book-open"></i></div>
+                                    Agregar perfil acádemico en: "<%= textoRole %>"
+                                </h1>
+                                <div class="page-header-subtitle">Ingresa cantidad de acumulados en su actividad</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <div>
+                            <a class="btn btn-primary me-2" href="/maestros/perfil/<%=idUnion%>"><i class="me-2"
+                                    data-feather="arrow-left"></i> Atrás</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="formPerfil">
+                            <input type="hidden" name="idUnion" id="idUnion" value="<%= idUnion %>">
+                            <input type="hidden" name="Role" id="Role" value="<%= Role %>">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span>Titulo de la actividad:</span>
+                                    <textarea name="titulo" class="form-control" id="titulo"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <span>¿Que se evaluara en la actividad? </span>
+                                    <textarea name="descripcion" class="form-control" id="descripcion"></textarea>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>¿Cantidad de acumulados?</span>
+                                    <select name="cantidadAcumulados" id="cantidadAcumulados" class="form-control">
+                                        <option selected value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>Descripción de acumulados</span>
+                                    <textarea name="acumulados[]" rows="1" class="form-control showControl1" id="texto1"
+                                        placeholder="Descripción acumulado 1"></textarea>
+                                    <textarea name="acumulados[]" rows="1" class="form-control showControl2 d-none" id="texto2"
+                                        placeholder="Descripción acumulado 2"></textarea>
+                                    <textarea name="acumulados[]" rows="1" class="form-control showControl3 d-none" id="texto3"
+                                        placeholder="Descripción acumulado 3"></textarea>
+                                    <textarea name="acumulados[]" rows="1" class="form-control showControl4 d-none" id="texto4"
+                                        placeholder="Descripción acumulado 4"></textarea>
+                                    <textarea name="acumulados[]" rows="1" class="form-control showControl5 d-none" id="texto5"
+                                        placeholder="Descripción acumulado 5"></textarea>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>Sumatoria de acumulados</span>
+                                    <input type="number" min="0" name="valor[]" class="form-control showControl1 " id="val1"
+                                        placeholder="Puntaje acumulado 1">
+                                    <input type="number" min="0" name="valor[]" class="form-control showControl2  d-none"
+                                        id="val2" placeholder="Puntaje acumulado 2">
+                                    <input type="number" min="0" name="valor[]" class="form-control showControl3  d-none"
+                                        id="val3" placeholder="Puntaje acumulado 3">
+                                    <input type="number" min="0" name="valor[]" class="form-control showControl4  d-none"
+                                        id="val4" placeholder="Puntaje acumulado 4">
+                                    <input type="number" min="0" name="valor[]" class="form-control showControl5  d-none"
+                                        id="val5" placeholder="Puntaje acumulado 5">
+                                </div>
+                            </div>
+                        </form>
+
+                            <div class="row mt-4 float-right d-none" id="alertaRoja">
+                                <div class="alert alert-danger alert-icon" role="alert">
+                                    <div class="alert-icon-aside">
+                                        <i data-feather="alert-octagon"></i>
+                                    </div>
+                                    <div class="alert-icon-content">
+                                        <h6 class="alert-heading">Sumatoria de acumulados total : <span
+                                                id="total">0</span></h6>
+                                        Recuerda que la sumatoria debe ser el total de la actividad (30)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4 float-right d-none" id="alertaVerde">
+                                <div class="alert alert-success alert-icon" role="alert">
+                                    <div class="alert-icon-aside">
+                                        <i data-feather="check"></i>
+                                    </div>
+                                    <div class="alert-icon-content">
+                                        <h6 class="alert-heading">Sumatoria de acumulados correcta : 30</h6>
+                                        Verifica que la información este correcta antes de ser ingresada, ya puedes
+                                        registrar la actividad.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-row-reverse mt-2">
+                                <button class="btn btn-success float-right" id="btnGuardar"> <i
+                                        data-feather="check"></i> Ingresar actividad</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <%- include('footer.maestros.ejs'); %>
+            <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/maestros/perfilAcademico.js"></script>

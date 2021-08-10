@@ -1,0 +1,95 @@
+<%- include('header.maestros.ejs'); %>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="user-plus"></i></div>
+                                    Ingreso de notas - Alumnos del grado : <%= dataGradoMateria.Grado %>
+                                </h1>
+                                <!-- <div class="page-header-subtitle">Seleccione una materia para ingresar notas</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-fluid px-4 mt-n10">
+
+                <div class="row">
+
+                    <div class="col-lg-9">
+
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header p-5">
+                                <div>
+                                    <a class="btn btn-primary me-2" href="/maestros/notas/<%= idUnion %>"><i
+                                            class="me-2" data-feather="arrow-left"></i> Atrás</a>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive">
+
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Carnet</th>
+                                            <th>Nombres</th>
+                                            <th>Apellidos</th>
+                                            <% acumulados.forEach( acu => { %>
+                                                <th>Nota <%= acu.Porcentaje %></th>
+                                            <%  })%>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% alumnos.forEach( alumno=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= alumno.Carnet %>
+                                                </td>
+                                                <td>
+                                                    <%= alumno.Nombre %>
+                                                </td>
+                                                <td>
+                                                    <%= alumno.Apellido %>
+                                                </td>
+                                                <% acumulados.forEach( acu => { %>
+                                                <td>
+                                                    <input type="tel" class="inputNota form-control form-control-sm" name="" id="">
+                                                </td>
+                                                <%  })%>  
+                                            </tr>
+                                            <%  })%>                                            
+                                    </tbody>
+                                </table>
+                                <div class="d-flex flex-row-reverse mt-2">
+                                    <button class="btn btn-success float-right" id="btnGuardar"> <i
+                                            data-feather="check"></i>Actualizar notas</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="nav-sticky">
+                            <div class="card">
+                                <div class="card-body">
+                                   <h4>Información de la actividad</h4>
+
+                                   <ul>
+                                    <li><b>Titulo: </b> <%= Titulo %></li>
+                                    <li> <b>Cantidad de acumulados: </b> <%= cantidad %> </li>
+                                   </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </main>
+        <%- include('footer.maestros.ejs'); %>

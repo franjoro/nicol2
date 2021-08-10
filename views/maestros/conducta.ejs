@@ -1,0 +1,50 @@
+<%- include('header.maestros.ejs'); %>  
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <header class="page-header page-header-dark bg-dark pb-10">
+                        <div class="container-xl px-4">
+                            <div class="page-header-content pt-4">
+                                <div class="row align-items-center justify-content-between">
+                                    <div class="col-auto mt-4">
+                                        <h1 class="page-header-title">
+                                            <div class="page-header-icon"><i data-feather="archive"></i></div>
+                                            Asignar observaciones o códigos de conducta
+                                        </h1>
+                                        <div class="page-header-subtitle">Seleccione un grado para buscar al alumno que deseá registrar una observación o código de conducta</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- Main page content-->
+                    <div class="container-xl px-4 mt-n10">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header p-5">
+                               Diario pedagógico
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Grados que imparte</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% asignaciones.forEach( asig=> { %>
+                                        <tr>
+                                            <td><%= asig.nombre%></td>
+                                            <td>
+                                                <a class="btn btn-primary me-2" href="/maestros/conducta/<%= asig.idGrado%>"><i class="me-2" data-feather="eye"></i>Ver grupo de alumnos</a>
+                                            </td>
+                                        </tr>      
+                                        <% })%>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+ <%- include('footer.maestros.ejs'); %>
+        

@@ -1,3 +1,4 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <%- include('../partials/header.ejs'); %>
   <div id="layoutSidenav_content">
     <main>
@@ -74,13 +75,19 @@
         </nav>
         <hr class="mt-0 mb-4" />
         <!-- Materias y mas-->
-        <section id="alumnosSection" class="d-none">
+          <section id="alumnosSection" class="d-none">
           <div class="card card-header-actions mb-4">
             <div class="card-header p-5">
               Alumnos
-              <button class="btn btn-md btn-warning" type="button">
-                Agregar Alumno
-              </button>
+              <div>
+                <button class="btn btn-md btn-primary" type="button"> <i class="me-2" data-feather="download-cloud"></i>
+                  Importar alumnos
+                </button>
+                <button class="btn btn-md btn-secondary" type="button" data-toggle="modal"
+                  data-target="#modalAddEstudiante"> <i class="me-2" data-feather="plus-circle"></i>
+                  Asignar alumnos
+                </button>
+              </div>
             </div>
             <div class="card-body table-responsive">
               <table class="table table-striped table-hover">
@@ -93,172 +100,213 @@
                   </tr>
                 </thead>
                 <tbody>
+
+                  <% Estudiantes.forEach( estudiante=> { %>
                   <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
+                    <td><%= estudiante.Carnet %></td>
+                    <td><%= estudiante.Nombre %></td>
+                    <td><%= estudiante.Apellido %></td>
                     <td>
                       <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
+                        <i data-feather="trash-2"></i>
                       </button>
                     </td>
                   </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>PL121272</td>
-                    <td>Juan José</td>
-                    <td>Peréz López</td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
-                    </td>
-                  </tr>
+                  <% } )%>
+                
                 </tbody>
               </table>
             </div>
           </div>
         </section>
-
         <section id="materiasSection">
           <!-- Payment methods card-->
           <div class="card card-header-actions mb-3">
             <div class="card-header p-5">
-              Opciones de materias 
+              Opciones de materias
               <div>
-                <button class="btn btn-md btn-warning" type="button">Editar</button>
-                <button class="btn btn-md btn-warning" type="button">Editar</button>
-                <button class="btn btn-md btn-success" type="button"><i class="me-2" data-feather="plus-circle"></i> Asignar materia</button>
+                <button class="btn btn-md btn-warning" type="button">Bloquear Actividad 1</button>
+                <button class="btn btn-md btn-warning" type="button">Bloquear Actividad 2</button>
+                <button class="btn btn-md btn-warning" type="button">Bloquear Examen</button>
+                <button class="btn btn-md btn-primary" type="button" data-toggle="modal"
+                  data-target="#modalAddMateria"><i class="me-2" data-feather="plus-circle"></i> Asignar
+                  materia</button>
               </div>
             </div>
           </div>
 
 
-          <div class="row">
-            <div class="col-xl-4">
-              <!-- Profile picture card-->
-              <div class="card mb-4 mb-xl-0">
-                <div class="card-header">Matemáticas</div>
-                <div class="card-body text-center">
+          <% dataFiltrada.forEach( materia=> { %>
+            <div class="row">
+              <div class="col-xl-4">
+                <!-- Profile picture card-->
+                <div class="card mb-4 mb-xl-0">
+                  <div class="card-header">
+                    <%= materia.NombreMateria %>
+                  </div>
+                  <div class="card-body text-center">
 
-                  <button class="btn btn-danger" type="button">
-                    Quitar materia
-                  </button>
+                    <button class="btn btn-danger" type="button">
+                      Quitar materia
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-8">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                  <div class="card-header d-flex justify-content-between">
+                    Maestros que imparten la materia:
+                    <button class="btn btn-md btn-success btnAsignarMaestro" type="button"
+                      data-union=<%=materia.idMateria %> data-materia=<%= materia.NombreMateria %> >
+                        <i class="me-2" data-feather="plus-circle"></i>Asignar maestro</button>
+                  </div>
+                  <div class="card-body table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Eliminar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% materia.maestros.forEach( maestro=> { %>
+                          <tr>
+                            <td>
+                              <%= maestro.NombreMaestro %>
+                            </td>
+                            <td class="col-md-2">
+                              <button class="btn btn-danger">
+                                <i data-feather="trash-2"></i></button>
+                            </td>
+                          </tr>
+                          <% } )%>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-xl-8">
-              <!-- Account details card-->
-              <div class="card mb-4">
-                <div class="card-header">Maestros asignados</div>
-                <div class="card-body table-responsive">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Área</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Octavo B - 2021</td>
-                        <td>Tercer Ciclo</td>
-                        <td>
-                          <button class="btn btn-primary me-2">
-                            <i class="me-2" data-feather="file-plus"></i>Asignar
-                          </button>
-                          <button class="btn btn-danger">
-                            <i class="me-2" data-feather="trash-2"></i>Eliminar
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Octavo B</td>
-                        <td>Tercer Ciclo</td>
-                        <td>
-                          <button class="btn btn-primary me-2">
-                            <i class="me-2" data-feather="file-plus"></i>Asignar
-                          </button>
-                          <button class="btn btn-danger">
-                            <i class="me-2" data-feather="trash-2"></i>Eliminar
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-          <hr />
-
+            <% } )%>
+              <hr />
         </section>
       </div>
     </main>
+
+    <!-- MODAL AGREGAR MATERIA -->
+    <div class="modal fade" id="modalAddMateria" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Asignar materia a : <b>
+                <%= datosGrado.nombre %>
+              </b></h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formAddMateria">
+              <div class="row">
+                <div class="form-group col-md-12" id="selectContainer">
+                  <label>Seleccionar modelo de materia</label>
+                  <select class="form-control" name="idMateria" id="selectMateria">
+                    <option selected disabled>Seleccione materia</option>
+                  </select>
+                  <input type="hidden" name="idGrado" value="<%= idGrado %>">
+                </div>
+              </div>
+            </form>
+            <small><b>Nota: </b>Puede buscar escribiendo el nombre de la materia</small>
+          </div>
+          <div class="modal-footer">
+
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarMaterias">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- MODAL AGREGAR MAESTRO -->
+    <div class="modal fade" id="modalAddMaestro" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Asignar maestro a materia : <b> <span id="textoNombreMateria"></span> </b> en el
+              grado : <b>
+                <%= datosGrado.nombre %>
+              </b> </h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formMaestro">
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label>Seleccionar maestro </label>
+                  <select class="form-control" name="idMaestro" id="selectMaestro">
+                    <option selected disabled>Seleccione materia</option>
+                  </select>
+                  <input type="hidden" name="idMateria" id="idMateriaInMaestro">
+                  <input type="hidden" name="idGrado" value="<%= idGrado %>">
+                </div>
+              </div>
+            </form>
+            <small><b>Nota:</b> Puede buscar escribiendo el nombre del maestro</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarMaestros">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- MODAL AGREGAR ESTUDIANTE -->
+    <div class="modal fade" id="modalAddEstudiante" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Asignar alumno al grado : <b><%= datosGrado.nombre %></b> </h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formEstudiantes">
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label>Seleccionar los alumnos pertenecientes a este grado </label>
+                  <select class="form-control" name="idEstudiantes[]" id="selectEstudiantes" multiple="multiple"></select>
+                  <input type="hidden" name="idGrado" value="<%= idGrado %>">
+                </div>
+              </div>
+            </form>
+            <small><b>Nota:</b> Puede buscar escribiendo el nombre del alumno</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarEstudiantes">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" id="idGrado" value="<%= idGrado %>">
     <%- include('../partials/footer.ejs'); %>
+      <script src="/static/js/alertas.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
       <script src="/static/js/admin/grados/detalleGrado.js"></script>
-  </div>

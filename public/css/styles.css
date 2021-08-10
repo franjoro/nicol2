@@ -83,7 +83,6 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #69707a;
   background-color: #f2f6fc;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -20502,4 +20501,10 @@ pre[class*=language-] {
 
 .token.variable {
   color: #ff6666;
+}
+.select2-container--open{
+  z-index: 9999999
+}
+.inputNota{
+  width: 5rem;
 }

@@ -9,12 +9,16 @@ var router = express.Router();
 router.get('/',  estudiantes.main);
 
 
-/* GET estudiantes para rellenar tabla */
-router.get('/table',  estudiantes.loadTable);
-
 /* POST ingresar nuevo estudiante */
 router.post('/',  estudiantes.addNew);
 
+
+/* GET estudiantes para rellenar tabla */
+router.get('/table',  estudiantes.loadTable);
+
+
+/* POST retorna JSON para select de alumnos que no pertenecen a grado */
+router.post('/getEstudiantes/:idGrado',  estudiantes.getEstudiantes);
 
 
 module.exports = router;

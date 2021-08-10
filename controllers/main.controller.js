@@ -27,8 +27,18 @@ main.signin = async (req, res) => {
       if (!(await desincriptar(password, data[0].Password)))
         return res.status(400).json({ error: "ERROR_PASSWORD", status: false });
       // Creamos JWT
-      const { Nombre, Role } = data[0];
-      const payload = { Nombre, Role, usuario: req.body.username };
+      const { Role } = data[0];
+      let identificador;
+      if(Role === 1 ) identificador = "admin";
+      if(Role === 3 ){
+        const { [0]: {id} } = await pool.query("SELECT id FROM maestros WHERE Email = ?" ,[usuario]);
+        identificador = id;
+      }
+      if(Role === 2 ){
+        identificador = usuario;
+      }
+      const payload = { identificador, Role, usuario };
+      console.log(payload);
       const token = firmar(payload);
       res.cookie("token", token);
       return res.status(200).json({ status: true, role: data[0].Role });

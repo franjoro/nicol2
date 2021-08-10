@@ -37,4 +37,19 @@ estudiantes.addNew = async (req , res) => {
     }
 };
 
+
+estudiantes.getEstudiantes = async (req, res) => {
+    const { searchTerm } = req.body;
+    const { idGrado } = req.params;
+    let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos Nombre like '%${searchTerm}%' GROUP BY Carnet  ORDER By Nombre LIMIT 5`;
+    if (!searchTerm) query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos GROUP BY Carnet ORDER BY Nombre LIMIT 5`;
+    try {
+        const data = await pool.query(query, [idGrado]);
+        return res.json({ results: data });
+    } catch (error) {
+        return res.status(400).json({ error });
+    }
+};
+
+
 module.exports = estudiantes;

@@ -1,0 +1,53 @@
+<%- include('header.maestros.ejs'); %>  
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <header class="page-header page-header-dark bg-dark pb-10">
+                        <div class="container-xl px-4">
+                            <div class="page-header-content pt-4">
+                                <div class="row align-items-center justify-content-between">
+                                    <div class="col-auto mt-4">
+                                        <h1 class="page-header-title">
+                                            <div class="page-header-icon"><i data-feather="user-plus"></i></div>
+                                            Ingreso de notas
+                                        </h1>
+                                        <div class="page-header-subtitle">Seleccione una materia para ingresar notas</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- Main page content-->
+                    <div class="container-xl px-4 mt-n10">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header p-5">
+                               Registro de notas
+                            </div>
+                            <div class="card-body table-responsive">
+                                
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Materia a impartir</th>
+                                            <th>Grado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% asignaciones.forEach( asig=> { %>
+                                        <tr>
+                                            <td><%= asig.Nombre %></td>
+                                            <td><%= asig.Grado %></td>
+                                            <td>
+                                                <a class="btn btn-success me-2" href="/maestros/notas/<%= asig.idUnion %>"><i class="me-2" data-feather="plus"></i>Ingresar notas</a>
+                                            </td>
+                                        </tr>      
+                                        <% })%>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+ <%- include('footer.maestros.ejs'); %>
+        

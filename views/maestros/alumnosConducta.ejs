@@ -1,0 +1,155 @@
+<%- include('header.maestros.ejs'); %>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="users"></i></div>
+                                    Listado de alumnos del grado : <%= Nombre %>
+                                </h1>
+                                <div class="page-header-subtitle">Seleccione un estudiante que deseá registrar una
+                                    observación o código de conducta</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <div>
+                            <a class="btn btn-primary me-2" href="/maestros/conducta"><i class="me-2"
+                                    data-feather="arrow-left"></i> Atrás</a>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Carnet</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Asignar código</th>
+                                    <th>Asignar observación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% alumnos.forEach( asig=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= asig.idAlumno %>
+                                        </td>
+                                        <td>
+                                            <%= asig.Nombre %>
+                                        </td>
+                                        <td>
+                                            <%= asig.Apellido %>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary" data-toggle="modal"
+                                                data-target="#modalAddCodigo"><i data-feather="plus-circle"></i></a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-secondary" data-toggle="modal"
+                                            data-target="#modalAddObservacion" ><i data-feather="plus-circle"></i></a>
+                                        </td>
+                                    </tr>
+                                    <% })%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+        <!-- MODAL AGREGAR CÓDIGO-->
+        <div class="modal fade" id="modalAddCodigo" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Asignar código de conducta a <b> <span id="textAlumno"></span> </b>
+                            </b> </h5>
+                        <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formCodigo">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Seleccione código a aplicar </label>
+                                    <select class="form-control" name="idCodigo" id="idCodigo">
+                                        <option selected disabled>Seleccione código</option>
+                                        <% codigos.forEach( codigo=> { %>
+                                            <option class="text-<%= codigo.color %>" value="<%= codigo.id %>"><%= codigo.Codigo  %> Valor : <%= codigo.valor  %>  </option>
+                                        <% } )%>
+                                    </select>
+                                    <input type="hidden" name="idAlumno" id="idAlumno">
+                                    <input type="hidden" name="idGrado"  id="idGrado" value="<%= idGrado %>">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label>Descripción del código <b>(Opcional)</b> </label>
+                                    <textarea name="descripcion" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <small><b>Ayuda:</b> Seleccione el código y agregue una descripción</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarCodigo">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- MODAL AGREGAR OBSERVACION -->
+        <div class="modal fade" id="modalAddObservacion" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Asignar observación a <b> <span id="textAlumnoObservacion"></span> </b>
+                            </b> </h5>
+                        <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formObservacion">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Describa la observación </label>
+                                    <textarea name="descripcion" id="descripcionobservacion" class="form-control"></textarea>
+                                    <input type="hidden" name="idAlumno" id="idAlumnoObs">
+                                </div>
+                            </div>
+                        </form>
+                        <small><b>Nota: </b>Las observaciónes no afectan el puntaje del alumno</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarObservacion">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="idMaestro" id="idMaestro" value="<%=identificador%>">
+        <%- include('footer.maestros.ejs'); %>
+            <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/maestros/conducta.js"></script>

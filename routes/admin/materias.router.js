@@ -13,5 +13,8 @@ router.get('/',  materias.main);
 router.post('/',  materias.addNewModelo);
 
 
+/* POST retorna JSON de modelos de materias ingresados para SELECT */
+router.post('/getModelos',  materias.getModelos);
+
 
 module.exports = router;

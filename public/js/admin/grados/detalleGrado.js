@@ -1,14 +1,180 @@
-$("#navAlumnos").click( ()=> {
-    $("#navMaterias").removeClass("active");
-    $("#navAlumnos").addClass("active");
-    $("#alumnosSection").removeClass("d-none");
-    $("#materiasSection").addClass("d-none");
-} );$("#navMaterias").click( ()=> {
-    $("#navAlumnos").removeClass("active");
-    $("#navMaterias").addClass("active");
-    $("#materiasSection").removeClass("d-none");
-    $("#alumnosSection").addClass("d-none");
-} );
+// Mostrar o ocultar partes 
+$("#navAlumnos").click(() => {
+  $("#navMaterias").removeClass("active");
+  $("#navAlumnos").addClass("active");
+  $("#alumnosSection").removeClass("d-none");
+  $("#materiasSection").addClass("d-none");
+}); $("#navMaterias").click(() => {
+  $("#navAlumnos").removeClass("active");
+  $("#navMaterias").addClass("active");
+  $("#materiasSection").removeClass("d-none");
+  $("#alumnosSection").addClass("d-none");
+});
+
+// ================================ MATERIAS EN GRADOS
+// Selector de modelo de materias
+$("#selectMateria").select2({
+  width: "100%",
+  ajax: {
+    url: "/admin/materias/getModelos",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data(params) {
+      return {
+        searchTerm: params.term, // search term
+      };
+    },
+    results(response) {
+      console.log(response);
+      $.map(response, (item) => ({
+        id: item.id,
+        text: item.text,
+      }));
+    },
+    cache: true,
+  },
+});
+
+// Agregar materia
+$("#formAddMateria").submit(async function (e) {
+  e.preventDefault();
+  const data = $(this).serialize();
+  try {
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      type: "POST",
+      url: "/admin/grados/assingMateria",
+      data: data,
+    });
+    swal.close();
+    if (query.error === "ERROR_EXISTENTE") return alertas.newErrorMessage("La materia seleccionada ya esta asignada");
+    if (query.status) return location.reload();
+  } catch (error) {
+    console.log(error);
+    return alertas.newErrorMessage();
+  }
+});
+// Boton de agregar materia
+$("#btnGuardarMaterias").click(() => {
+  if (!$("#selectMateria").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+  $("#formAddMateria").submit();
+});
+
+// ================================ MAESTROS EN MATERIAS
+// Selector de modelo de maestros
+$("#selectMaestro").select2({
+  width: "100%",
+  ajax: {
+    url: "/admin/maestros/getMaestros",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data(params) {
+      return {
+        searchTerm: params.term, // search term
+      };
+    },
+    results(response) {
+      console.log(response);
+      $.map(response, (item) => ({
+        id: item.id,
+        text: item.text,
+      }));
+    },
+    cache: true,
+  },
+});
+
+// Agregar maestro
+$("#formMaestro").submit(async function (e) {
+  e.preventDefault();
+  const data = $(this).serialize();
+  try {
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      type: "POST",
+      url: "/admin/grados/assingMaestro",
+      data: data,
+    });
+    swal.close();
+    if (query.error === "ERROR_EXISTENTE") return alertas.newErrorMessage("El maestro seleccionado ya esta asignado");
+    if (query.status) return location.reload();
+  } catch (error) {
+    console.log(error);
+    return alertas.newErrorMessage();
+  }
+});
+// Boton de formulario maestro
+$("#btnGuardarMaestros").click(() => {
+  if (!$("#selectMaestro").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+  $("#formMaestro").submit();
+});
+
+// Boton de asignar maestro
+$(".btnAsignarMaestro").on('click', function () {
+  const { materia, union } = $(this).data();
+
+  $("#textoNombreMateria").text(materia);
+  $("#idMateriaInMaestro").val(union);
+  $("#modalAddMaestro").modal();
+});
+
+
+const idGrado = $("#idGrado").val(); 
+
+// ================================ ALUMNOS EN GRADOS
+// Selector de modelo de maestros
+$("#selectEstudiantes").select2({
+  width: "100%",
+  ajax: {
+    url: "/admin/estudiantes/getEstudiantes/"+idGrado,
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data(params) {
+      return {
+        searchTerm: params.term, // search term
+      };
+    },
+    results(response) {
+      console.log(response);
+      $.map(response, (item) => ({
+        id: item.id,
+        text: item.text,
+      }));
+    },
+    cache: true,
+  },
+});
+
+
+// Agregar maestro
+$("#formEstudiantes").submit(async function (e) {
+  e.preventDefault();
+  const data = $(this).serialize();
+  try {
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      type: "POST",
+      url: "/admin/grados/assingEstudiantes",
+      data: data,
+    });
+    swal.close();
+    if (query.status) return location.reload();
+    console.log(query);
+  } catch (error) {
+    console.log(error);
+    return alertas.newErrorMessage();
+  }
+});
+// Boton de formulario estudiantes
+$("#btnGuardarEstudiantes").click(() => {
+  if (!$("#selectEstudiantes").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+  $("#formEstudiantes").submit();
+});
+
+
 
 // const createGradosTable = (year ) => {
 //     // DataTable Usuarios
@@ -30,7 +196,7 @@ $("#navAlumnos").click( ()=> {
 //               return "Instructor Empresa Centro";
 //             } 
 //               return "Coordinador";
-            
+
 //           },
 //         },
 //         {
@@ -39,7 +205,7 @@ $("#navAlumnos").click( ()=> {
 //               return '<p class="text-primary">Activo</p>';
 //             } 
 //               return '<p class="text-danger">Inactivo</p>';
-            
+
 //           },
 //         },
 //         {

@@ -37,4 +37,18 @@ maestros.addNew = async (req , res) => {
     }
 };
 
+
+maestros.getModelos = async (req, res) => {
+    const { searchTerm } = req.body;
+    let query = `SELECT id ,  CONCAT(Nombres , ' ' , Apellidos) AS text FROM maestros WHERE Nombres like '%${searchTerm}%' order By Nombres LIMIT 5`;
+    if (!searchTerm) query = `SELECT id,  CONCAT(Nombres , ' ' , Apellidos) AS text FROM maestros order By Nombres LIMIT 5`;
+    try {
+        const data = await pool.query(query);
+        return res.json({ results: data });
+    } catch (error) {
+        return res.status(400).json({ error });
+    }
+};
+
+
 module.exports = maestros;
