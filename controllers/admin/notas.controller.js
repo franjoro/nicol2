@@ -24,7 +24,7 @@ conducta.getNotasByAlumnos = async (req , res) => {
     try {
         const {idAlumno , idBimestre } = req.params; 
 
-        const { [0] : {idGrado}} = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN YEAR ON YEAR.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE YEAR.estado = 1 AND idAlumno = ? GROUP BY idAlumno",[idAlumno]);
+        const { [0] : {idGrado}} = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno",[idAlumno]);
 
 
         const queryPromesas = [
