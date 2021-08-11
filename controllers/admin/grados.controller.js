@@ -62,6 +62,7 @@ grados.detalleGrado = async (req, res) => {
             [4]: Estudiantes,
         } = await Promise.all(promesas);
 
+
         const dataFiltrada = [];
         Materias.forEach((materia) => {
             const maestrosArr = [];
@@ -172,6 +173,19 @@ grados.assingEstudiantesGrado = async (req, res) => {
             );
         }
         await Promise.all(arrPromesas);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+grados.edicionIndividual = async (req, res) => {
+    try {
+        const { idunion, role , status } = req.body;
+        console.log(req.body);
+        await pool.query(`UPDATE materia_grado SET EstadoAct${role} = ? WHERE id = ?  `, [status, idunion]);
         res.json({ status: true });
     } catch (error) {
         console.log(error);

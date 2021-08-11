@@ -75,7 +75,7 @@
         </nav>
         <hr class="mt-0 mb-4" />
         <!-- Materias y mas-->
-          <section id="alumnosSection" class="d-none">
+        <section id="alumnosSection" class="d-none">
           <div class="card card-header-actions mb-4">
             <div class="card-header p-5">
               Alumnos
@@ -102,18 +102,24 @@
                 <tbody>
 
                   <% Estudiantes.forEach( estudiante=> { %>
-                  <tr>
-                    <td><%= estudiante.Carnet %></td>
-                    <td><%= estudiante.Nombre %></td>
-                    <td><%= estudiante.Apellido %></td>
-                    <td>
-                      <button class="btn btn-danger">
-                        <i data-feather="trash-2"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <% } )%>
-                
+                    <tr>
+                      <td>
+                        <%= estudiante.Carnet %>
+                      </td>
+                      <td>
+                        <%= estudiante.Nombre %>
+                      </td>
+                      <td>
+                        <%= estudiante.Apellido %>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger">
+                          <i data-feather="trash-2"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <% } )%>
+
                 </tbody>
               </table>
             </div>
@@ -124,10 +130,29 @@
           <div class="card card-header-actions mb-3">
             <div class="card-header p-5">
               Opciones de materias
+
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Permisos de edición en grado
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <h6 class="dropdown-header text-green">Activar edición</h6>
+                  <a class="dropdown-item" href="#">Primera actividad 30% </a>
+                  <a class="dropdown-item" href="#">Segunda actividad 30% </a>
+                  <a class="dropdown-item" href="#">Examen 40% </a>
+                  <div class="dropdown-divider"></div>
+                  <h6 class="dropdown-header text-red">Desactivar edición</h6>
+                  <a class="dropdown-item" href="#">Primera actividad 30% </a>
+                  <a class="dropdown-item" href="#">Segunda actividad 30% </a>
+                  <a class="dropdown-item" href="#">Examen 40% </a>
+
+
+
+                </div>
+              </div>
+
               <div>
-                <button class="btn btn-md btn-warning" type="button">Bloquear Actividad 1</button>
-                <button class="btn btn-md btn-warning" type="button">Bloquear Actividad 2</button>
-                <button class="btn btn-md btn-warning" type="button">Bloquear Examen</button>
                 <button class="btn btn-md btn-primary" type="button" data-toggle="modal"
                   data-target="#modalAddMateria"><i class="me-2" data-feather="plus-circle"></i> Asignar
                   materia</button>
@@ -144,11 +169,37 @@
                   <div class="card-header">
                     <%= materia.NombreMateria %>
                   </div>
-                  <div class="card-body text-center">
+                  <div class="card-body">
+                    <span>Permisos de edición: </span>
+                    <table class="table table-striped">
+                      <thead>
+                        <th>Primera actividad 30%</th>
+                        <th>Segunda actividad 30%</th>
+                        <th>Examen 40%</th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <% if(materia.EstadoAct1){ %>
+                            <td><button data-idunion="<%= materia.idMateria %>" data-status="<%= materia.EstadoAct1%>" data-role="1"  class="btn btn-sm btn-success edicionBtn">Activo</button></td>
+                          <% }else{ %>
+                            <td><button data-idunion="<%= materia.idMateria %>" data-status="<%= materia.EstadoAct1%>" data-role="1"  class="btn btn-sm btn-danger edicionBtn">Inactivo</button></td>
+                          <% } %>
 
-                    <button class="btn btn-danger" type="button">
-                      Quitar materia
-                    </button>
+                          <% if(materia.EstadoAct2){ %>
+                            <td><button data-idunion="<%= materia.idMateria %>" data-status="<%= materia.EstadoAct2%>" data-role="2"  class="btn btn-sm btn-success edicionBtn">Activo</button></td>
+                          <% }else{ %>
+                            <td><button data-idunion="<%= materia.idMateria %>" data-status="<%= materia.EstadoAct2%>" data-role="2"  class="btn btn-sm btn-danger edicionBtn">Inactivo</button></td>
+                          <% } %>
+
+                          <% if(materia.EstadoAct3){ %>
+                            <td><button data-idunion="<%= materia.idMateria %>" data-status="<%= materia.EstadoAct3%>" data-role="3"  class="btn btn-sm btn-success edicionBtn">Activo</button></td>
+                          <% }else{ %>
+                            <td><button data-idunion="<%= materia.idMateria %>" data-status="<%= materia.EstadoAct3%>" data-role="3" class="btn btn-sm btn-danger edicionBtn">Inactivo</button></td>
+                          <% } %>
+                        </tr>
+                      </tbody>
+                    </table>                   
+
                   </div>
                 </div>
               </div>
@@ -161,6 +212,9 @@
                     <button class="btn btn-md btn-success btnAsignarMaestro" type="button"
                       data-union=<%=materia.idMateria %> data-materia=<%= materia.NombreMateria %> >
                         <i class="me-2" data-feather="plus-circle"></i>Asignar maestro</button>
+                        <!-- <button class="btn btn-danger" type="button">
+                          Quitar materia
+                        </button> -->
                   </div>
                   <div class="card-body table-responsive">
                     <table class="table table-striped">
@@ -276,7 +330,9 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Asignar alumno al grado : <b><%= datosGrado.nombre %></b> </h5>
+            <h5 class="modal-title">Asignar alumno al grado : <b>
+                <%= datosGrado.nombre %>
+              </b> </h5>
             <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true"><i data-feather="x"></i></span>
             </button>
@@ -286,7 +342,8 @@
               <div class="row">
                 <div class="form-group col-md-12">
                   <label>Seleccionar los alumnos pertenecientes a este grado </label>
-                  <select class="form-control" name="idEstudiantes[]" id="selectEstudiantes" multiple="multiple"></select>
+                  <select class="form-control" name="idEstudiantes[]" id="selectEstudiantes"
+                    multiple="multiple"></select>
                   <input type="hidden" name="idGrado" value="<%= idGrado %>">
                 </div>
               </div>
@@ -306,6 +363,10 @@
     </div>
 
     <input type="hidden" id="idGrado" value="<%= idGrado %>">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"></script>
+
     <%- include('../partials/footer.ejs'); %>
       <script src="/static/js/alertas.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

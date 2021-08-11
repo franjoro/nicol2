@@ -121,14 +121,14 @@ $(".btnAsignarMaestro").on('click', function () {
 });
 
 
-const idGrado = $("#idGrado").val(); 
+const idGrado = $("#idGrado").val();
 
 // ================================ ALUMNOS EN GRADOS
 // Selector de modelo de maestros
 $("#selectEstudiantes").select2({
   width: "100%",
   ajax: {
-    url: "/admin/estudiantes/getEstudiantes/"+idGrado,
+    url: "/admin/estudiantes/getEstudiantes/" + idGrado,
     type: "post",
     dataType: "json",
     delay: 250,
@@ -162,18 +162,40 @@ $("#formEstudiantes").submit(async function (e) {
     });
     swal.close();
     if (query.status) return location.reload();
-    console.log(query);
   } catch (error) {
     console.log(error);
     return alertas.newErrorMessage();
   }
 });
+
 // Boton de formulario estudiantes
 $("#btnGuardarEstudiantes").click(() => {
   if (!$("#selectEstudiantes").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
   $("#formEstudiantes").submit();
 });
 
+
+$(".edicionBtn").on("click", async function () {
+  try {
+    let { role, status, idunion } = $(this).data();
+    if (status) status = 0;
+    else status = 1;
+    const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar permisos de edición?", "Este cambio afectara el permiso de edición");
+    if (isConfirmed) {
+      alertas.loaderAlert();
+      const query = await $.ajax({
+        type: "PUT",
+        url: "/admin/grados/edicion",
+        data: {role, status, idunion},
+      });
+      swal.close();
+      if (query.status) return location.reload();
+    }
+  } catch (error) {
+    console.log(error);
+    return alertas.newErrorMessage();
+  }
+});
 
 
 // const createGradosTable = (year ) => {

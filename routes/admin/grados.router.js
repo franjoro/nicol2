@@ -29,5 +29,8 @@ router.post('/assingMaestro',  grados.assingMaestroGrado);
 router.post('/assingEstudiantes',  grados.assingEstudiantesGrado);
 
 
+/* PUT Actualizar el estado de los permisos de edición individuales */
+router.put('/edicion',  grados.edicionIndividual);
+
 
 module.exports = router;

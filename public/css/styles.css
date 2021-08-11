@@ -2080,7 +2080,7 @@ progress {
   --bs-table-hover-bg: rgba(224, 229, 236, 0.25);
   width: 100%;
   margin-bottom: 1rem;
-  color: #69707a;
+  /* color: #69707a; */
   vertical-align: top;
   border-color: #e0e5ec;
 }

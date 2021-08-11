@@ -1,113 +1,153 @@
 <%- include('../../partials/header.ejs'); %>
-<div id="layoutSidenav_content">
-  <main>
-    <header class="page-header page-header-dark bg-primary pb-10">
-      <div class="container-xl px-4">
-        <div class="page-header-content pt-4">
-          <div class="row align-items-center justify-content-between">
-            <div class="col-auto mt-4">
-              <h1 class="page-header-title">
-                <div class="page-header-icon">
-                  <i data-feather="calendar"></i>
+  <div id="layoutSidenav_content">
+    <main>
+      <header class="page-header page-header-dark bg-primary pb-10">
+        <div class="container-xl px-4">
+          <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-auto mt-4">
+                <h1 class="page-header-title">
+                  <div class="page-header-icon">
+                    <i data-feather="calendar"></i>
+                  </div>
+                  Años - Información actual: <%=dataActual.year %> Bimestre # <%=dataActual.Role %> 
+                </h1>
+                <div class="page-header-subtitle">
+                  Visualiza el catálogo de años disponibles
                 </div>
-                Años
-              </h1>
-              <div class="page-header-subtitle">
-                Visualiza el catálogo de años disponibles
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
-    <!-- Main page content-->
-    <div class="container-xl px-4 mt-n10">
-      <div class="card card-header-actions mb-4">
-        <div class="card-header p-5">
-          Años
-          <button
-            class="btn btn-md btn-warning"
-            type="button"
-            data-toggle="modal"
-            data-target="#agregarAno"
-          >
-            Agregar año
-          </button>
-        </div>
-        <div class="card-body">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Año</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Bimestre Activo</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-            <% years.forEach( (year)=> {   %>
-              <tr>
-                <th scope="row"><%= year.year %></th>
-                <td class="text-<%= year.color %>"><%= year.estadoText %></td>
-                <td scope="row">Bimestre #<%= year.bimestreActivo %></td>
-                <td style="width: 30%;">
-                  <button class="btn btn-danger">
-                    <i class="me-2" data-feather="trash-2"></i>Eliminar
-                  </button>
-                </td>
-              </tr>
-            <%})%>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <div
-    class="modal fade"
-    id="agregarAno"
-    tabindex="-1"
-    aria-labelledby="agregarAno"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="agregarAno">Agregar Año</h5>
-          <button
-            type="button"
-            class="btn btn-light"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true"><i data-feather="x"></i></span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="formYear">
-            <div class="form-group">
-              <label for="exampleInputEmail1">Nombre del año</label>
-              <input
-                type="email"
-                class="form-control"
-                id="yearInputId"
-                name="yearName"
-                placeholder="Ejemplo: 2021"
-                aria-describedby="emailHelp"
-              />
+      </header>
+      <!-- Main page content-->
+      <div class="container-xl px-4 mt-n10">
+        <div class="card card-header-actions mb-4">
+          <div class="card-header p-5">
+            Años
+            <div>
+              <button class="btn btn-md btn-primary" type="button" data-toggle="modal" data-target="#settings"> <i
+                  class="me-2" data-feather="settings"></i>
+                Configurar año y bimestres activos
+              </button>
+              <button class="btn btn-md btn-success" type="button" data-toggle="modal" data-target="#agregarAno"><i
+                  class="me-2" data-feather="plus"></i>
+                Agregar año
+              </button>
             </div>
-          </form>
+          </div>
+          <div class="card-body">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Año</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% years.forEach( (year)=> { %>
+                  <tr>
+                    <th scope="row">
+                      <%= year.year %>
+                    </th>
+                    <td class="text-<%= year.color %>">
+                      <%= year.estadoText %>
+                    </td>
+                    <td style="width: 30%;">
+                      <button class="btn btn-danger">
+                        <i class="me-2" data-feather="trash-2"></i>Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  <%})%>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Cancelar
-          </button>
-          <button type="button" class="btn btn-primary" id="btnGuardarForm">Guardar</button>
+      </div>
+    </main>
+
+    <div class="modal fade" id="agregarAno" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="agregarAno">Agregar Año</h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formYear">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Nombre del año</label>
+                <input type="email" class="form-control" id="yearInputId" name="yearName" placeholder="Ejemplo: 2021"
+                  aria-describedby="emailHelp" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarForm">Guardar</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <%- include('../../partials/footer.ejs'); %>
-  <script src="/static/js/alertas.js"></script>
-  <script src="/static/js/admin/catalogos/years/years.js"></script>
+
+
+
+    <div class="modal fade" id="settings" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="agregarAno">Configurar año y bimestre activos</h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formSettings">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Seleccionar el año activo</label>
+                      <select name="year" id="year" class="form-control">
+                        <option selected disabled>Seleccionar año activo</option>
+                          <% years.forEach( (year)=> { %>
+                            <option value="<%= year.year %>"><%= year.year %></option>
+                          <% }) %>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Seleccionar el bimestre activo</label>
+                      <select name="bimestre" id="bimestre" class="form-control">
+                        <option selected disabled>Seleccionar bimestre activo</option>
+                        <option value="1">Bimestre #1</option>
+                        <option value="2">Bimestre #2</option>
+                        <option value="3">Bimestre #3</option>
+                        <option value="4">Bimestre #4</option>
+                      </select>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarSettings">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <%- include('../../partials/footer.ejs'); %>
+      <script src="/static/js/alertas.js"></script>
+      <script src="/static/js/admin/catalogos/years/years.js"></script>

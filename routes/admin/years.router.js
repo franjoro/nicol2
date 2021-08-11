@@ -13,5 +13,9 @@ router.get('/',  years.main);
 router.post('/',  years.createNewYear);
 
 
+/* POST Configuración de año y bimestre */
+router.post('/settings',  years.settings);
+
+
 
 module.exports = router;

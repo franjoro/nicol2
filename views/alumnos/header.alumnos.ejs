@@ -71,7 +71,7 @@
                                         <div class=" text-center">
                                             <img class="img-account-profile rounded-circle mb-2" src="/static/assets/img/illustrations/profiles/profile-1.png" alt="" />
                                             <!-- Nombre -->
-                                            <h1 class="text-primary p-3">Aaron Alberto Acebedo Blandon</h1>
+                                            <h1 class="text-primary p-3"><%= dataAlumno.Nombre +" "+ dataAlumno.Apellido%></h1>
                                         </div>
                                         <div class="px-3">
                                             <h5 class="mb-0 mt-5">Información personal</h5>
@@ -82,7 +82,7 @@
                                                     <i class="me-1" data-feather="map"></i>
                                                     Grado
                                                 </p>
-                                                <h5 class="card-title mb-4">Tercero A</h5>
+                                                <h5 class="card-title mb-4"><%= dataAlumno.nombreGrado %></h5>
                                             </div>
                                             <!-- Codigo -->
                                             <div>
@@ -90,7 +90,7 @@
                                                     <i class="me-1" data-feather="map"></i>
                                                     Código
                                                 </p>
-                                                <h5 class="card-title mb-2">AAAB17-140812</h5>
+                                                <h5 class="card-title mb-2"><%= dataAlumno.carnet %></h5>
                                             </div>
                                         </div>
                                     </div>

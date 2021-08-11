@@ -1,12 +1,12 @@
-<%- include('header.alumnos.ejs'); %>
-    <div id="conducta">
+<%- include('header.alumnos.ejs', dataAlumno); %>
+    <div id="conducta" >
         <div class="row mt-5">
             <div class="col-lg-6 mb-4">
                 <!-- Billing card 1-->
                 <div class="card h-100 border-start-lg border-start-primary">
                     <div class="card-body">
                         <div class="small text-muted">Puntaje</div>
-                        <div class="h3">100</div>
+                        <div class="h3"><%= dataAlumno.puntaje %></div>
                     </div>
                 </div>
             </div>
@@ -20,158 +20,89 @@
                 </div>
             </div>
         </div>
-        <table class="table table-bordered table-hover my-5">
+        <span>Códigos aplicados:</span>
+        <table class="table table-bordered table-hover my-2">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Código aplicado</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Descripción del maestro: </th>
                 </tr>
             </thead>
             <tbody>
+
+                <% codigosAplicados.forEach( codigo =>   {    %>
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td><%= codigo.Codigo %></td>
+                    <td><%= codigo.valor %></td>
+                    <td><%= codigo.Observacion %></td>
                 </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
+                <%})%>
+
             </tbody>
         </table>
     </div>
-    <div id="observaciones" class="d-none">
-        <table class="table table-bordered table-hover my-5">
+    <div id="observaciones" class="d-none" >
+        <span>Observaciones:</span>
+        <table class="table table-bordered table-hover my-2">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Maestro</th>
+                    <th scope="col">Descripción de la observación</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
+                <% observaciones.forEach( obs =>   {    %>
+                    <tr>
+                        <td><%= obs.NombreMaestro %></td>
+                        <td><%= obs.descripcion %></td>
+                    </tr>
+                    <%})%>
             </tbody>
         </table>
     </div>
-    <div id="notas" class="d-none">
+    <div id="notas" class="d-none" >
         <!-- Materia -->
-        <div class="card card-header-actions my-4">
-            <div class="card-header bg-primary">
-                <h4 class="text-light my-0">Educación para AEP</h4>
-                <button class="btn btn-sm btn-teal" type="button">ver más</button>
-            </div>
-            <div class="card-body px-0">
-                <div class="d-flex align-items-center justify-content-between px-4">
-                    <table class="table table-bordered table-hover my-2">
-                        <thead>
-                            <tr>
-                                <th scope="col">Perfil</th>
-                                <th scope="col">descripción</th>
-                                <th scope="col">Porcentaje</th>
-                                <th scope="col">Nota</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
 
-        <!-- Materia -->
-        <div class="card card-header-actions my-4">
-            <div class="card-header bg-primary">
-                <h4 class="text-light my-0">Educación para AEP</h4>
-                <button class="btn btn-sm btn-teal" type="button">ver más</button>
-            </div>
-            <div class="card-body px-0">
-                <div class="d-flex align-items-center justify-content-between px-4">
-                    <table class="table table-bordered table-hover my-2">
-                        <thead>
-                            <tr>
-                                <th scope="col">Perfil</th>
-                                <th scope="col">descripción</th>
-                                <th scope="col">Porcentaje</th>
-                                <th scope="col">Nota</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
 
-        <!-- Materia -->
+        <%  dataOrdenada.forEach( materia=> {  %>
         <div class="card card-header-actions my-4">
             <div class="card-header bg-primary">
-                <h4 class="text-light my-0">Educación para AEP</h4>
-                <button class="btn btn-sm btn-teal" type="button">ver más</button>
+                <h4 class="text-light my-0"><%=materia.Nombre %></h4>
             </div>
             <div class="card-body px-0">
                 <div class="d-flex align-items-center justify-content-between px-4">
                     <table class="table table-bordered table-hover my-2">
                         <thead>
                             <tr>
-                                <th scope="col">Perfil</th>
+                                <th scope="col">Actividad</th>
                                 <th scope="col">descripción</th>
                                 <th scope="col">Porcentaje</th>
-                                <th scope="col">Nota</th>
+                                <th scope="col">Nota Obtenida</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+
+                            <%  materia.notas.forEach( nota=> {  %>
+                            <tr>    
+                                <% if(nota.RoleActivida == 1){ %> <td>Primer consolidado 30%</td> <% } %>
+                                <% if(nota.RoleActivida == 2){ %> <td>Segundo consolidado 30%</td> <% } %>
+                                <% if(nota.RoleActivida == 3){ %> <td>Examen 40%</td> <% } %>
+                                
+                                <td>  <%= nota.Titulo %>   </td>
+                                <% if(nota.RoleActivida == 1 ||  nota.RoleActivida == 2  ){ %> <td>30</td> <% } %>
+                                <% if(nota.RoleActivida == 3){ %> <td>40</td> <% } %>
+                                <td><%= nota.nota %>  </td>
                             </tr>
+                            
+                            <% }) %>
+
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <% }) %>
+
     </div>
     <%- include('footer.alumnos.ejs'); %>

@@ -6,7 +6,7 @@ var router = express.Router();
 router.use(authCheckAlumnos);
 
 
-router.get('/', alumnos.main);
+router.get('/:roleBimestre?', alumnos.main);
 
 
 module.exports = router;
