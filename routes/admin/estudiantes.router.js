@@ -21,4 +21,8 @@ router.get('/table',  estudiantes.loadTable);
 router.post('/getEstudiantes/:idGrado',  estudiantes.getEstudiantes);
 
 
+/* POST retorna JSON para select de alumnos  */
+router.post('/getEstudiantesAll/',  estudiantes.getEstudiantesAll);
+
+
 module.exports = router;

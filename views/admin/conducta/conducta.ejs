@@ -1,0 +1,136 @@
+<%- include('../partials/header.ejs'); %>
+
+  <!-- End Nav-->
+  <div id="layoutSidenav_content">
+    <main>
+      <header class="page-header page-header-dark bg-primary pb-10">
+        <div class="container-xl px-4">
+          <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-auto mt-4">
+                <h1 class="page-header-title">
+                  <div class="page-header-icon">
+                    <i data-feather="check-circle"></i>
+                  </div>
+                  Gestión de códigos de conducta
+                </h1>
+                <div class="page-header-subtitle">
+                  Visualiza los códigos de conducta aplicados
+                </div>
+                <!-- Selector de año-->
+                <div class="pt-4">
+                  <label for="exampleFormControlSelect1">Selecciona el bimestre que deseas visualizar</label>
+                  <div class="input-group input-group-joined">
+                    <span class="input-group-text">
+                      <i data-feather="calendar"></i>
+                    </span>
+                    <select class="form-control form-control-solid" id="selectBimestre">
+                      <option value="1">Bimestre #1</option>
+                      <option value="2">Bimestre #2</option>
+                      <option value="3">Bimestre #3</option>
+                      <option value="4">Bimestre #4</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Main page content-->
+      <div class="container-xl px-4 mt-n10">
+        <div class="card card-header-actions mb-4">
+          <div class="card-header p-5">
+            Códigos de conducta aplicados
+          </div>
+          <div class="card-body">
+            <table id="datatable">
+              <thead>
+                <tr>
+                  <th>Código Aplicado</th>
+                  <th>Estudiante</th>
+                  <th>Maestro</th>
+                  <th>Descripción</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% codigos.forEach( codigo=> { %>
+                  <tr>
+                    <td>
+                      <%= codigo.Codigo %>   <b>  ( Valor <%= codigo.valor %> )</b>
+                    </td>
+                    <td>
+                      <%= codigo.NombreAlumno %>
+                    </td>
+                    <td>
+                      <%= codigo.NombreMaestro %>
+                    </td>
+                    <td>
+                      <%= codigo.Observacion %>
+                    </td>
+                    <td class="col-md-4">
+                      <button class="btn btn-danger">
+                        <i class="me-2" data-feather="trash-2"></i>Eliminar
+                      </button>
+                    </td>
+                    <%})%>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="modal fade" id="agregarAno" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="agregarAno">Agregar código</h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formCodigos">
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <label for="codigoInput">Texto del código</label>
+                  <input type="email" required class="form-control" id="codigoInput" name="codigoInput"
+                    placeholder="Ejemplo: Platica mucho en clase" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="selectCodigo">Acción</label>
+                  <select name="accionCodigo" required class="form-control" id="selectCodigo">
+                    <option selected disabled> Seleccione acción del código</option>
+                    <option value="+">El código SUMARA</option>
+                    <option value="-">El código RESTARA</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="exampleInputEmail1">Valor</label>
+                  <input type="number" min="0" required class="form-control" id="value" name="valor" placeholder="0" />
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<input type="hidden" id="roleBimestre" value="<%= roleBimestre %>">
+
+    <%- include('../partials/footer.ejs'); %>
+      <script src="/static/js/alertas.js"></script>
+      <script src="/static/js/admin/conducta/conducta.js"></script>

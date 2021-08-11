@@ -12,6 +12,8 @@ const rutaUsuarios = require('./usuarios.router');
 const rutaMaestros = require('./maestros.router');
 const rutaciclos = require('./ciclos.router');
 const rutaCodigos= require('./codigos.router');
+const rutaConducta= require('./conducta.router');
+const rutaNotas= require('./notas.router');
 const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
@@ -28,5 +30,7 @@ router.use('/usuarios', rutaUsuarios);
 router.use('/maestros', rutaMaestros);
 router.use('/ciclos', rutaciclos);
 router.use('/codigos', rutaCodigos);
+router.use('/conducta', rutaConducta);
+router.use('/notas', rutaNotas);
 
 module.exports = router;

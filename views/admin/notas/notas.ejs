@@ -1,0 +1,106 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<%- include('../partials/header.ejs'); %>
+  <!-- End Nav-->
+  <div id="layoutSidenav_content">
+    <main>
+      <header class="page-header page-header-dark bg-primary pb-10">
+        <div class="container-xl px-4">
+          <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-auto mt-4">
+                <h1 class="page-header-title">
+                  <div class="page-header-icon">
+                    <i data-feather="check-circle"></i>
+                  </div>
+                  Gestión de códigos de conducta
+                </h1>
+                <div class="page-header-subtitle">
+                  Visualiza los códigos de conducta aplicados
+                </div>
+                <!-- Selector de año-->
+                <div class="pt-4">
+                  <label for="exampleFormControlSelect1">Selecciona el bimestre que deseas visualizar</label>
+                  <div class="input-group input-group-joined">
+                    <span class="input-group-text">
+                      <i data-feather="calendar"></i>
+                    </span>
+                    <select class="form-control form-control-solid" id="selectBimestre">
+                      <option value="1">Bimestre #1</option>
+                      <option value="2">Bimestre #2</option>
+                      <option value="3">Bimestre #3</option>
+                      <option value="4">Bimestre #4</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Main page content-->
+      <div class="container-xl px-4 mt-n10">
+
+
+
+        <div class="card">
+          <div class="card-header">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                  aria-selected="true">Ver notas por alumno</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                  aria-controls="profile" aria-selected="false">Ver notas por grado</a>
+              </li>
+            </ul>
+
+
+
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="cardPillContent">
+              <div class="tab-pane fade show active" id="home" aria-labelledby="overview-pill">
+                <label>Seleccione alumno para ver notas</label>
+                <select name="" id="selectEstudiantes" class="form-control"></select>
+                <div id="notasAlumno"></div>
+              </div>
+              <div class="tab-pane fade" id="profile" aria-labelledby="example-pill">
+
+                <div class="pt-1">
+                  <label>Selecciona el grado que desea visualizar</label>
+                  <div class="input-group input-group-joined">
+                    <span class="input-group-text">
+                      <i data-feather="users"></i>
+                    </span>
+                    <select class="form-control form-control-solid">
+                      <option value="1">Bimestre #1</option>
+                      <option value="2">Bimestre #2</option>
+                      <option value="3">Bimestre #3</option>
+                      <option value="4">Bimestre #4</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+
+    <input type="hidden" id="roleBimestre" value="<%= roleBimestre %>">
+    <input type="hidden" id="idBimestre" value="<%= idBimestre %>">
+
+
+    <%- include('../partials/footer.ejs'); %>
+      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
+      <script src="/static/js/alertas.js"></script>
+      <script src="/static/js/admin/notas/notas.js"></script>
