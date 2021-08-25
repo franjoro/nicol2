@@ -1,0 +1,55 @@
+<%- include('../partials/header.ejs'); %>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-primary pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="user"></i></div>
+                                    Matriculas registradas estudiante : <%= Nombre +' '+ Apellido%>
+                                </h1>
+                                <div class="page-header-subtitle">
+                                    Visualiza toda la información del alumno seleccionado
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <div>
+                            <a href="/admin/estudiantes" class="btn btn-sm btn-primary" >
+                                Volver Atrás
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Matricula Año</th>
+                                    <th>Ver información</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <% matriculas.forEach( matricula=> {   %>
+                                    <tr>
+                                        <td><%= matricula.idYear%></td>
+                                        <td> <a class="btn btn-success" href="/admin/estudiantes/vermatricula/<%= matricula.id%>"> Ver información</a> </td>
+                                    </tr>
+                                <%})%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer.ejs'); %>
+            <script src="/static/js/alertas.js"></script>
+    </div>

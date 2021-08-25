@@ -1,0 +1,213 @@
+<%- include('header.maestros.ejs'); %>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="user-plus"></i></div>
+                                    Registro de matricula
+                                </h1>
+                                <div class="page-header-subtitle">Rellene la información del alumno para matricula del año <%= year %> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        Registro de matricula antiguo y nuevo ingreso
+                    </div>
+                    <div class="card-body">
+
+                        <form id="formMatricula" enctype="multipart/form-data">
+                            <input type="hidden" name="idYear" value="<%= year %>">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Carnet o código identificador</label>
+                                    <input type="text" class="form-control" id="carnet" name="carnet"
+                                        autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Nombres</label>
+                                    <input type="text" class="form-control" id="Nombres" name="Nombres"
+                                        autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Apellidos</label>
+                                    <input type="text" class="form-control" id="Apellidos" name="Apellidos"
+                                        autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Correo electrónico</label>
+                                    <input type="email" class="form-control" id="EmailMain" name="EmailMain"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-5">
+                                    <label>Dirección</label>
+                                    <input type="text" class="form-control" id="Direccion" name="Direccion"
+                                        autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Sexo</label>
+                                    <select name="Sexo" id="Sexo" class="form-control">
+                                        <option selected disabled>Seleccione</option>
+                                        <option value="0">Masculino</option>
+                                        <option value="1">Femenino</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Télefono</label>
+                                    <input type="text" class="form-control" id="Tel" name="Tel"
+                                        autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Fecha de nacimiento</label>
+                                    <input type="date" class="form-control" id="FechaNac" name="FechaNac"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos personales madre
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" id="NombreMadre" name="NombreMadre"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Cédula</label>
+                                                    <input type="text" class="form-control" id="CedulaMadre" name="CedulaMadre"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Teléfono</label>
+                                                    <input type="tel" class="form-control" id="TelMadre" name="TelMadre"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" id="EmailMadre" name="EmailMadre"
+                                                        autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos personales padre
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Cédula</label>
+                                                    <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Teléfono</label>
+                                                    <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" id="EmailPadre" name="EmailPadre"
+                                                        autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="card">
+                                <div class="card-header">
+                                    Detalles familiares
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>El alumno vive con : </label>
+                                            <select name="ViveCon" id="ViveCon" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                                <option value="Ambos padres">Ambos padres</option>
+                                                <option value="Solo con papá">Solo con papá</option>
+                                                <option value="Solo con mamá">Solo con mamá</option>
+                                                <option value="Con otro tipo de familiar">Con otro tipo de familiar</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Situación de los padres</label>
+                                            <select name="SiticionPadres" id="SiticionPadres" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                                <option value="Padres Divorciados">Padres Divorciados</option>
+                                                <option value="Padres en unión sentimental">Padres en unión sentimental</option>
+                                                <option value="Padres en unión civil">Padres en unión civil</option>
+                                                <option value="Padres en unión religiosa">Padres en unión religiosa</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Resposabilidad económica</label>
+                                            <select name="ResEcono" id="ResEcono" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                                <option value="Ambos padres">Ambos padres</option>
+                                                <option value="Solo de papá">Solo de papá</option>
+                                                <option value="Solo de mamá">Solo de mamá</option>
+                                                <option value="Con otro tipo de familiar">Con otro tipo de familiar</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                                            <label>¿Alumnos familiares? ( Si no tiene dejar vacío) </label>
+                                            <select name="Familiares[]" multiple id="Familiares" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                            </select>
+                                        </div> -->
+                                        <div class="col-md-6">
+                                            <label>Seleccione el grado a matricularse</label>
+                                            <select name="idGrado" id="idGrado" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                                <% grados.forEach( grado=> {   %>
+                                                   <option value="<%= grado.id %>"><%= grado.nombre %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Seleccione fotografía</label> 
+                                            <input type="file" name="imagen" class="form-control" id="imagen">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </form>
+                        <button class="btn btn-success btn-lg" id="btnGuardar" >Registrar matricula</button>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        
+        <%- include('footer.maestros.ejs'); %>
+        <script src="/static/js/alertas.js"></script>
+        <script src="/static/js/maestros/matricula.js"></script>

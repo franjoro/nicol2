@@ -25,4 +25,11 @@ router.post('/getEstudiantes/:idGrado',  estudiantes.getEstudiantes);
 router.post('/getEstudiantesAll/',  estudiantes.getEstudiantesAll);
 
 
+/* GET Pantalla de matriculas  */
+router.get('/matriculas/:idAlumno',  estudiantes.getMatriculas);
+
+/* GET Pantalla de matriculas  */
+router.get('/vermatricula/:idMatricula',  estudiantes.viewMatricula);
+
+
 module.exports = router;

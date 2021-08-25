@@ -6,15 +6,14 @@ grados.main = async (req, res) => {
     try {
         let { year: yearActivo } = req.params;
         if (!yearActivo) {
-            year = await pool.query(
-                "SELECT year AS yearActivo FROM year WHERE estado = 1"
-            );
+            year = await pool.query("SELECT year AS yearActivo FROM year WHERE estado = 1");
             yearActivo = year[0].yearActivo;
         }
         const {
             [0]: years,
             [1]: grados,
             [2]: ciclos,
+            [3]: yearToAdd,
         } = await Promise.all([
             pool.query("SELECT year, estado FROM year ORDER BY year DESC"),
             pool.query(
@@ -22,8 +21,10 @@ grados.main = async (req, res) => {
                 [yearActivo]
             ),
             pool.query("SELECT id, Nombre FROM ciclos"),
+            pool.query("SELECT year FROM year WHERE year>=(SELECT year FROM year WHERE estado = 1)"),
+
         ]);
-        res.render("./admin/grados/grados", { years, grados, ciclos });
+        res.render("./admin/grados/grados", { years, grados, ciclos , yearToAdd , yearActivo});
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -91,10 +92,7 @@ grados.detalleGrado = async (req, res) => {
 
 grados.addNewGrado = async (req, res) => {
     try {
-        const { NombreCurso, idCiclo } = req.body;
-        const {
-            [0]: { year },
-        } = await pool.query("SELECT year FROM year WHERE estado  = 1");
+        const { NombreCurso, idCiclo, year } = req.body;
         const { insertId } = await pool.query(
             "INSERT INTO grados(nombre , idCiclo, idYear ) VALUES(? , ? ,? )",
             [NombreCurso, idCiclo, year]

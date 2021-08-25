@@ -19,6 +19,17 @@ $("#btnGuardar").click( ()=> {
     if( !$("#NombreCurso").val() ||  !$("#idCiclo").val() ) return alertas.newErrorMessage("No se permiten espacios vacíos"); 
     $("#formGrados").submit();
 });
+
+
+
 $(document).ready( function () {
-    $('#datatable').DataTable();
+    // $('#datatable').DataTable();
+    const yearActivo = $("#yearActivo").val();
+    $("#selectorYear").val(yearActivo);
 } );
+
+$("#selectorYear").on("change", function(){
+    const value = $(this).val();
+    window.location = "/admin/grados/"+value;
+
+});

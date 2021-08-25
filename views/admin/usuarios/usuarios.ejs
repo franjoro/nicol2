@@ -31,6 +31,8 @@
                         <table id="datatable">
                             <thead>
                                 <tr>
+                                    <th class="d-none">data</th>
+                                    <th class="d-none">role</th>
                                     <th>Usuario</th>
                                     <th>Role</th>
                                     <th>Estado</th>
@@ -40,6 +42,8 @@
                             <tbody>
                                 <% usuarios.forEach((usuario)=> { %>
                                     <tr>
+                                        <td class="d-none"><%= usuario.Permisos %></td>
+                                        <td class="d-none"><%= usuario.Role %></td>
                                         <td>
                                             <%= usuario.Username %>
                                         </td>
@@ -50,7 +54,7 @@
                                             <%= usuario.Estado %>
                                         </td>
                                         <td class="col-md-4">
-                                            <button class="btn btn-primary btn-sm">
+                                            <button class="btn btn-primary btn-sm" id="btnPermisos">
                                                 <i class="me-2" data-feather="edit"></i>Ver permisos
                                             </button>
                                             <button class="btn btn-info btn-sm">
@@ -65,6 +69,45 @@
                 </div>
             </div>
         </main>
+
+
+
+        <div class="modal fade" id="modalMaestros" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Actualizar permisos usuario de tipo "Maestro" : <span id="textMaestros"></span> </h5>
+                        <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Permitir ingreso de matriculas</label>
+                                    <select class="form-control" name="selectMatricula" id="selectMatricula">
+                                        <option selected disabled>Seleccione</option>
+                                        <option value="true">Permitir</option>
+                                        <option value="false">No permitir</option>
+                                    </select>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarMaestros">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>
-            <script src="/static/js/admin/estudiantes/estudiantes.js"></script>
+            <script src="/static/js/admin/usuarios/usuarios.js"></script>

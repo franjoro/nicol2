@@ -1,8 +1,8 @@
-var express = require('express');
+const express = require('express');
 const { authCheckMaestros  } = require('../../middlewares/auth');
 const maestros = require('../../controllers/maestros/maestros.controller');
-var router = express.Router();
-
+const fileUpload = require("express-fileupload");
+const router = express.Router();
 
 // Validar sesión
 router.use(authCheckMaestros);
@@ -68,6 +68,22 @@ router.post('/notasAdd/', maestros.notasAdd );
 
 
 
+// =============================================== MATRICULAS
+
+// GET Ingreso de matriculas
+router.get('/matricula', maestros.matriculaView);
+
+// POST Registro de matriculas;
+router.post('/matricula', maestros.matriculaRegtistro);
+
+// POST Registro de imagen matricula;
+router.post('/img', fileUpload(), maestros.uploadImg);
+
+// GET datos del alumno en json para rellenar
+router.get('/matricula/:carnet', maestros.getDataAlumno);
+
+
+// =============================================== FIN MATRICULAS
 
 
 

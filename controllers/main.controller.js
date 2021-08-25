@@ -14,7 +14,7 @@ main.signin = async (req, res) => {
       // verificamos si existe el usuario y traemos data en caso si
       const {usuario , password}  = req.body ;
       const data = await pool.query(
-        "SELECT Username,Password,Estado,Role FROM usuarios WHERE Username = ? ",
+        "SELECT Username,Password,Estado,Role, Permisos FROM usuarios WHERE Username = ? ",
        [usuario]
       );
       // Error si no existe
@@ -27,7 +27,7 @@ main.signin = async (req, res) => {
       if (!(await desincriptar(password, data[0].Password)))
         return res.status(400).json({ error: "ERROR_PASSWORD", status: false });
       // Creamos JWT
-      const { Role } = data[0];
+      const { Role , Permisos} = data[0];
       let identificador;
       if(Role === 1 ) identificador = "admin";
       if(Role === 3 ){
@@ -37,7 +37,7 @@ main.signin = async (req, res) => {
       if(Role === 2 ){
         identificador = usuario;
       }
-      const payload = { identificador, Role, usuario };
+      const payload = { identificador, Role, usuario , Permisos };
       console.log(payload);
       const token = firmar(payload);
       res.cookie("token", token);

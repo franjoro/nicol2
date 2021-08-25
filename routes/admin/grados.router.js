@@ -13,7 +13,7 @@ router.get('/detalle/:idGrado',  grados.detalleGrado);
 router.get('/:year?',  grados.main);
 
 
-/* POST Agregar nuevo modelo */
+/* POST Agregar nuevo grado  */
 router.post('/',  grados.addNewGrado);
 
 

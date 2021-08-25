@@ -45,14 +45,19 @@
                                 <div class="nav-link-icon text-white"><i data-feather="award"></i></div>
                                 Diario Pedagógico 
                             </a>  
-                            <a class="nav-link collapsed" href="grados.html">
+                            <!-- <a class="nav-link collapsed" href="grados.html">
                                 <div class="nav-link-icon text-white"><i data-feather="archive"></i></div>
                                 Reportes
-                            </a> 
-                            <a class="nav-link collapsed" href="javascript:void(0);">
+                            </a>  -->
+
+                            <% if( permisosSend.matricula) { %>
+                            <a class="nav-link collapsed" href="/maestros/matricula">
                                 <div class="nav-link-icon text-white"><i data-feather="clipboard"></i></div>
-                                Ingreso de Matrículas
-                            </a>                
+                                Ingreso de Matrículas 
+                            </a>    
+                            <%}%>
+                            
+                            
                             <div class="sidenav-menu-heading">Sesión</div>
                             <a class="nav-link collapsed" href="/">
                                 <div class="nav-link-icon"><i data-feather="log-out"></i></div>

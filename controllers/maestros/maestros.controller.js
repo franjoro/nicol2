@@ -1,12 +1,16 @@
 const { getUserDataByToken } = require("../../middlewares/auth");
 // const { sendEmail } = require("../../utils/mailer");
 const pool = require("../../models/db");
+const { upload } = require("../../utils/s3");
+const { adddUsuarioFunction } = require("../admin/usuarios.controller");
 
 const maestros = {};
 
 
 maestros.main = (req, res) => {
-    res.render('./maestros/main');
+    const { Permisos } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
+    res.render('./maestros/main', { permisosSend });
 };
 
 
@@ -19,10 +23,12 @@ maestros.blank = (req, res) => {
 
 maestros.conducta = async (req, res) => {
     try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
+        const { identificador, Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         // const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
         const asignaciones = await pool.query("SELECT idGrado , nombre FROM grados INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id WHERE idMaestro = ? GROUP BY nombre", [identificador]);
-        res.render('./maestros/conducta', { asignaciones });
+        res.render('./maestros/conducta', { asignaciones, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -33,7 +39,9 @@ maestros.conducta = async (req, res) => {
 
 maestros.conductaAlumnos = async (req, res) => {
     try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
+        const { identificador, Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const { idGrado } = req.params;
         const arrayPromesas = [
             await pool.query("SELECT Nombre FROM grados WHERE id = ?", [idGrado]),// Obtiene el nombre del grado;
@@ -41,7 +49,7 @@ maestros.conductaAlumnos = async (req, res) => {
             await pool.query("SELECT id, Codigo , valor , IF(valor >0 , 'success' , 'danger') AS color FROM codigos ORDER BY valor") // Obtiene todos los códigos existentes
         ];
         const { [0]: { [0]: { Nombre } }, [1]: alumnos, [2]: codigos } = await Promise.all(arrayPromesas);
-        res.render('./maestros/alumnosConducta', { Nombre, alumnos, codigos, identificador, idGrado });
+        res.render('./maestros/alumnosConducta', { Nombre, alumnos, codigos, identificador, idGrado, permisosSend });
 
     } catch (error) {
         console.log(error);
@@ -109,9 +117,11 @@ maestros.addObservacion = async (req, res) => {
 
 maestros.perfil = async (req, res) => {
     try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
+        const { identificador, Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado , materia_grado.id AS idUnion  FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
-        res.render('./maestros/perfilAcademico', { asignaciones });
+        res.render('./maestros/perfilAcademico', { asignaciones, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -121,6 +131,9 @@ maestros.perfil = async (req, res) => {
 
 maestros.perfilActividades = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const { idUnion } = req.params;
         const { [0]: { id, Role, idYear } } = await pool.query("SELECT id, Role, idYear FROM bimestres WHERE Estado = 1");
         const { [0]: dataGradoMateria } = await pool.query("SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion]);
@@ -133,7 +146,7 @@ maestros.perfilActividades = async (req, res) => {
         }
         const actividades = await Promise.all(arrayPromesas);
         const { [0]: bloqueos } = await pool.query(`SELECT  EstadoAct1, EstadoAct2, EstadoAct3 FROM materia_grado WHERE id= ? `, [idUnion]);
-        res.render('./maestros/perfilAcademicoActividades', { Role, idYear, actividades, bloqueos, idUnion, dataGradoMateria });
+        res.render('./maestros/perfilAcademicoActividades', { Role, idYear, actividades, bloqueos, idUnion, dataGradoMateria, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -143,12 +156,15 @@ maestros.perfilActividades = async (req, res) => {
 
 maestros.addPerfilView = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const { idUnion, Role } = req.params;
         let textoRole = "";
         if (Role == 1) textoRole = "Actividad 1 (30%)";
         if (Role == 2) textoRole = "Actividad 2 (30%)";
         if (Role == 3) textoRole = "Examen (40%)";
-        res.render('./maestros/perfilAcademicoAdd', { idUnion, Role, textoRole });
+        res.render('./maestros/perfilAcademicoAdd', { idUnion, Role, textoRole, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -193,9 +209,11 @@ maestros.addPerfil = async (req, res) => {
 
 maestros.notasViewMain = async (req, res) => {
     try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
+        const { identificador, Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado , materia_grado.id AS idUnion  FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
-        res.render('./maestros/mainNotas', { asignaciones });
+        res.render('./maestros/mainNotas', { asignaciones, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -205,6 +223,9 @@ maestros.notasViewMain = async (req, res) => {
 
 maestros.notasActividades = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const { idUnion } = req.params;
         const { [0]: { id, Role, idYear } } = await pool.query("SELECT id, Role, idYear FROM bimestres WHERE Estado = 1");
         const { [0]: dataGradoMateria } = await pool.query("SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion]);
@@ -216,7 +237,7 @@ maestros.notasActividades = async (req, res) => {
         }
         const actividades = await Promise.all(arrayPromesas);
         const { [0]: bloqueos } = await pool.query(`SELECT  EstadoAct1, EstadoAct2, EstadoAct3 FROM materia_grado WHERE id= ? `, [idUnion]);
-        res.render('./maestros/notasActividades', { Role, idYear, actividades, bloqueos, idUnion, dataGradoMateria });
+        res.render('./maestros/notasActividades', { Role, idYear, actividades, bloqueos, idUnion, dataGradoMateria, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -228,7 +249,9 @@ maestros.notasActividades = async (req, res) => {
 
 maestros.notasAlumnos = async (req, res) => {
     try {
-        // const { identificador } = getUserDataByToken(req.cookies.token).data;
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
         const { [0]: { id } } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
         const { idUnion, Role } = req.params;
         const { [0]: dataGradoMateria } = await pool.query("SELECT idGrado, (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion]);
@@ -271,7 +294,7 @@ maestros.notasAlumnos = async (req, res) => {
                 });
 
 
-                if ( boolean.includes(true)) {
+                if (boolean.includes(true)) {
                     console.log("entra");
                     if (acumulados.length != arrNota.length) {
                         for (let index = (arrNota.length + 1); index <= acumulados.length; index++) {
@@ -301,7 +324,7 @@ maestros.notasAlumnos = async (req, res) => {
             dataOrdenada.push(notaObtenida);
         });
         // console.log(notasAcumulados);
-        res.render('./maestros/notasAlumnos', { Role, idUnion, dataGradoMateria, Titulo, cantidad, dataOrdenada, acumulados });
+        res.render('./maestros/notasAlumnos', { Role, idUnion, dataGradoMateria, Titulo, cantidad, dataOrdenada, acumulados, permisosSend });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -315,13 +338,13 @@ maestros.notasAdd = async (req, res) => {
         const { data } = req.body;
         const arrdata = JSON.parse(data);
         const arrQueries = [];
-        
-        arrdata.forEach( valores =>{
-            if(valores.exist) {
+
+        arrdata.forEach(valores => {
+            if (valores.exist) {
                 arrQueries.push(
                     pool.query("UPDATE notas SET Nota = ? WHERE id=? AND idAlumno  = ? AND idAcumulado = ?", [valores.nota, valores.idnota, valores.alumno, valores.idacumulado])
                 );
-            }else{
+            } else {
                 arrQueries.push(
                     pool.query("INSERT INTO notas(Nota,idAlumno, idAcumulado) VALUES(?,?,?)", [valores.nota, valores.alumno, valores.idacumulado])
                 );
@@ -338,5 +361,94 @@ maestros.notasAdd = async (req, res) => {
     }
 };
 
+
+
+maestros.matriculaView = async (req, res) => {
+    try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+        if (!permisosSend.matricula) return res.send("NOT_ALLOWED");
+        const { [0]: { year } } = await pool.query("SELECT (year + 1 ) AS year FROM year WHERE estado = 1 ");
+        const grados = await pool.query("SELECT id, nombre FROM grados WHERE idYear = ?", [year]);
+
+
+        res.render('./maestros/matricula', { permisosSend, year, grados });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+maestros.matriculaRegtistro = async (req, res) => {
+    try {
+        const { carnet, idYear, idGrado, Nombres, Apellidos, Sexo, FechaNac, EmailMain } = req.body;
+
+        const promesas = [];
+        const { [0]: { cantidad } } = await pool.query("SELECT COUNT(*) AS cantidad FROM alumnos WHERE Carnet = ? ", [carnet]);
+        if (cantidad) {
+            //Alumno existente
+            promesas.push(
+               /* Registro de matricula*/  pool.query("INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ", [
+                carnet, idYear, JSON.stringify(req.body)
+            ]),
+               /* Registro de alumno en grado */  pool.query("INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ", [idGrado, carnet])
+            );
+        } else {
+            // Alumno no existe
+
+            await pool.query("INSERT INTO alumnos(Carnet, Nombre , Apellido, Genero , FechaNac , Email) VALUES(?,?,?,?,?,?)", [carnet, Nombres, Apellidos, Sexo, FechaNac, EmailMain]);
+            adddUsuarioFunction({ user: carnet, passwordPlain: carnet, role: 2 });
+
+            promesas.push(
+                /* Registro de matricula*/  pool.query("INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ", [
+                carnet, idYear, JSON.stringify(req.body)
+            ]),
+                /* Registro de alumno en grado */  pool.query("INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ", [idGrado, carnet])
+            );
+        }
+        const { [0]: { insertId } } = await Promise.all(promesas);
+
+        res.json({ status: true , insertId});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+
+maestros.getDataAlumno = async (req, res) => {
+    try {
+        const { carnet } = req.params;
+        const data = await pool.query("SELECT * FROM alumnos WHERE Carnet = ?", [carnet]);
+        res.json(data);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+maestros.uploadImg = async (req, res) => {
+    try {
+        const { idAlumno, idMatricula } = req.body;
+        const ext = formatExtension(req.files.imagen.name.split("."));
+        const fileContent = Buffer.from(req.files.imagen.data, "binary");
+        const s3key = await upload(fileContent, `alumnos/${idAlumno}/${Date.now()}.${ext}`);
+        await pool.query("UPDATE matriculas SET s3Key = ? WHERE id = ?" , [s3key.key, idMatricula]);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+const formatExtension = (ext) => {
+    ext = ext[ext.length - 1].toLowerCase();
+    if (ext == "jpg") ext = "jpeg";
+    return ext;
+};
 
 module.exports = maestros;

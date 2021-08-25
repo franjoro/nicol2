@@ -33,8 +33,8 @@ const loadTable = () => {
             { data: "FechaNac" },
             { data: "Email" },
             {
-                "render": function () {
-                    const html = `<button class="btn btn-danger">Eliminar</button>`;
+                "render": function (data, type, row) {
+                    const html = `<a href="/admin/estudiantes/matriculas/${row.Carnet}" class="btn btn-primary btn-sm">Ver matriculas</a>`;
                     return html;
                 }
             },

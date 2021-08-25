@@ -11,6 +11,25 @@ estudiantes.main = async (req , res) => {
     }
 };
 
+
+estudiantes.getMatriculas = async (req , res) => {
+    try {
+        const {idAlumno} = req.params;
+
+        const {[0]: {Nombre, Apellido}} = await pool.query("SELECT Nombre, Apellido FROM alumnos WHERE Carnet = ? ", [idAlumno]);
+        const matriculas = await pool.query("SELECT id, idYear FROM matriculas WHERE idAlumno = ? ", [idAlumno]);
+
+
+        console.log(matriculas);
+
+        res.render('./admin/estudiantes/matriculas', {Nombre, Apellido , matriculas});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error }); 
+    }
+};
+
+
 estudiantes.loadTable = async (req, res) => {
     const data = await pool.query("SELECT Carnet, Nombre, Apellido, FechaNac, Email , IF(Genero=0 , 'Hombre', 'Mujer') AS Genero FROM alumnos ");
     res.json({ data });
@@ -61,6 +80,24 @@ estudiantes.getEstudiantesAll = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(400).json({ error });
+    }
+};
+
+
+
+estudiantes.viewMatricula = async (req , res) => {
+    try {
+        const {idMatricula} = req.params;
+
+        const {[0]: matriculas} = await pool.query("SELECT * FROM matriculas WHERE id = ? ", [idMatricula]);
+
+        const datos = JSON.parse(matriculas.data);
+        console.log(datos);
+
+        res.render('./admin/estudiantes/vermatricula', {datos});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error }); 
     }
 };
 

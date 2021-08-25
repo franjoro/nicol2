@@ -5,7 +5,7 @@ const { encriptar } = require("../../utils/decrypt");
 usuarios.main = async (req, res) => {
     try {
         const usuarios = await pool.query(
-            "SELECT Username,  CASE WHEN Role = 1 THEN 'Administrador' WHEN Role = 2 THEN 'Estudiante' WHEN Role = 3 THEN 'Maestro' END AS RoleText, IF(Estado = 1 , 'Activo', 'Inactivo') AS Estado FROM usuarios"
+            "SELECT Username,  CASE WHEN Role = 1 THEN 'Administrador' WHEN Role = 2 THEN 'Estudiante' WHEN Role = 3 THEN 'Maestro' END AS RoleText, IF(Estado = 1 , 'Activo', 'Inactivo') AS Estado, Permisos , Role FROM usuarios"
         );
         res.render("./admin/usuarios/usuarios", { usuarios });
     } catch (error) {
@@ -26,6 +26,18 @@ usuarios.adddUsuarioFunction =  ( async data =>{
 usuarios.addUsuario = async (req, res) => {
     try {
         usuarios.adddUsuarioFunction(req.body);
+        return res.json({status : true});
+    } catch (err) {
+        if (err.sqlState)return res.status(400).json({ error: "SQL ERROR", data: err.sqlMessage });
+        return res.json(err);
+    }
+};
+
+
+usuarios.updatePermisos = async (req, res) => {
+    try {
+        const {idUsuario, permisos} = req.body;
+        await pool.query("UPDATE usuarios SET Permisos = ? WHERE Username = ?", [permisos , idUsuario]);
         return res.json({status : true});
     } catch (err) {
         if (err.sqlState)return res.status(400).json({ error: "SQL ERROR", data: err.sqlMessage });

@@ -18,7 +18,7 @@
                                     <span class="input-group-text">
                                         <i data-feather="calendar"></i>
                                     </span>
-                                    <select class="form-control form-control-solid" id="exampleFormControlSelect1">
+                                    <select class="form-control form-control-solid" id="selectorYear">
                                         <% years.forEach( year=> {%>
                                         <option><%= year.year%></option>
                                         <%  })  %>
@@ -67,7 +67,7 @@
 
 
     <div class="modal fade" id="modalGrados" tabindex="-1"  aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Agregar grado en año activo</h5>
@@ -78,12 +78,12 @@
                 <div class="modal-body">
                     <form id="formGrados">
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label>Nombre</label>
                                 <input type="text" class="form-control" id="NombreCurso" name="NombreCurso"
                                     autocomplete="off" />
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label>Ciclo educativo </label>
                                 <select class="form-control" name="idCiclo" id="idCiclo">
                                     <option selected disabled>Seleccione ciclo</option>
@@ -92,12 +92,18 @@
                                     <%  })  %>
                                 </select>
                             </div>
+                            <div class="form-group col-md-4">
+                                <label>Seleccionar año  </label>
+                                <select class="form-control" name="year" id="year">
+                                    <% yearToAdd.forEach( year=> {%>
+                                        <option value="<%= year.year %>"><%= year.year %></option>
+                                    <%  })  %>
+                                </select>
+                            </div>
                         </div>
                     </form>
-                    <small><b>Nota:</b> Los grados agregados serán asignados al año activo </small>
                 </div>
                 <div class="modal-footer">
-
                     <button type="button" class="btn btn-danger" data-dismiss="modal">
                         Cancelar
                     </button>
@@ -108,6 +114,9 @@
             </div>
         </div>
     </div>
+
+    <input type="hidden" id="yearActivo" value="<%=yearActivo%>">
+
 <%- include('../partials/footer.ejs'); %>
 <script src="/static/js/alertas.js"></script>
 <script src="/static/js/admin/grados/grados.js"></script>

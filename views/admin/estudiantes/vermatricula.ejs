@@ -1,0 +1,217 @@
+<%- include('../partials/header.ejs'); %>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-primary pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="user"></i></div>
+                                    Matriculas registrada 
+                                </h1>
+                                <div class="page-header-subtitle">
+                                    Visualiza toda la información del alumno seleccionado
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <div>
+                            <a href="/admin/estudiantes" class="btn btn-sm btn-primary" >
+                                Volver Atrás
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+
+
+
+                        <form id="formMatricula" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Carnet o código identificador</label>
+                                    <input type="text" class="form-control" id="carnet" name="carnet"
+                                        autocomplete="off" disabled value="<%= datos.carnet %>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Nombres</label>
+                                    <input type="text" class="form-control" id="Nombres" name="Nombres"
+                                        autocomplete="off" disabled value="<%= datos.Nombres %>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Apellidos</label>
+                                    <input type="text" class="form-control" id="Apellidos" name="Apellidos"
+                                        autocomplete="off" disabled value="<%= datos.Apellidos %>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Correo electrónico</label>
+                                    <input type="email" class="form-control" id="EmailMain" name="EmailMain"
+                                        autocomplete="off" disabled value="<%= datos.EmailMain %>">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-5">
+                                    <label>Dirección</label>
+                                    <input type="text" class="form-control" id="Direccion" name="Direccion"
+                                        autocomplete="off" disabled value="<%= datos.Direccion %>">
+                                </div>
+                                <!-- <div class="form-group col-md-2">
+                                    <label>Sexo</label>
+                                    <select name="Sexo" id="Sexo" class="form-control">
+                                        <option selected disabled>Seleccione</option>
+                                    </select>
+                                </div> -->
+                                <div class="form-group col-md-2">
+                                    <label>Télefono</label>
+                                    <input type="text" class="form-control" id="Tel" name="Tel"
+                                        autocomplete="off" disabled value="<%= datos.Tel %>">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Fecha de nacimiento</label>
+                                    <input type="date" class="form-control" id="FechaNac" name="FechaNac"
+                                        autocomplete="off" disabled value="<%= datos.FechaNac %>">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos personales madre
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" id="NombreMadre" name="NombreMadre"
+                                                        autocomplete="off" disabled value="<%= datos.NombreMadre %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Cédula</label>
+                                                    <input type="text" class="form-control" id="CedulaMadre" name="CedulaMadre"
+                                                        autocomplete="off" disabled value="<%= datos.CedulaMadre %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Teléfono</label>
+                                                    <input type="tel" class="form-control" id="TelMadre" name="TelMadre"
+                                                        autocomplete="off" disabled value="<%= datos.TelMadre %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" id="EmailMadre" name="EmailMadre"
+                                                        autocomplete="off" disabled value="<%= datos.EmailMadre %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos personales padre
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
+                                                        autocomplete="off" disabled value="<%= datos.NombrePadre %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Cédula</label>
+                                                    <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
+                                                        autocomplete="off" disabled value="<%= datos.CedulaPadre %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Teléfono</label>
+                                                    <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
+                                                        autocomplete="off" disabled value="<%= datos.TelPadre %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" id="EmailPadre" name="EmailPadre"
+                                                        autocomplete="off" disabled value="<%= datos.EmailPadre %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="card">
+                                <div class="card-header">
+                                    Detalles familiares
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>El alumno vive con : </label>
+                                            <select name="ViveCon" id="ViveCon" disabled class="form-control">
+                                                <option selected disabled value="null"><%= datos.ViveCon %></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Situación de los padres </label>
+                                            <select name="SiticionPadres" disabled id="SiticionPadres" class="form-control">
+                                                <option selected value="null"><%= datos.SiticionPadres %></option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Resposabilidad económica</label>
+                                            <select name="ResEcono" disabled id="ResEcono" class="form-control">
+                                                <option selected value="null"><%= datos.ResEcono %></option>
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                                            <label>¿Alumnos familiares? ( Si no tiene dejar vacío) </label>
+                                            <select name="Familiares[]" multiple id="Familiares" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                            </select>
+                                        </div> -->
+                                        <!-- <div class="col-md-6">
+                                            <label>Seleccione el grado a matricularse</label>
+                                            <select name="idGrado" id="idGrado" class="form-control">
+                                                <option selected value="null">Seleccione</option>
+                                            </select>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer.ejs'); %>
+            <script src="/static/js/alertas.js"></script>
+    </div>
