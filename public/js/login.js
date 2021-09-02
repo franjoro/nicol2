@@ -14,6 +14,7 @@ $("#loginForm").submit(async function (e) {
       }
     } catch (error) {
       swal.close();
+      if(error.responseJSON.error == "ERROR_ESTADO") return alertas.newErrorMessage("Usuario bloqueado, por favor comunicate con registro acádemico o la administración más cercana.");
       alertas.errorLogin();
     }
   });

@@ -29,9 +29,8 @@
                         </div>
                     </div>
                     <div class="card-body ">
-
-
-
+                        <img src="/static/<%= img %>" class="mx-auto d-block imgMatricula" >
+                        <hr>
                         <form id="formMatricula" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="form-group col-md-3">
@@ -80,7 +79,7 @@
                             </div>
                             <hr>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header">
                                             Datos personales madre
@@ -111,7 +110,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header">
                                             Datos personales padre
@@ -137,6 +136,37 @@
                                                     <label>Email</label>
                                                     <input type="email" class="form-control" id="EmailPadre" name="EmailPadre"
                                                         autocomplete="off" disabled value="<%= datos.EmailPadre %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos personales tutor
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
+                                                        autocomplete="off" disabled value="<%= datos.NombreTutor %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Cédula</label>
+                                                    <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
+                                                        autocomplete="off" disabled value="<%= datos.CedulaTutor %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Teléfono</label>
+                                                    <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
+                                                        autocomplete="off" disabled value="<%= datos.TelTutor %>">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" id="EmailPadre" name="EmailPadre"
+                                                        autocomplete="off" disabled value="<%= datos.EmailTutor %>">
                                                 </div>
                                             </div>
                                         </div>

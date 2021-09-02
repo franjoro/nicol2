@@ -5,7 +5,7 @@ const { encriptar } = require("../../utils/decrypt");
 usuarios.main = async (req, res) => {
     try {
         const usuarios = await pool.query(
-            "SELECT Username,  CASE WHEN Role = 1 THEN 'Administrador' WHEN Role = 2 THEN 'Estudiante' WHEN Role = 3 THEN 'Maestro' END AS RoleText, IF(Estado = 1 , 'Activo', 'Inactivo') AS Estado, Permisos , Role FROM usuarios"
+            "SELECT Username,  CASE WHEN Role = 1 THEN 'Administrador' WHEN Role = 2 THEN 'Estudiante' WHEN Role = 3 THEN 'Maestro' END AS RoleText, IF(Estado = 1 , 'Activo', 'Inactivo') AS Estado, Permisos , Role, Estado AS estadoNum FROM usuarios"
         );
         res.render("./admin/usuarios/usuarios", { usuarios });
     } catch (error) {
@@ -45,5 +45,28 @@ usuarios.updatePermisos = async (req, res) => {
     }
 };
 
+
+usuarios.updateEstado = async (req, res) => {
+    try {
+        const {idUsuario, estado} = req.body;
+        await pool.query("UPDATE usuarios SET Estado = ? WHERE Username = ?", [estado , idUsuario]);
+        return res.json({status : true});
+    } catch (err) {
+        if (err.sqlState)return res.status(400).json({ error: "SQL ERROR", data: err.sqlMessage });
+        return res.json(err);
+    }
+};
+
+
+usuarios.password = async (req, res) => {
+    const { newPass, idUsuario } = req.body; 
+    const newPassword = await encriptar(newPass);
+    try {
+      await pool.query("UPDATE usuarios SET Password = ? WHERE Username = ? ", [newPassword, idUsuario]);
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+  };
 
 module.exports = usuarios;

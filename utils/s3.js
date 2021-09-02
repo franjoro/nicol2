@@ -38,27 +38,28 @@ s3Functions.upload = (file, key) =>
 //   });
 
 
-// s3Functions.getFiles = (Key) =>
-//   new Promise(async (resolve, reject) => {
-//     const uploadParams = {
-//       Bucket: process.env.BUCKET,
-//       Key,
-//     };
-//     const fs = require("fs");
-//     keyarr = Key.split(".");
-//     try {
-//       s3.getObject(uploadParams, (err, data) => {
-//         if (err) throw err;
-//         const path = `./public/files/tmp/tmpfile.${keyarr[1]}`;
-//         fs.writeFile(path, data.Body, "Binary", (err) => {
-//           if (err) throw err;
-//           resolve(keyarr[1]);
-//         });
-//       });
-//     } catch (error) {
-//       resolve(error);
-//     }
-//   });
+s3Functions.getImgMatricula = (Key) =>
+  new Promise(async (resolve) => {
+    const uploadParams = {
+      Bucket: process.env.BUCKET,
+      Key,
+    };
+    const fs = require("fs");
+    keyarr = Key.split(".");
+    const idFile = Date.now();
+    try {
+      s3.getObject(uploadParams, (err, data) => {
+        if (err) throw err;
+        const path = `files/tmp/MatriculaView${idFile}.${keyarr[1]}`;
+        fs.writeFile(`./public/${path}`, data.Body, "Binary", (err) => {
+          if (err) throw err;
+          resolve({path, idFile});
+        });
+      });
+    } catch (error) {
+      resolve(error);
+    }
+  });
 
 
 module.exports = s3Functions;

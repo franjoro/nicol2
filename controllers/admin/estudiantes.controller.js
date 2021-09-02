@@ -1,5 +1,6 @@
 const estudiantes = {};
 const pool = require("../../models/db");
+const { getImgMatricula } = require("../../utils/s3");
 const {adddUsuarioFunction} = require('./usuarios.controller');
 
 estudiantes.main = async (req , res) => {
@@ -88,13 +89,10 @@ estudiantes.getEstudiantesAll = async (req, res) => {
 estudiantes.viewMatricula = async (req , res) => {
     try {
         const {idMatricula} = req.params;
-
         const {[0]: matriculas} = await pool.query("SELECT * FROM matriculas WHERE id = ? ", [idMatricula]);
-
         const datos = JSON.parse(matriculas.data);
-        console.log(datos);
-
-        res.render('./admin/estudiantes/vermatricula', {datos});
+        const img = await getImgMatricula(matriculas.s3Key);
+        res.render('./admin/estudiantes/vermatricula', {datos, img : img.path});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error }); 

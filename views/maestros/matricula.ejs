@@ -76,7 +76,7 @@
                             </div>
                             <hr>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header">
                                             Datos personales madre
@@ -107,31 +107,62 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header">
-                                            Datos personales padre
+                                            Datos personales madre
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <label>Nombre</label>
-                                                    <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
+                                                    <input type="text" class="form-control" id="NombreMadre" name="NombreMadre"
                                                         autocomplete="off">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>Cédula</label>
-                                                    <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
+                                                    <input type="text" class="form-control" id="CedulaMadre" name="CedulaMadre"
                                                         autocomplete="off">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>Teléfono</label>
-                                                    <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
+                                                    <input type="tel" class="form-control" id="TelMadre" name="TelMadre"
                                                         autocomplete="off">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>Email</label>
-                                                    <input type="email" class="form-control" id="EmailPadre" name="EmailPadre"
+                                                    <input type="email" class="form-control" id="EmailMadre" name="EmailMadre"
+                                                        autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos personales tutor
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" id="NombreTutor" name="NombreTutor"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Cédula</label>
+                                                    <input type="text" class="form-control" id="CedulaTutor" name="CedulaTutor"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Teléfono</label>
+                                                    <input type="tel" class="form-control" id="TelTutor" name="TelTutor"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Email</label>
+                                                    <input type="email" class="form-control" id="EmailTutor" name="EmailTutor"
                                                         autocomplete="off">
                                                 </div>
                                             </div>
@@ -182,7 +213,7 @@
                                                 <option selected value="null">Seleccione</option>
                                             </select>
                                         </div> -->
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label>Seleccione el grado a matricularse</label>
                                             <select name="idGrado" id="idGrado" class="form-control">
                                                 <option selected value="null">Seleccione</option>
@@ -191,7 +222,12 @@
                                                 <% }) %>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label>Condición de salud diagnosticada</label>
+                                            <input type="text" class="form-control" id="condicionMedica" name="condicionMedica"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="col-md-4">
                                             <label>Seleccione fotografía</label> 
                                             <input type="file" name="imagen" class="form-control" id="imagen">
                                         </div>

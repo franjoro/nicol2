@@ -11,4 +11,7 @@ router.get('/', CloseSession ,  main.main);
 /* POST Funcion login */
 router.post("/", main.signin);
 
+/* POST Funcion Cambiar contraseña */
+router.put("/", main.password);
+
 module.exports = router;

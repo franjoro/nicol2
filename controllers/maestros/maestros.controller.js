@@ -1,5 +1,5 @@
 const { getUserDataByToken } = require("../../middlewares/auth");
-// const { sendEmail } = require("../../utils/mailer");
+const { sendEmail } = require("../../utils/mailer");
 const pool = require("../../models/db");
 const { upload } = require("../../utils/s3");
 const { adddUsuarioFunction } = require("../admin/usuarios.controller");
@@ -63,25 +63,29 @@ maestros.addCodigo = async (req, res) => {
     try {
         const { identificador } = getUserDataByToken(req.cookies.token).data;
         const { idCodigo, idAlumno, descripcion, idGrado } = req.body;
-        const { [0]: { id, Role } } = await pool.query("SELECT id , Role FROM bimestres WHERE Estado = 1");
-        const { [0]: { valor } } = await pool.query("SELECT valor FROM codigos WHERE id = ?", idCodigo);
-        const columna = `Conducta${Role}`;
 
+
+        const { [0]: { [0]: { id, Role } } , [1]: { [0]: {valor, Codigo} } } = await Promise.all( [
+            pool.query("SELECT id , Role FROM bimestres WHERE Estado = 1"),
+            pool.query("SELECT valor, Codigo FROM codigos WHERE id = ?", idCodigo),
+        ]);
+        const columna = `Conducta${Role}`;
+        let {[0]: {puntaje}} = await pool.query(`SELECT ${columna} AS puntaje FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? ` , [idGrado, idAlumno]);
+
+        puntaje = Number(puntaje) + Number(valor);
+        if(puntaje>=100) puntaje = 100;  
         const promesas = [
             pool.query("INSERT INTO codigo_alumno(idCodigo, idAlumno , idMaestro , idBimestre , Observacion) VALUES(?,?,?,?,?)", [
                 idCodigo, idAlumno, identificador, id, descripcion
             ]),
-            pool.query(`UPDATE grado_alumno SET ${columna} = (${columna} + ? ) WHERE idGrado = ? AND idAlumno = ? `, [
-                valor, idGrado, idAlumno
+            pool.query(`UPDATE grado_alumno SET  ${columna} = ? WHERE idGrado = ? AND idAlumno = ? `, [
+                puntaje, idGrado, idAlumno
             ]),
         ];
-
         await Promise.all(promesas);
-
         res.json({ status: true });
-
-
-        // sendEmail('fral_98@outlook.com', 'Código de conducta aplicado' , '', '<h1>CODIGO DE CONDUCATA APLICADO</h1>');
+        
+        sendEmail('fral_98@outlook.com', `Código de conducta aplicado ${Date.now()}` , '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p>`);
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
