@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col-xl-4 mb-4">
                         <!-- Dashboard example card 1-->
-                        <a class="card lift h-100" href="#!">
+                        <a class="card lift h-100" href="/admin/notas">
                             <div class="card-body d-flex justify-content-center flex-column">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="me-3">
@@ -36,13 +36,13 @@
                     </div>
                     <div class="col-xl-4 mb-4">
                         <!-- Dashboard example card 2-->
-                        <a class="card lift h-100" href="#!">
+                        <a class="card lift h-100" href="/admin/grados">
                             <div class="card-body d-flex justify-content-center flex-column">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="me-3">
                                         <i class="feather-xl text-warning mb-3" data-feather="clipboard"></i>
-                                        <h5>Reporte de notas</h5>
-                                        <div class="text-muted small">Genera el reporte de notas de forma rápida</div>
+                                        <h5>Ver Grados</h5>
+                                        <div class="text-muted small">Visualiza los alumnos por grados</div>
                                     </div>
                                     <img src="/static/assets/img/illustrations/student.svg" alt="..." style="width: 8rem" />
                                 </div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-xl-4 mb-4">
                         <!-- Dashboard example card 3-->
-                        <a class="card lift h-100" href="#!">
+                        <a class="card lift h-100" href="/admin/conducta">
                             <div class="card-body d-flex justify-content-center flex-column">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="me-3">
@@ -77,9 +77,9 @@
                                 </div>
                                 <div class="col">
                                     <div class="card-body">
-                                        <h1 class="card-title">230</h5>
+                                        <h1 class="card-title"><%= alumnos %></h5>
                                         <p class="card-text">Estudiantes Registrados</p>
-                                        <a class="text-arrow-icon small text-warning" href="#!">
+                                        <a class="text-arrow-icon small text-warning" href="/admin/estudiantes">
                                             Ver todos los estudiantes
                                             <i data-feather="arrow-right"></i>
                                         </a>
@@ -96,10 +96,10 @@
                                 </div>
                                 <div class="col">
                                     <div class="card-body">
-                                        <h1 class="card-title">45</h5>
+                                        <h1 class="card-title"><%= maestros %></h5>
                                         <p class="card-text">Maestros registrados</p>
-                                        <a class="text-arrow-icon small text-teal" href="#!">
-                                            Ver todos los estudiantes
+                                        <a class="text-arrow-icon small text-teal" href="/admin/maestros">
+                                            Ver todos los maestros
                                             <i data-feather="arrow-right"></i>
                                         </a>
                                     </div>

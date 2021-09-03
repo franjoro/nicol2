@@ -14,6 +14,7 @@ const rutaciclos = require('./ciclos.router');
 const rutaCodigos= require('./codigos.router');
 const rutaConducta= require('./conducta.router');
 const rutaNotas= require('./notas.router');
+const rutaIndicadores= require('./indicadores.router');
 const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
@@ -22,6 +23,7 @@ router.use('/notas', rutaNotas);
 /* USE especificar las rutas competentes a los grados */
 router.use(authCheckAdmin);
 router.get('/', admin.main);
+router.delete('/', admin.delete);
 router.use('/years', rutaYears);
 router.use('/grados', rutaGrados);
 router.use('/materias', rutaMaterias);
@@ -32,5 +34,6 @@ router.use('/maestros', rutaMaestros);
 router.use('/ciclos', rutaciclos);
 router.use('/codigos', rutaCodigos);
 router.use('/conducta', rutaConducta);
+router.use('/indicadores', rutaIndicadores);
 
 module.exports = router;
