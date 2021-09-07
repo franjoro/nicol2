@@ -1,11 +1,11 @@
-$("#formCiclo").submit(async function (e) {
+$("#formModeloMateria").submit(async function (e) {
     e.preventDefault();
     const data = $(this).serialize();
     try {
         alertas.loaderAlert();
         const query = await $.ajax({
             type: "POST",
-            url: "/admin/ciclos",
+            url: "/maestros/indicadores",
             data: data,
         });
         if (query.status) return location.reload();
@@ -16,17 +16,17 @@ $("#formCiclo").submit(async function (e) {
 });
 
 $("#btnGuardar").click(() => {
-    if (!$("#isParvularia").val() || !$("#cicloName").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
-    $("#formCiclo").submit();
+    if (!$("#NombreMateriaInput").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+    $("#formModeloMateria").submit();
 });
+
 $(document).ready(function () {
     $('#datatable').DataTable();
 });
 
+
 $(".btnDelete").on("click", function () {
-    Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "No se pudo realizar la operación. Para eliminar un ciclo educativo debe hacerse vía base de datos",
-    });
+    const { id } = $(this).data();
+    console.log(id);
+    alertas.deleteAlertAjxMaestros("Eliminar indicador", "¿Desea eliminar el indicador y todo lo relacionado a esta información?", "indicadoresparvularia", "id", id);
 });

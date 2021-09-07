@@ -1,5 +1,6 @@
 var express = require('express');
 const notas = require('../../controllers/admin/notas.controller');
+const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
 var router = express.Router();
@@ -36,7 +37,7 @@ router.get('/getFile',  notas.openFile);
 
 
 /* PUT Actualizar nota */
-router.put('/',  notas.updateNota);
+router.put('/', authCheckAdmin  , notas.updateNota);
 
 
 /* GET Pantalla principal de notas */

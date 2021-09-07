@@ -46,3 +46,12 @@ $("#btnGuardarSettings").click( async()=> {
     const { isConfirmed } = await alertas.ConfirmAlert("¿Deseá actualizar la configuración de año y bimestre?", "Esto tendra repercuciones en los perfiles acádemicos, ingreso de notas y permisos de edición");
     if(isConfirmed) return $("#formSettings").submit();    
 });
+
+
+$(".btnDelete").on("click", function () {
+    Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No se pudo realizar la operación. Para eliminar un año debe hacerse vía base de datos" ,
+      });
+});

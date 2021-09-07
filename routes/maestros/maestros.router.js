@@ -1,5 +1,5 @@
 const express = require('express');
-const { authCheckMaestros  } = require('../../middlewares/auth');
+const { authCheckMaestros } = require('../../middlewares/auth');
 const maestros = require('../../controllers/maestros/maestros.controller');
 const fileUpload = require("express-fileupload");
 const router = express.Router();
@@ -10,6 +10,9 @@ router.use(authCheckMaestros);
 // GET Home de maestros 
 router.get('/', maestros.main);
 
+
+// DELETE 
+router.delete('/', maestros.delete);
 
 
 // =============================================== DIARIO PEDAGOGICO
@@ -34,7 +37,7 @@ router.post('/observacion', maestros.addObservacion);
 // GET Perfil academico ************************************************************************************************************* PENDIENTE A HACER CARDS MIENTRAS TABLA
 router.get('/perfil', maestros.perfil);
 
-// GET Perfil academico muestra las 3 actividades disponibles
+// GET Perfil academico muestra las 3 actividades disponibles o los indicadores de logro de parvularia
 router.get('/perfil/:idUnion', maestros.perfilActividades);
 
 // GET Panel para agregar actividad
@@ -53,14 +56,17 @@ router.post('/addPerfil/:idUnion/:Role', maestros.addPerfil);
 // GET Ingreso de notas************************************************************************************************************* PENDIENTE A HACER CARDS MIENTRAS TABLA
 router.get('/notas', maestros.notasViewMain);
 
-// GET Ingreso de notas actividades muestra las 3 actividades disponibles
+// GET Ingreso de notas actividades muestra las 3 actividades disponibles  O Ingreso de notas de parvularia
 router.get('/notas/:idUnion', maestros.notasActividades);
 
 // GET Muestra a los alumnos pertenecientes al grado
 router.get('/notasAdd/:idUnion/:Role', maestros.notasAlumnos);
 
 // POST Ingreso de notas;
-router.post('/notasAdd/', maestros.notasAdd );
+router.post('/notasAdd/', maestros.notasAdd);
+
+// POST Ingreso de notas Parvularia;
+router.post('/notasAddParvularia/', maestros.notasAddParv);
 
 
 
@@ -83,6 +89,15 @@ router.post('/img', fileUpload(), maestros.uploadImg);
 router.get('/matricula/:carnet', maestros.getDataAlumno);
 
 
+// =============================================== FIN MATRICULAS
+
+
+
+// =============================================== INDICADORES
+router.get('/indicadores', maestros.indicadores);
+
+/* POST Agregar nuevo indicador */
+router.post('/indicadores', maestros.newIndicadores);
 // =============================================== FIN MATRICULAS
 
 

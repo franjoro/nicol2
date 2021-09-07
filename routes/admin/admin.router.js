@@ -19,6 +19,7 @@ const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
 router.use('/notas', rutaNotas);
+router.use('/indicadores', rutaIndicadores);
 
 /* USE especificar las rutas competentes a los grados */
 router.use(authCheckAdmin);
@@ -34,6 +35,5 @@ router.use('/maestros', rutaMaestros);
 router.use('/ciclos', rutaciclos);
 router.use('/codigos', rutaCodigos);
 router.use('/conducta', rutaConducta);
-router.use('/indicadores', rutaIndicadores);
 
 module.exports = router;

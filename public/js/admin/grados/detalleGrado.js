@@ -186,7 +186,7 @@ $(".edicionBtn").on("click", async function () {
       const query = await $.ajax({
         type: "PUT",
         url: "/admin/grados/edicion",
-        data: {role, status, idunion},
+        data: { role, status, idunion },
       });
       swal.close();
       if (query.status) return location.reload();

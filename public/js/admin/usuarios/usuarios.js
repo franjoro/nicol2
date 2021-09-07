@@ -35,11 +35,13 @@ const savePermisos = async (idUsuario) => {
 };
 
 $("#btnGuardarMaestros").click(() => {
-    const valueSelect = $("#selectMatricula").val();
-    if (!valueSelect) return alertas.newErrorMessage("No se permiten espacios vacíos");
-    const getBool = String(valueSelect) == "true";
-    global_permisos.matricula = getBool;
-    global_permisos.allPermisos = getBool;
+    const matriculaValue = $("#selectMatricula").val();
+    const indicadoresValue = $("#selectIndicadores").val();
+    if (!matriculaValue || !indicadoresValue) return alertas.newErrorMessage("No se permiten espacios vacíos");
+    const getBoolMatricula = String(matriculaValue) == "true";
+    const getBoolIndicador = String(indicadoresValue) == "true";
+    global_permisos.matricula = getBoolMatricula;
+    global_permisos.indicadores = getBoolIndicador;
     savePermisos($("#textMaestros").text());
 });
 
@@ -54,9 +56,10 @@ $('#datatable tbody').on('click', '#btnPermisos', function () {
     const permisos = JSON.parse(data[0]);
     global_permisos = permisos;
 
-
+    console.log(global_permisos);
     if (role == 3) {
         $("#selectMatricula").val(`${permisos.matricula}`);
+        $("#selectIndicadores").val(`${permisos.indicadores}`);
         $("#textMaestros").text(data[2]);
         $("#modalMaestros").modal();
     }

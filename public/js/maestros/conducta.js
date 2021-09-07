@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    $('#datatable').DataTable();
+    $('#datatableC').DataTable();
 });
 
 
-$('#datatable tbody').on('click', 'tr', function () {
-    const { [0]: codigoAlumno, [1]: Nombre, [2]: Apellidos } = $('#datatable').DataTable().row(this).data();
+$('#datatableC tbody').on('click', 'tr', function () {
+    const { [0]: codigoAlumno, [1]: Nombre, [2]: Apellidos } = $('#datatableC').DataTable().row(this).data();
     $("#textAlumno").text(`${Nombre} ${Apellidos}`);
     $("#textAlumnoObservacion").text(`${Nombre} ${Apellidos}`);
     $("#idAlumno").val(codigoAlumno);

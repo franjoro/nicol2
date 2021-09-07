@@ -1,0 +1,95 @@
+<%- include('header.maestros.ejs'); %>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="user-plus"></i></div>
+                                    Ingreso de notas - Alumnos del grado : <%= dataGradoMateria.Grado %>
+                                </h1>
+                                <!-- <div class="page-header-subtitle">Seleccione una materia para ingresar notas</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-fluid px-4 mt-n10">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header p-5">
+                                <div>
+                                    <a class="btn btn-primary me-2" href="/maestros/notas"><i
+                                            class="me-2" data-feather="arrow-left"></i> Atrás</a>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Carnet</th>
+                                            <th>Nombres</th>
+                                            <th>Apellidos</th>
+                                            <% indicadores.forEach( acu => { %>
+                                                <th class="acumulado text-center font-sm" data-valor="<%= acu.idUnionMateriaIndicador %>">
+                                                    <small><%= acu.textIndicador %></small></th>
+                                            <%  })%>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% dataOrdenada.forEach( alumno=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= alumno.Carnet %>
+                                                </td>
+                                                <td>
+                                                    <%= alumno.Nombre %>
+                                                </td>
+                                                <td>
+                                                    <%= alumno.Apellido %>
+                                                </td>
+                                                <% alumno.Nota.forEach( (nota, i) => { 
+                                                    let text = ['','','',''];
+                                                    if(nota == 0) text[0] = 'selected';
+                                                    if(nota == "AE") text[1] = 'selected';
+                                                    if(nota == "AA") text[2] = 'selected';
+                                                    if(nota == "AP") text[3] = 'selected';
+                                                %>                                               
+                                                <td>
+                                                    <select name="notas[]" id="" class="form-control form-select-sm"
+                                                        data-limite="<%= indicadores[i].Porcentaje %>" 
+                                                        data-exist="<%= alumno.isExist[i] %>" 
+                                                        data-idnota="<%= alumno.idNota[i] %>" 
+                                                        data-idunion="<%= indicadores[i].idUnionMateriaIndicador %>" 
+                                                        data-alumno="<%= alumno.Carnet %>" 
+                                                    >   
+                                                        <option <%= text[0] %> disabled>Seleccionar opción</option>
+                                                        <option <%= text[1] %> value="AE">AE (Aprendizaje Excelente) </option>
+                                                        <option <%= text[2] %> value="AA">AA (Aprendizaje Alcanzado) </option>
+                                                        <option <%= text[3] %> value="AP">AP (Aprendizaje en progreso) </option>
+                                                    </select>
+                                                </td>
+                                                <%  })%>  
+                                            </tr>
+                                            <%  })%>                                            
+                                    </tbody>
+                                </table>
+                                <div class="d-flex flex-row-reverse mt-2">
+                                    <button class="btn btn-success float-right" id="btnGuardarParvularia"> <i
+                                            data-feather="check"></i>Actualizar notas</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <input type="hidden" id="idUnionGradoMateria" value="<%= idUnion %>">
+
+        <%- include('footer.maestros.ejs'); %>
+        <script src="/static/js/maestros/notas.js"></script>

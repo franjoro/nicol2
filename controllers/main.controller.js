@@ -50,21 +50,21 @@ main.signin = async (req, res) => {
 
 
 main.password = async (req, res) => {
-  if(!req.cookies.token) return res.json({status: false, error: "USER_NOT_EXIST"});
 
-
-  const { identificador } = getUserDataByToken (req.cookies.token).data; 
-  const { newPass, idUsuario } = req.body;
-  console.log(req.body);
-  console.log(identificador);
-
-  if(identificador != idUsuario) return res.json({status: false, error: "NOT_EQUAL_USER"});
-
-  const newPassword = await encriptar(newPass);
   try {
+    if (!req.cookies.token) return res.json({ status: false, error: "USER_NOT_EXIST" });
+
+    const { usuario } = getUserDataByToken(req.cookies.token).data;
+    const { password, idUsuario } = req.body;
+
+    if (usuario != idUsuario) return res.json({ status: false, error: "NOT_EQUAL_USER" });
+
+    const newPassword = await encriptar(password);
     await pool.query("UPDATE usuarios SET Password = ? WHERE Username = ? ", [newPassword, idUsuario]);
+    console.log(newPassword);
     return res.status(200).json({ status: true });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ error });
   }
 };

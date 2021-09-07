@@ -23,3 +23,9 @@ $("#btnGuardar").click( ()=> {
 $(document).ready( function () {
     $('#datatable').DataTable();
 } );
+
+$(".btnDelete").on("click", function () {
+    const { id } = $(this).data();
+    console.log(id);
+    alertas.deleteAlertAjx("Eliminar modelo de materia", "¿Desea eliminar el modelo de materia y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES SI LA MATERIA YA HA SIDO ASIGNADA", "modelomaterias", "id", id);
+});

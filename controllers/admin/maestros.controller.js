@@ -30,7 +30,7 @@ maestros.addNew = async (req , res) => {
         if(cantidadU) return res.status(400).json({ status: false, error: "CORREO_EXISTENTE"});
         // Enviar consulta
         const {insertId}  = await pool.query("INSERT INTO maestros(Nombres , Apellidos, Genero , FechaNac , Email) VALUES(?,?,?,?,?)", [Nombre, Apellido, Genero, FechaNac , Email]);
-        adddUsuarioFunction({user: Email, passwordPlain: Email , role: 3, permisos: JSON.stringify({allPermisos : false, matricula: false}) });
+        adddUsuarioFunction({user: Email, passwordPlain: Email , role: 3, permisos: JSON.stringify({ "matricula": false, "indicadores": false}) });
         res.json({ status: true, insertId});
     } catch (error) {
         res.json({ status: false, error}).status(400);

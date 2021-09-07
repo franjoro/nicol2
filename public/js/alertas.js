@@ -85,3 +85,30 @@ alertas.deleteAlertAjx = async (title, text, tabla, column, id) => {
     });
   }
 };
+
+alertas.deleteAlertAjxMaestros = async (title, text, tabla, column, id) => {
+  try {
+    const alert = await Swal.fire({
+      title, text,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar",
+    });
+    if (alert.isConfirmed) {
+      const query = await $.ajax({
+        type: "DELETE",
+        url: "/maestros",
+        data: { id, tabla, column },
+      });
+      if (query.status) return location.reload();
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "No se pudo realizar la operación." ,
+    });
+  }
+};

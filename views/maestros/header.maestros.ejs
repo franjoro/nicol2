@@ -55,13 +55,18 @@
                                 <div class="nav-link-icon text-white"><i data-feather="clipboard"></i></div>
                                 Ingreso de Matrículas 
                             </a>    
+                            <%}if( permisosSend.indicadores) { %>
+                                <a class="nav-link collapsed" href="/maestros/indicadores">
+                                <div class="nav-link-icon text-white"><i data-feather="list"></i></div>
+                                Indicadores de logro parvularia 
+                            </a>    
                             <%}%>
                             
                             
                             <div class="sidenav-menu-heading">Sesión</div>
-                            <a class="nav-link collapsed" href="/">
+                            <a class="nav-link collapsed" href="#" data-toggle="modal" data-target="#modalMaestros">
                                 <div class="nav-link-icon"><i data-feather="user"></i></div>
-                                Mi perfil
+                                Cambiar contraseña
                             </a> 
                             <a class="nav-link collapsed" href="/">
                                 <div class="nav-link-icon"><i data-feather="log-out"></i></div>

@@ -50,7 +50,7 @@ $(document).on("blur","input", function(){
     makeCalculo();
 });
 
-// Agregar codigo de conducta
+// Agregar perfil academico
 $("#formPerfil").submit(async function (e) {
     e.preventDefault();
     const data = $(this).serialize();

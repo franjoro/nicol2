@@ -21,7 +21,7 @@ router.post('/',  grados.addNewGrado);
 router.post('/assingMateria',  grados.assingMateriaGrado);
 
 
-/* POST Agregar nueva union de grado materia */
+/* POST Agregar nueva union de grado maestro */
 router.post('/assingMaestro',  grados.assingMaestroGrado);
 
 

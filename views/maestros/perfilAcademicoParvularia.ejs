@@ -1,0 +1,117 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<%- include('header.maestros.ejs'); %>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="book-open"></i></div>
+                                    Perfil Acádemico
+                                </h1>
+                                <h2 class="text-white pt-1">
+                                    Materia: <b>
+                                        <%= dataGradoMateria.Materia %>
+                                    </b>
+                                </h2>
+                                <h2 class="text-white pt-1">
+                                    Grado: <b>
+                                        <%= dataGradoMateria.Grado %>
+                                    </b>
+                                </h2>
+                                <div class="page-header-subtitle">Seleccione una actividad para ingresar el perfil
+                                    acádemico</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <div>
+                            <a class="btn btn-primary me-2" href="/maestros/perfil"><i class="me-2"
+                                    data-feather="arrow-left"></i> Atrás</a>
+                        </div>
+                        <div>
+                            <a class="btn btn-success me-2" data-toggle="modal" data-target="#modalAddIndicador"><i
+                                    class="me-2" data-feather="plus"></i>Agregar indicador de logro</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="page-header-subtitle">Seleccione la cantidad de indicadores de logro necesarios
+                            Bimestre : <b>
+                                <%= Role %>
+                            </b> - Año : <b>
+                                <%= idYear %>
+                            </b> </div>
+                        <hr>
+                        <div class="row">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Indicador de logro</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%indicadoresInMateria.forEach(indicador=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= indicador.indicador %>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger btnDelete" data-id="<%= indicador.idMateriaIndicador %>" >Eliminar</button>
+                                            </td>
+                                        </tr>
+                                        <%})%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MODAL AGREGAR INDICADOR DE LOGRO -->
+        <div class="modal fade" id="modalAddIndicador" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Asignar indicadores de logro a esta materia/área </h5>
+                        <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formIndicadores">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Seleccionar los indicadores de logro autilizar</label>
+                                    <select class="form-control" name="selectIndicadores[]" id="selectIndicadores"
+                                        multiple="multiple"></select>
+                                    <input type="hidden" name="idUnion" value="<%= idUnion %>">
+                                    <input type="hidden" name="idBimestre" value="<%= idBimestre %>">
+                                </div>
+                            </div>
+                        </form>
+                        <small><b>Nota:</b> Puede buscar escribiendo el nombre del indicador. Si no existe el indicador que busca comuniquese con el administrador o coordinación de parvularia.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnSaveIndicadores">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('footer.maestros.ejs'); %>
+          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+          <script src="/static/js/maestros/perfilAcademicoParvularia.js"></script>
