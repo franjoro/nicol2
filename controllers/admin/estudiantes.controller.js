@@ -53,6 +53,27 @@ estudiantes.addNew = async (req , res) => {
         adddUsuarioFunction({user: Carnet , passwordPlain: Carnet , role: 2 });
         res.json({ status: true, insertId});
     } catch (error) {
+        console.log(error);
+        res.json({ status: false, error}).status(400);
+    }
+};
+
+estudiantes.edit = async (req , res) => {
+    try {
+        const {Carnet, Nombre, Apellido, Genero, FechaNac, Email} = req.body;
+        // Validar campos
+        if(!Carnet || !Nombre  || !Apellido  || !Genero  || !FechaNac  || !Email  )  return res.json({ status: false, error: "VALUES_NOT_COMPLETED"}).status(400);
+        // Validar existencia de carnet
+        const {[0] : {cantidad}} = await pool.query("SELECT COUNT(*) AS cantidad FROM alumnos WHERE Carnet = ? " , [Carnet]); 
+        if(!cantidad) return res.status(400).json({ status: false, error: "CARNET_NO_EXISTENTE"});
+        // Validar existencia de usuario 
+        const {[0] : {cantidadU}} = await pool.query("SELECT COUNT(*) AS cantidadU FROM usuarios WHERE Username = ? " , [Carnet]); 
+        if(!cantidadU) return res.status(400).json({ status: false, error: "CARNET_NO_EXISTENTE"});
+        // Enviar consulta
+        await pool.query("UPDATE alumnos SET Nombre = ? , Apellido = ? , Genero = ? , FechaNac = ? , Email = ? WHERE Carnet = ?" ,[ Nombre, Apellido, Genero, FechaNac , Email , Carnet]);
+        res.json({ status: true});
+    } catch (error) {
+        console.log(error);
         res.json({ status: false, error}).status(400);
     }
 };

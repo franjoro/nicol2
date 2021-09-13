@@ -12,7 +12,6 @@ var router = express.Router();
 /* POST retorna JSON de modelos de indicadores ingresados para SELECT */
 router.post('/getIndi',  indicadores.getModelos);
 
-
 /* POST Vincula el indicador con la materia */
 router.post('/materiaIndicador',  indicadores.attachMateriaIndicador);
 

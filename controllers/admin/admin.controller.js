@@ -22,12 +22,11 @@ admin.main = async (req, res) => {
 admin.delete = async (req, res) => {
     try {
         const {id, tabla , column } = req.body;
-
         if(!id || !tabla || !column ) return res.json({status:false , error: "PARAMS_NOT_COMPLETE"});
-
+        
         
         const stament = `DELETE FROM ${tabla} WHERE ${column} = ${id}`;
-    
+        
         await pool.query(stament);
         
         res.json({status:true});
@@ -36,5 +35,6 @@ admin.delete = async (req, res) => {
         res.status(400).json({ status: false, error });
     }
 };
+
 
 module.exports = admin;

@@ -56,7 +56,6 @@ $('#datatable tbody').on('click', '#btnPermisos', function () {
     const permisos = JSON.parse(data[0]);
     global_permisos = permisos;
 
-    console.log(global_permisos);
     if (role == 3) {
         $("#selectMatricula").val(`${permisos.matricula}`);
         $("#selectIndicadores").val(`${permisos.indicadores}`);

@@ -13,6 +13,10 @@ router.get('/',  estudiantes.main);
 router.post('/',  estudiantes.addNew);
 
 
+/* PUT Actualizar estudiante */
+router.put('/',  estudiantes.edit);
+
+
 /* GET estudiantes para rellenar tabla */
 router.get('/table',  estudiantes.loadTable);
 

@@ -28,9 +28,9 @@
                                 data-target="#agregarAlumno">
                                 Agregar alumno
                             </button>
-                            <button class="btn btn-md btn-success" type="button">
+                            <!-- <button class="btn btn-md btn-success" type="button">
                                 Descargar reporte
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class="card-body table-responsive">
@@ -115,6 +115,69 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal fade" id="editAlumno" tabindex="-1" aria-labelledby="editAlumno" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar estudiante</h5>
+                        <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEstudiantesEdit">
+                            <div class="row">
+                                <input type="hidden" name="Carnet" id="CarnetEdit">
+                                <div class="form-group col-md-6">
+                                    <label>Nombres</label>
+                                    <input type="text" class="form-control" id="NombreEdit" name="Nombre"
+                                        autocomplete="off" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Apellidos</label>
+                                    <input type="text" class="form-control" id="ApellidoEdit" name="Apellido"
+                                        autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Género</label>
+                                    <select class="form-control" name="Genero" id="GeneroEdit">
+                                        <option selected disabled>Seleccione Género</option>
+                                        <option value="0">Hombre</option>
+                                        <option value="1">Mujer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Fecha de nacimiento</label>
+                                    <input type="date" class="form-control" id="FechaNacEdit" name="FechaNac"
+                                        autocomplete="off" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="EmailEdit" name="Email"
+                                        autocomplete="off" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarEdit">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>
             <script src="/static/js/admin/estudiantes/estudiantes.js"></script>
