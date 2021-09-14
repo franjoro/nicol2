@@ -17,6 +17,10 @@ router.get('/table',  maestros.loadTable);
 router.post('/',  maestros.addNew);
 
 
+/* PUT Editar info maestro */
+router.put('/',  maestros.edit);
+
+
 /* POST retorna JSON de maestros ingresados para SELECT */
 router.post('/getMaestros',  maestros.getModelos);
 

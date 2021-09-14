@@ -18,7 +18,20 @@ ciclos.addNew = async (req , res) => {
         const {insertId}  = await pool.query("INSERT INTO ciclos(Nombre ,isParvularia) VALUES(? ,? )", [cicloName, isParvularia]);
         res.json({ status: true, insertId});
     } catch (error) {
-        res.json({ status: false, error}).status(400);
+        console.log(error);
+        res.status(400).json({ status: false, error});
+    }
+};
+
+ciclos.edit = async (req , res) => {
+    try {
+        const {cicloName, id} = req.body;
+        console.log(req.body);
+        await pool.query("UPDATE ciclos SET Nombre = ?  WHERE id= ?", [cicloName, id]);
+        res.json({ status: true});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error});
     }
 };
 

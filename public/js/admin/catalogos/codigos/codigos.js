@@ -30,3 +30,33 @@ $(".btnDelete").on("click", function () {
     console.log(id);
     alertas.deleteAlertAjx("Eliminar código de conducta", "¿Desea eliminar código y todo lo relacionado a esta información?", "codigos", "id", id);
 });
+
+$('#datatable tbody').on('click', '.btnEdit', async function () {
+    const data = $('#datatable').DataTable().row(this.closest('tr')).data();
+    const { id } = $(this).data();
+    const { value: codigoInput } = await Swal.fire({
+        title: 'Editar código de conducta',
+        input: 'text',
+        inputValue: data[0],
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to write something!';
+            }
+        }
+    });
+    if (codigoInput) {
+        try {
+            alertas.loaderAlert();
+            const query = await $.ajax({
+                type: "PUT",
+                url: "/admin/codigos",
+                data: {codigoInput , id},
+            });
+            if (query.status) return location.reload();
+        } catch (error) {
+            console.log(error);
+            return alertas.newErrorMessage();
+        }
+    }
+});

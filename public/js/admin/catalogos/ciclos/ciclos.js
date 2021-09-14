@@ -24,9 +24,39 @@ $(document).ready(function () {
 });
 
 $(".btnDelete").on("click", function () {
-    Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "No se pudo realizar la operación. Para eliminar un ciclo educativo debe hacerse vía base de datos",
+    const { id } = $(this).data();
+    console.log(id);
+    alertas.deleteAlertAjx("Eliminar ciiclo educativo", "¿Desea eliminar el ciclo y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES Y GRADOS ASIGNADOS", "ciclos", "id", id);
+});
+
+
+
+$('#datatable tbody').on('click', '.btnEdit', async function () {
+    const data = $('#datatable').DataTable().row(this.closest('tr')).data();
+    const { id } = $(this).data();
+    const { value: cicloName } = await Swal.fire({
+        title: 'Editar texto ciclo educativo',
+        input: 'text',
+        inputValue: data[0],
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to write something!';
+            }
+        }
     });
+    if (cicloName) {
+        try {
+            alertas.loaderAlert();
+            const query = await $.ajax({
+                type: "PUT",
+                url: "/admin/ciclos",
+                data: {cicloName , id},
+            });
+            if (query.status) return location.reload();
+        } catch (error) {
+            console.log(error);
+            return alertas.newErrorMessage();
+        }
+    }
 });

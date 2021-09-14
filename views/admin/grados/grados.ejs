@@ -39,7 +39,7 @@
                     data-target="#modalGrados">Agregar Grado</button>
                 </div>
                 <div class="card-body">
-                    <table id="tableGrados" class="table table-striped">
+                    <table id="datatable" >
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -54,7 +54,7 @@
                                 <td><%= grado.ciclo %></td>
                                 <td class="col-md-6">
                                     <a  href="/admin/grados/detalle/<%= grado.id %>" class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar materias y alumnos</a>
-                                    <button class="btn btn-danger"><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                    <button class="btn btn-danger btnDelete" data-id="<%= grado.id %>" ><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
                                 </td>
                             </tr>
                             <%  })  %>

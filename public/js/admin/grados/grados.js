@@ -23,7 +23,7 @@ $("#btnGuardar").click( ()=> {
 
 
 $(document).ready( function () {
-    // $('#datatable').DataTable();
+    $('#datatable').DataTable();
     const yearActivo = $("#yearActivo").val();
     $("#selectorYear").val(yearActivo);
 } );
@@ -32,4 +32,10 @@ $("#selectorYear").on("change", function(){
     const value = $(this).val();
     window.location = "/admin/grados/"+value;
 
+});
+
+
+$(".btnDelete").on("click", function () {
+    const { id } = $(this).data();
+    alertas.deleteAlertAjx("Eliminar grado", "¿Desea eliminar el grado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "grados", "id", id);
 });

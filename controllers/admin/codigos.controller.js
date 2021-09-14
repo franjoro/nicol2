@@ -18,7 +18,17 @@ codigos.addNew = async (req , res) => {
         const {insertId}  = await pool.query("INSERT INTO codigos(Codigo, valor) VALUES(? , ?)", [codigoInput , newValue]);
         res.json({ status: true, insertId});
     } catch (error) {
-        res.json({ status: false, error}).status(400);
+        res.status(400).json({ status: false, error});
+    }
+};
+
+codigos.edit = async (req , res) => {
+    try {
+        const {codigoInput , id } = req.body;
+        await pool.query("UPDATE codigos SET Codigo = ? WHERE id = ? ", [codigoInput , id]);
+        res.json({ status: true});
+    } catch (error) {
+        res.status(400).json({ status: false, error});
     }
 };
 

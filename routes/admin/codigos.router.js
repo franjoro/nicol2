@@ -11,6 +11,9 @@ router.get('/',  codigos.main);
 /* POST ingresar nuevo ciclo */
 router.post('/',   codigos.addNew);
 
+/* PUT editar código de conducta */
+router.put('/',   codigos.edit);
+
 
 
 module.exports = router;

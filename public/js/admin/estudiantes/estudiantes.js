@@ -40,7 +40,6 @@ const loadTable = () => {
                         <button type="button" data-id="${row.Carnet}" class="btn btn-danger btnDelete">Eliminar</button>
                         <button type="button" class="btn btn-info btnEdit">Editar</button>
                     </div>
-                    
                     `;
                     return html;
                 }
