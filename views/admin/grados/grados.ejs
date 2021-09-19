@@ -1,122 +1,140 @@
 <%- include('../partials/header.ejs'); %>
-<div id="layoutSidenav_content">
-    <main>
-        <header class="page-header page-header-dark bg-primary pb-10">
-            <div class="container-xl px-4">
-                <div class="page-header-content pt-4">
-                    <div class="row align-items-center justify-content-between">
-                        <div class="col-auto mt-4">
-                            <h1 class="page-header-title">
-                                <div class="page-header-icon"><i data-feather="archive"></i></div>
-                                Grados
-                            </h1>
-                            <div class="page-header-subtitle">Visualiza todos los grados registrados, asigna materias y maestros a cada grado.</div>
-                             <!-- Selector de año-->
-                             <div class="pt-4">
-                                <label for="exampleFormControlSelect1">Selecciona el año que quieres visualizar</label>
-                                <div class="input-group input-group-joined">
-                                    <span class="input-group-text">
-                                        <i data-feather="calendar"></i>
-                                    </span>
-                                    <select class="form-control form-control-solid" id="selectorYear">
-                                        <% years.forEach( year=> {%>
-                                        <option><%= year.year%></option>
-                                        <%  })  %>
-                                    </select>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-primary pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="archive"></i></div>
+                                    Grados
+                                </h1>
+                                <div class="page-header-subtitle">Visualiza todos los grados registrados, asigna
+                                    materias y maestros a cada grado.</div>
+                                <!-- Selector de año-->
+                                <div class="pt-4">
+                                    <label for="exampleFormControlSelect1">Selecciona el año que quieres
+                                        visualizar</label>
+                                    <div class="input-group input-group-joined">
+                                        <span class="input-group-text">
+                                            <i data-feather="calendar"></i>
+                                        </span>
+                                        <select class="form-control form-control-solid" id="selectorYear">
+                                            <% years.forEach( year=> {%>
+                                                <option>
+                                                    <%= year.year%>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
                                 </div>
-                             </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
-        <!-- Main page content-->
-        <div class="container-xl px-4 mt-n10">
-            <div class="card card-header-actions mb-4">
-                <div class="card-header p-5">
-                    Grados
-                    <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
-                    data-target="#modalGrados">Agregar Grado</button>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        Grados
+                        <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
+                            data-target="#modalGrados">Agregar Grado</button>
+                    </div>
+                    <div class="card-body">
+                        <table id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Ciclo educativo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% grados.forEach( grado=> {%>
+                                    <tr>
+                                        <td>
+                                            <%= grado.nombre%>
+                                        </td>
+                                        <td>
+                                            <%= grado.ciclo %>
+                                        </td>
+                                        <td class="col-md-6">
+                                            <div class="btn-group" role="group">
+
+                                                <a href="/admin/grados/detalle/<%= grado.id %>"
+                                                    class="btn btn-primary"><i class="me-2"
+                                                        data-feather="file-plus"></i>Asignar materias y alumnos</a>
+                                                <button class="btn btn-danger btnDelete" data-id="<%= grado.id %>"><i
+                                                        class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table id="datatable" >
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Ciclo educativo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% grados.forEach( grado=> {%>
-                            <tr>
-                                <td><%= grado.nombre%></td>
-                                <td><%= grado.ciclo %></td>
-                                <td class="col-md-6">
-                                    <a  href="/admin/grados/detalle/<%= grado.id %>" class="btn btn-primary me-2"><i class="me-2" data-feather="file-plus"></i>Asignar materias y alumnos</a>
-                                    <button class="btn btn-danger btnDelete" data-id="<%= grado.id %>" ><i class="me-2" data-feather="trash-2"></i>Eliminar</button>
-                                </td>
-                            </tr>
-                            <%  })  %>
-                        </tbody>
-                    </table>
+            </div>
+        </main>
+
+
+        <div class="modal fade" id="modalGrados" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar grado en año activo</h5>
+                        <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i data-feather="x"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formGrados">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-control" id="NombreCurso" name="NombreCurso"
+                                        autocomplete="off" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Ciclo educativo </label>
+                                    <select class="form-control" name="idCiclo" id="idCiclo">
+                                        <option selected disabled>Seleccione ciclo</option>
+                                        <% ciclos.forEach( ciclo=> {%>
+                                            <option value="<%= ciclo.id %>">
+                                                <%= ciclo.Nombre%>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Seleccionar año </label>
+                                    <select class="form-control" name="year" id="year">
+                                        <% yearToAdd.forEach( year=> {%>
+                                            <option value="<%= year.year %>">
+                                                <%= year.year %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnGuardar">
+                            Guardar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
 
+        <input type="hidden" id="yearActivo" value="<%=yearActivo%>">
 
-    <div class="modal fade" id="modalGrados" tabindex="-1"  aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Agregar grado en año activo</h5>
-                    <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i data-feather="x"></i></span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="formGrados">
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label>Nombre</label>
-                                <input type="text" class="form-control" id="NombreCurso" name="NombreCurso"
-                                    autocomplete="off" />
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>Ciclo educativo </label>
-                                <select class="form-control" name="idCiclo" id="idCiclo">
-                                    <option selected disabled>Seleccione ciclo</option>
-                                    <% ciclos.forEach( ciclo=> {%>
-                                        <option value="<%= ciclo.id %>"><%= ciclo.Nombre%></option>
-                                    <%  })  %>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>Seleccionar año  </label>
-                                <select class="form-control" name="year" id="year">
-                                    <% yearToAdd.forEach( year=> {%>
-                                        <option value="<%= year.year %>"><%= year.year %></option>
-                                    <%  })  %>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-primary" id="btnGuardar">
-                        Guardar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <input type="hidden" id="yearActivo" value="<%=yearActivo%>">
-
-<%- include('../partials/footer.ejs'); %>
-<script src="/static/js/alertas.js"></script>
-<script src="/static/js/admin/grados/grados.js"></script>
+        <%- include('../partials/footer.ejs'); %>
+            <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/admin/grados/grados.js"></script>

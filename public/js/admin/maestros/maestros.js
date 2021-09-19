@@ -35,7 +35,7 @@ const loadTable = () => {
             {
                 "render": function (data, type, row) {
                     const html = `
-                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <div class="btn-group" role="group">
                         <button type="button" data-id="${row.id}" class="btn btn-danger btnDelete">Eliminar</button>
                         <button type="button" class="btn btn-info btnEdit">Editar</button>
                     </div>

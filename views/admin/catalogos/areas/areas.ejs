@@ -33,21 +33,25 @@
             <table id="datatable">
               <thead>
                 <tr>
-                  <th scope="col">Área</th>
-                  <th scope="col">Acciones</th>
+                  <th>Área</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <% areas.forEach( (area)=>{ %>
                   <tr>
-                    <th scope="row"><%= area.Nombre %></th>
-                    <td scope="row" class="col-md-4">
-                      <button class="btn btn-primary me-2">
-                        <i class="me-2" data-feather="edit"></i>Editar
-                      </button>
-                      <button class="btn btn-danger btnDelete" data-id="<%= area.id %>" >
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
+                    <td>
+                      <%= area.Nombre %>
+                    </td>
+                    <td class="col-md-4">
+                      <div class="btn-group" role="group">
+                        <button class="btn btn-primary">
+                          <i class="me-2" data-feather="edit"></i>Editar
+                        </button>
+                        <button class="btn btn-danger btnDelete" data-id="<%= area.id %>">
+                          <i class="me-2" data-feather="trash-2"></i>Eliminar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                   <%})%>
@@ -57,7 +61,7 @@
         </div>
       </div>
     </main>
-    
+
     <div class="modal fade" id="agregarAno" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -71,7 +75,8 @@
             <form id="formArea">
               <div class="form-group">
                 <label for="exampleInputEmail1">Nombre</label>
-                <input type="email" class="form-control" id="areaInputId" name="areaNombre" aria-describedby="emailHelp" />
+                <input type="email" class="form-control" id="areaInputId" name="areaNombre"
+                  aria-describedby="emailHelp" />
               </div>
             </form>
           </div>

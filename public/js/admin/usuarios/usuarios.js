@@ -16,6 +16,45 @@
 //     }
 // });
 
+
+const loadTable = () => {
+    $("#datatable").DataTable().destroy();
+    $("#datatable").DataTable({
+        ajax: "/admin/usuarios/table",
+        columns: [
+            { data: "Permisos" , "visible": false },
+            { data: "Role" , "visible": false},
+            { data: "Username" },
+            { data: "RoleText" },
+            { data: "Estado" },
+            {
+                "render": function (data, type, row) {
+                    let html = `
+                    <div class="btn-group" role="group">
+                    <button class="btn btn-primary btn-sm btnPermisos">Ver permisos</button>`;
+
+                     if( row.estadoNum ) { 
+                        html += `  <button class="btn btn-red btn-sm changeEstado" data-estado="0" data-idusuario="${row.Username}">Deshabilitar
+                        </button>`;
+                      } else{
+                            html += `<button class="btn btn-success btn-sm changeEstado" data-estado="1" data-idusuario="${row.Username}">Habilitar
+                            </button>`;
+                      }
+                         html += `<button class="btn btn-warning btn-sm btnPassword"
+                                    data-id="${row.Username}">
+                                    <i class="me-2" data-feather="key"></i>Cambiar
+                                    contraseña
+                                </button>
+                           </div>`;
+                    return html;
+                }
+            },
+        ]
+    } );
+};
+
+
+
 let global_permisos = {};
 
 const savePermisos = async (idUsuario) => {
@@ -47,24 +86,26 @@ $("#btnGuardarMaestros").click(() => {
 
 
 $(document).ready(function () {
-    $('#datatable').DataTable();
+    loadTable();
 });
 
-$('#datatable tbody').on('click', '#btnPermisos', function () {
+$('#datatable tbody').on('click', '.btnPermisos', function () {
     const data = $('#datatable').DataTable().row(this.closest('tr')).data();
-    const role = data[1];
-    const permisos = JSON.parse(data[0]);
+    const role = data.Role;
+    console.log(data);
+    const permisos = JSON.parse(data.Permisos);
     global_permisos = permisos;
 
     if (role == 3) {
         $("#selectMatricula").val(`${permisos.matricula}`);
         $("#selectIndicadores").val(`${permisos.indicadores}`);
-        $("#textMaestros").text(data[2]);
+        $("#textMaestros").text(data.Username);
         $("#modalMaestros").modal();
     }
 });
 
-$(".changeEstado").click(async function () {
+
+$('#datatable tbody').on('click', '.changeEstado', async function () {
     try {
         const { estado, idusuario } = $(this).data();
         const { isConfirmed } = await alertas.ConfirmAlert("¿Desea cambiar el estado de acceso de este usuario?");
@@ -80,12 +121,10 @@ $(".changeEstado").click(async function () {
         console.log(error);
         alertas.newErrorMessage(error);
     }
+
 });
-
-
-$(".btnPassword").click(async function () {
+$('#datatable tbody').on('click', '.btnPassword', async function () {
     const { id } = $(this).data();
-
     const { value: password } = await Swal.fire({
         title: 'Cambiar contraseña a usuario seleccionado',
         input: 'password',

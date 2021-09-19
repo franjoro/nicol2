@@ -18,7 +18,19 @@ indicadores.addNewModelo = async (req, res) => {
         const { insertId } = await pool.query("INSERT INTO indicadoresparvularia(indicador) VALUES(?)", [indicador]);
         res.json({ status: true, insertId });
     } catch (error) {
-        res.json({ status: false, error }).status(400);
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+indicadores.edit = async (req, res) => {
+    try {
+        const { indicador, id } = req.body;
+        await pool.query("UPDATE indicadoresparvularia SET indicador = ? WHERE id = ? ", [indicador , id]);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
     }
 };
 

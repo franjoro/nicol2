@@ -20,5 +20,7 @@ router.put('/password',  usuarios.password);
 /* PUT Actualizar estado de acceso*/
 router.put('/estado',  usuarios.updateEstado);
 
+/* GET alumnos para rellenar tabla */
+router.get('/table',  usuarios.loadTable);
 
 module.exports = router;

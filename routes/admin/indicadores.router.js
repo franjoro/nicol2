@@ -23,6 +23,9 @@ router.get('/',  indicadores.main);
 /* POST Agregar nuevo indicador */
 router.post('/',  indicadores.addNewModelo);
 
+/* PUT actualizar indicador */
+router.put('/',  indicadores.edit);
+
 
 
 module.exports = router;

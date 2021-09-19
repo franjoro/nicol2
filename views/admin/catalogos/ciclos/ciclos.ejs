@@ -41,15 +41,22 @@
               <tbody>
                 <% ciclos.forEach( (ciclo)=>{ %>
                   <tr>
-                    <th scope="row"><%= ciclo.Nombre %></th>
-                    <th scope="row"><%= ciclo.evaluacion %></th>
+                    <td scope="row">
+                      <%= ciclo.Nombre %>
+                    </td>
+                    <td scope="row">
+                      <%= ciclo.evaluacion %>
+                    </td>
                     <td scope="row" class="col-md-4">
-                      <button class="btn btn-primary me-2 btnEdit" data-id="<%= ciclo.id %>">
-                        <i class="me-2" data-feather="edit"></i>Editar
-                      </button>
-                      <button class="btn btn-danger btnDelete" data-id="<%= ciclo.id %>">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
+                      <div class="btn-group" role="group">
+
+                        <button class="btn btn-primary btnEdit" data-id="<%= ciclo.id %>">
+                          <i class="me-2" data-feather="edit"></i>Editar
+                        </button>
+                        <button class="btn btn-danger btnDelete" data-id="<%= ciclo.id %>">
+                          <i class="me-2" data-feather="trash-2"></i>Eliminar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                   <%})%>
@@ -59,7 +66,7 @@
         </div>
       </div>
     </main>
-    
+
     <div class="modal fade" id="modalCiclo" tabindex="-1" aria-labelledby="agregarAno" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -72,12 +79,12 @@
           <div class="modal-body">
             <form id="formCiclo">
               <div class="form-group mb-2">
-                <label >Nombre</label>
+                <label>Nombre</label>
                 <input type="text" class="form-control" id="cicloName" name="cicloName" />
               </div>
               <div class="form-group mt-2">
-                <label >Evaluaciones de tipo : </label>
-                <select name="isParvularia"  id="isParvularia"  class="form-control" > 
+                <label>Evaluaciones de tipo : </label>
+                <select name="isParvularia" id="isParvularia" class="form-control">
                   <option selected disabled>Seleccione forma de evaluar</option>
                   <option value="1">Cualitativas ( Se evalúa por cualidades )</option>
                   <option value="0">Cuantitativas ( Se evalúan por cantidades )</option>

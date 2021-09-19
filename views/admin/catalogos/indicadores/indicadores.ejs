@@ -47,14 +47,17 @@
             <tbody>
               <% indicadores.forEach( indicador => { %>
               <tr>
-                <th scope="row"><%= indicador.indicador %></th>
+                <td scope="row"><%= indicador.indicador %></td>
                 <td scope="row" class="col-md-4">
-                  <button class="btn btn-primary me-2">
+                  <div class="btn-group" role="group">
+
+                  <button class="btn btn-primary btnEdit" data-id="<%= indicador.id%>">
                     <i class="me-2" data-feather="edit"></i>Editar
                   </button>
                   <button class="btn btn-danger btnDelete" data-id="<%= indicador.id%>" >
                     <i class="me-2" data-feather="trash-2"></i>Eliminar
                   </button>
+                  </div>
                 </td>
               </tr>
               <%})%>

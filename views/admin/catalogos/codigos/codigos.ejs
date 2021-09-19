@@ -41,20 +41,27 @@
                 </tr>
               </thead>
               <tbody>
-                <% codigos.forEach( codigo=> {  %>
-                <tr>
-                  <th scope="row"><%= codigo.Codigo %></th>
-                  <td scope="row"><%= codigo.valor %></td>
-                  <td scoper="row" class="col-md-4">
-                    <button class="btn btn-primary me-2 btnEdit" data-id="<%= codigo.id %>">
-                      <i class="me-2" data-feather="edit"></i>Editar
-                    </button>
-                    <button class="btn btn-danger btnDelete" data-id="<%= codigo.id %>" >
-                      <i class="me-2" data-feather="trash-2"></i>Eliminar
-                    </button>
-                  </td>
-                <%})%>
-                </tr>
+                <% codigos.forEach( codigo=> { %>
+                  <tr>
+                    <td scope="row">
+                      <%= codigo.Codigo %>
+                    </td>
+                    <td scope="row">
+                      <%= codigo.valor %>
+                    </td>
+                    <td scoper="row" class="col-md-4">
+                      <div class="btn-group" role="group">
+
+                        <button class="btn btn-primary btnEdit" data-id="<%= codigo.id %>">
+                          <i class="me-2" data-feather="edit"></i>Editar
+                        </button>
+                        <button class="btn btn-danger btnDelete" data-id="<%= codigo.id %>">
+                          <i class="me-2" data-feather="trash-2"></i>Eliminar
+                        </button>
+                      </div>
+                    </td>
+                    <%})%>
+                  </tr>
               </tbody>
             </table>
           </div>
@@ -76,7 +83,8 @@
               <div class="row mb-3">
                 <div class="col-md-12">
                   <label for="codigoInput">Texto del código</label>
-                  <input type="email" required class="form-control" id="codigoInput" name="codigoInput"  placeholder="Ejemplo: Platica mucho en clase"/>
+                  <input type="email" required class="form-control" id="codigoInput" name="codigoInput"
+                    placeholder="Ejemplo: Platica mucho en clase" />
                 </div>
               </div>
 
@@ -107,5 +115,5 @@
       </div>
     </div>
     <%- include('../../partials/footer.ejs'); %>
-  <script src="/static/js/alertas.js"></script>
-  <script src="/static/js/admin/catalogos/codigos/codigos.js"></script>
+      <script src="/static/js/alertas.js"></script>
+      <script src="/static/js/admin/catalogos/codigos/codigos.js"></script>
