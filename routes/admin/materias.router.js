@@ -17,4 +17,9 @@ router.post('/',  materias.addNewModelo);
 router.post('/getModelos',  materias.getModelos);
 
 
+/* PUT editar materia */
+router.put('/', materias.edit);
+
+
+
 module.exports = router;

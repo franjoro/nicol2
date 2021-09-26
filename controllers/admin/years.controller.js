@@ -5,12 +5,6 @@ years.main =async (req, res) => {
   try {
     const years = await pool.query("SELECT year, IF(estado = 1 , 'Activo','Inactivo') AS estadoText , estado AS estadoID ,  IF(estado = 1 , 'green','red') AS color  FROM year ORDER BY year DESC");
     const {[0]:dataActual} = await pool.query("SELECT year , Role FROM year INNER JOIN bimestres ON bimestres.idYear = year.year WHERE bimestres.Estado = 1 AND year.estado = 1");
-    
-    
-    console.log(dataActual);
-
-
-
     res.render("./admin/catalogos/years/years" , {years, dataActual});
   } catch (error) {
     console.log(error);

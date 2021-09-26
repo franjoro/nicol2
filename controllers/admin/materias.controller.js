@@ -41,4 +41,19 @@ materias.getModelos = async (req, res) => {
     }
 };
 
+
+
+materias.edit = async (req , res) => {
+    try {
+        console.log(req.body);
+        const {codigoInput , id } = req.body;
+        await pool.query("UPDATE modelomaterias SET Nombre = ? WHERE id = ? ", [codigoInput , id]);
+        res.json({ status: true});
+    } catch (error) {
+        res.status(400).json({ status: false, error});
+    }
+};
+
+
+
 module.exports = materias;

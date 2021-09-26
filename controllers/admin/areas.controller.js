@@ -22,4 +22,14 @@ areas.addNew = async (req , res) => {
     }
 };
 
+
+areas.edit = async (req , res) => {
+    try {
+        const {codigoInput , id } = req.body;
+        await pool.query("UPDATE areas SET Nombre = ? WHERE id = ? ", [codigoInput , id]);
+        res.json({ status: true});
+    } catch (error) {
+        res.status(400).json({ status: false, error});
+    }
+};
 module.exports = areas;

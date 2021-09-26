@@ -26,6 +26,35 @@ $(document).ready( function () {
 
 $(".btnDelete").on("click", function () {
     const { id } = $(this).data();
-    console.log(id);
     alertas.deleteAlertAjx("Eliminar modelo de materia", "¿Desea eliminar el modelo de materia y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES SI LA MATERIA YA HA SIDO ASIGNADA", "modelomaterias", "id", id);
+});
+
+$('#datatable tbody').on('click', '.btnEdit', async function () {
+    const data = $('#datatable').DataTable().row(this.closest('tr')).data();
+    const { id } = $(this).data();
+    const { value: codigoInput } = await Swal.fire({
+        title: 'Editar nombre de materia',
+        input: 'text',
+        inputValue: data[0],
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return 'You need to write something!';
+            }
+        }
+    });
+    if (codigoInput) {
+        try {
+            alertas.loaderAlert();
+            const query = await $.ajax({
+                type: "PUT",
+                url: "/admin/materias",
+                data: {codigoInput , id},
+            });
+            if (query.status) return location.reload();
+        } catch (error) {
+            console.log(error);
+            return alertas.newErrorMessage();
+        }
+    }
 });

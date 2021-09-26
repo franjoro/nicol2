@@ -27,7 +27,7 @@
         <div class="card card-header-actions mb-4">
           <div class="card-header p-5">
             Información general
-            <button class="btn btn-md btn-warning" type="button">Editar grado</button>
+            <button class="btn btn-md btn-warning" type="button" id="editGrado">Editar nombre del grado</button>
           </div>
           <div class="card-body px-0">
             <div class="d-flex align-items-center justify-content-between px-4">
@@ -35,7 +35,7 @@
                 <i data-feather="archive"></i>
                 <div class="ms-4">
                   <div class="text-xs text-muted">Nombre</div>
-                  <div class="small">
+                  <div class="small" id="nombreGrado">
                     <%= datosGrado.nombre %>
                   </div>
                 </div>
@@ -80,9 +80,9 @@
             <div class="card-header p-5">
               Alumnos
               <div>
-                <button class="btn btn-md btn-primary" type="button"> <i class="me-2" data-feather="download-cloud"></i>
+                <!-- <button class="btn btn-md btn-primary" type="button"> <i class="me-2" data-feather="download-cloud"></i>
                   Importar alumnos
-                </button>
+                </button> -->
                 <button class="btn btn-md btn-secondary" type="button" data-toggle="modal"
                   data-target="#modalAddEstudiante"> <i class="me-2" data-feather="plus-circle"></i>
                   Asignar alumnos
@@ -100,7 +100,6 @@
                   </tr>
                 </thead>
                 <tbody>
-
                   <% Estudiantes.forEach( estudiante=> { %>
                     <tr>
                       <td>
@@ -113,7 +112,7 @@
                         <%= estudiante.Apellido %>
                       </td>
                       <td>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger btnDeleteAlumno" data-id="<%= estudiante.idGradoAlumno %>">
                           <i data-feather="trash-2"></i>
                         </button>
                       </td>
@@ -231,7 +230,7 @@
                               <%= maestro.NombreMaestro %>
                             </td>
                             <td class="col-md-2">
-                              <button class="btn btn-danger">
+                              <button class="btn btn-danger btnDelete" data-id="<%=maestro.idMaestroMateria%>">
                                 <i data-feather="trash-2"></i></button>
                             </td>
                           </tr>

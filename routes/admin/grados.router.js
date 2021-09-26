@@ -33,4 +33,10 @@ router.post('/assingEstudiantes',  grados.assingEstudiantesGrado);
 router.put('/edicion',  grados.edicionIndividual);
 
 
+/* PUT actualizar información de grado */
+router.put('/',  grados.edit);
+
+
+
+
 module.exports = router;

@@ -26,7 +26,7 @@ router.post('/getEstudiantes/:idGrado',  estudiantes.getEstudiantes);
 
 
 /* POST retorna JSON para select de alumnos  */
-router.post('/getEstudiantesAll/',  estudiantes.getEstudiantesAll);
+router.post('/getEstudiantesAll',  estudiantes.getEstudiantesAll);
 
 
 /* GET Pantalla de matriculas  */

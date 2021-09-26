@@ -1,10 +1,11 @@
-// Mostrar o ocultar partes 
+// Mostrar o ocultar partes
 $("#navAlumnos").click(() => {
   $("#navMaterias").removeClass("active");
   $("#navAlumnos").addClass("active");
   $("#alumnosSection").removeClass("d-none");
   $("#materiasSection").addClass("d-none");
-}); $("#navMaterias").click(() => {
+});
+$("#navMaterias").click(() => {
   $("#navAlumnos").removeClass("active");
   $("#navMaterias").addClass("active");
   $("#materiasSection").removeClass("d-none");
@@ -48,7 +49,10 @@ $("#formAddMateria").submit(async function (e) {
       data: data,
     });
     swal.close();
-    if (query.error === "ERROR_EXISTENTE") return alertas.newErrorMessage("La materia seleccionada ya esta asignada");
+    if (query.error === "ERROR_EXISTENTE")
+      return alertas.newErrorMessage(
+        "La materia seleccionada ya esta asignada"
+      );
     if (query.status) return location.reload();
   } catch (error) {
     console.log(error);
@@ -57,7 +61,8 @@ $("#formAddMateria").submit(async function (e) {
 });
 // Boton de agregar materia
 $("#btnGuardarMaterias").click(() => {
-  if (!$("#selectMateria").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+  if (!$("#selectMateria").val())
+    return alertas.newErrorMessage("No se permiten espacios vacíos");
   $("#formAddMateria").submit();
 });
 
@@ -98,7 +103,10 @@ $("#formMaestro").submit(async function (e) {
       data: data,
     });
     swal.close();
-    if (query.error === "ERROR_EXISTENTE") return alertas.newErrorMessage("El maestro seleccionado ya esta asignado");
+    if (query.error === "ERROR_EXISTENTE")
+      return alertas.newErrorMessage(
+        "El maestro seleccionado ya esta asignado"
+      );
     if (query.status) return location.reload();
   } catch (error) {
     console.log(error);
@@ -107,19 +115,19 @@ $("#formMaestro").submit(async function (e) {
 });
 // Boton de formulario maestro
 $("#btnGuardarMaestros").click(() => {
-  if (!$("#selectMaestro").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+  if (!$("#selectMaestro").val())
+    return alertas.newErrorMessage("No se permiten espacios vacíos");
   $("#formMaestro").submit();
 });
 
 // Boton de asignar maestro
-$(".btnAsignarMaestro").on('click', function () {
+$(".btnAsignarMaestro").on("click", function () {
   const { materia, union } = $(this).data();
 
   $("#textoNombreMateria").text(materia);
   $("#idMateriaInMaestro").val(union);
   $("#modalAddMaestro").modal();
 });
-
 
 const idGrado = $("#idGrado").val();
 
@@ -148,7 +156,6 @@ $("#selectEstudiantes").select2({
   },
 });
 
-
 // Agregar maestro
 $("#formEstudiantes").submit(async function (e) {
   e.preventDefault();
@@ -170,17 +177,20 @@ $("#formEstudiantes").submit(async function (e) {
 
 // Boton de formulario estudiantes
 $("#btnGuardarEstudiantes").click(() => {
-  if (!$("#selectEstudiantes").val()) return alertas.newErrorMessage("No se permiten espacios vacíos");
+  if (!$("#selectEstudiantes").val())
+    return alertas.newErrorMessage("No se permiten espacios vacíos");
   $("#formEstudiantes").submit();
 });
-
 
 $(".edicionBtn").on("click", async function () {
   try {
     let { role, status, idunion } = $(this).data();
     if (status) status = 0;
     else status = 1;
-    const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar permisos de edición?", "Este cambio afectara el permiso de edición");
+    const { isConfirmed } = await alertas.ConfirmAlert(
+      "¿Actualizar permisos de edición?",
+      "Este cambio afectara el permiso de edición"
+    );
     if (isConfirmed) {
       alertas.loaderAlert();
       const query = await $.ajax({
@@ -197,6 +207,59 @@ $(".edicionBtn").on("click", async function () {
   }
 });
 
+$(".btnDelete").on("click", function () {
+  const { id } = $(this).data();
+  console.log(id);
+  alertas.deleteAlertAjx(
+    "Eliminar maestro asignado",
+    "Remover asignación de maestro en materia",
+    "maestros_materias",
+    "id",
+    id
+  );
+});
+
+$(".btnDeleteAlumno").on("click", function () {
+  const { id } = $(this).data();
+  console.log(id);
+  alertas.deleteAlertAjx(
+    "Eliminar alumno asignado",
+    "Remover asignación de alumno en materia",
+    "grado_alumno",
+    "id",
+    id
+  );
+});
+
+$("#editGrado").on("click", async function () {
+  const nombreGrado = $("#nombreGrado").text();
+  const id = $("#idGrado").val();
+  const { value: codigoInput } = await Swal.fire({
+    title: "Editar nombre del grado",
+    input: "text",
+    inputValue: nombreGrado.trim(),
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value) {
+        return "You need to write something!";
+      }
+    },
+  });
+  if (codigoInput) {
+    try {
+      alertas.loaderAlert();
+      const query = await $.ajax({
+        type: "PUT",
+        url: "/admin/grados",
+        data: { codigoInput, id },
+      });
+      if (query.status) return location.reload();
+    } catch (error) {
+      console.log(error);
+      return alertas.newErrorMessage();
+    }
+  }
+});
 
 // const createGradosTable = (year ) => {
 //     // DataTable Usuarios
@@ -210,13 +273,13 @@ $(".edicionBtn").on("click", async function () {
 //           render (data, type, row) {
 //             if (row.Role == 1) {
 //               return "Administrador";
-//             } 
+//             }
 //             if (row.Role == 5) {
 //               return "Empresa Centro";
-//             } 
+//             }
 //             if (row.Role == 2) {
 //               return "Instructor Empresa Centro";
-//             } 
+//             }
 //               return "Coordinador";
 
 //           },
@@ -225,7 +288,7 @@ $(".edicionBtn").on("click", async function () {
 //           render (data, type, row) {
 //             if (row.Estado == 1) {
 //               return '<p class="text-primary">Activo</p>';
-//             } 
+//             }
 //               return '<p class="text-danger">Inactivo</p>';
 
 //           },

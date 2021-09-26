@@ -45,11 +45,11 @@ grados.detalleGrado = async (req, res) => {
                 [idGrado]
             ), // Trae todas las materias
             pool.query(
-                "SELECT idUnionGradoMateria AS idMateria , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = maestros_materias.idMaestro) AS NombreMaestro  FROM maestros_materias WHERE idGrado  = ?",
+                "SELECT id AS idMaestroMateria , idUnionGradoMateria AS idMateria , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = maestros_materias.idMaestro) AS NombreMaestro  FROM maestros_materias WHERE idGrado  = ?",
                 [idGrado]
             ), // Trae todas los maestros asignados
             pool.query(
-                "SELECT Carnet , Nombre , Apellido FROM alumnos INNER JOIN grado_alumno  ON grado_alumno.idAlumno = alumnos.Carnet  WHERE idGrado = ? GROUP BY Carnet",
+                "SELECT Carnet , Nombre , Apellido, grado_alumno.id AS idGradoAlumno FROM alumnos INNER JOIN grado_alumno  ON grado_alumno.idAlumno = alumnos.Carnet  WHERE idGrado = ? GROUP BY Carnet",
                 [idGrado]
             ), // Trae todos los alumnos inscritos
         ];
@@ -188,6 +188,16 @@ grados.edicionIndividual = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
+    }
+};
+
+grados.edit = async (req , res) => {
+    try {
+        const {codigoInput , id } = req.body;
+        await pool.query("UPDATE grados SET nombre = ? WHERE id = ? ", [codigoInput , id]);
+        res.json({ status: true});
+    } catch (error) {
+        res.status(400).json({ status: false, error});
     }
 };
 
