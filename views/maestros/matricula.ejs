@@ -1,3 +1,4 @@
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <%- include('header.maestros.ejs'); %>
 
     <div id="layoutSidenav_content">
@@ -110,7 +111,7 @@
                                 <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header">
-                                            Datos personales madre
+                                            Datos personales padre
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
@@ -207,12 +208,6 @@
                                                 <option value="Con otro tipo de familiar">Con otro tipo de familiar</option>
                                             </select>
                                         </div>
-                                        <!-- <div class="col-md-3">
-                                            <label>¿Alumnos familiares? ( Si no tiene dejar vacío) </label>
-                                            <select name="Familiares[]" multiple id="Familiares" class="form-control">
-                                                <option selected value="null">Seleccione</option>
-                                            </select>
-                                        </div> -->
                                         <div class="col-md-4">
                                             <label>Seleccione el grado a matricularse</label>
                                             <select name="idGrado" id="idGrado" class="form-control">
@@ -232,6 +227,11 @@
                                             <input type="file" name="imagen" class="form-control" id="imagen">
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <label>Seleccione Hermanos en la institución (Opcional) </label> 
+                                        <select class="form-control" name="idEstudiantes[]" id="selectEstudiantes"
+                                        multiple="multiple"></select>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -246,4 +246,5 @@
         
         <%- include('footer.maestros.ejs'); %>
         <script src="/static/js/alertas.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="/static/js/maestros/matricula.js"></script>

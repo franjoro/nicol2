@@ -38,7 +38,6 @@ main.signin = async (req, res) => {
       identificador = usuario;
     }
     const payload = { identificador, Role, usuario, Permisos };
-    console.log(payload);
     const token = firmar(payload);
     res.cookie("token", token);
     return res.status(200).json({ status: true, role: data[0].Role });

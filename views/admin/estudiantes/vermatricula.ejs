@@ -180,37 +180,41 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label>El alumno vive con : </label>
                                             <select name="ViveCon" id="ViveCon" disabled class="form-control">
                                                 <option selected disabled value="null"><%= datos.ViveCon %></option>
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label>Situación de los padres </label>
                                             <select name="SiticionPadres" disabled id="SiticionPadres" class="form-control">
                                                 <option selected value="null"><%= datos.SiticionPadres %></option>
 
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label>Resposabilidad económica</label>
                                             <select name="ResEcono" disabled id="ResEcono" class="form-control">
                                                 <option selected value="null"><%= datos.ResEcono %></option>
                                             </select>
                                         </div>
-                                        <!-- <div class="col-md-3">
-                                            <label>¿Alumnos familiares? ( Si no tiene dejar vacío) </label>
-                                            <select name="Familiares[]" multiple id="Familiares" class="form-control">
-                                                <option selected value="null">Seleccione</option>
-                                            </select>
-                                        </div> -->
-                                        <!-- <div class="col-md-6">
-                                            <label>Seleccione el grado a matricularse</label>
-                                            <select name="idGrado" id="idGrado" class="form-control">
-                                                <option selected value="null">Seleccione</option>
-                                            </select>
-                                        </div> -->
+                                        <div class="col-md-3">
+                                            <label>Condición de salud diagnosticada</label>
+                                            <input type="text" class="form-control" disabled id="condicionMedica" name="condicionMedica"
+                                            autocomplete="off" value="<%= datos.condicionMedica %>">
+                                        </div>
+                                        <hr>
+                                        <% if(existFamiliares) { %>
+                                        <div class="col-md-12">
+                                            <label>Alumnos familiares inscritos</label>
+                                            <ol>
+                                                <% arrFamiliares.forEach( familiar =>{   %>                                
+                                                    <li><%= familiar[0].Nombre +' '+ familiar[0].Apellido  %></li>
+                                                <%})%>
+                                            </ol>
+                                        </div>
+                                        <%}%>
                                     </div>
                                 </div>
                             </div>

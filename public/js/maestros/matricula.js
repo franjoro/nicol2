@@ -61,3 +61,28 @@ const sendFile = async (idMatricula = 2) => {
     }
 
 };
+
+
+$("#selectEstudiantes").select2({
+    width: "100%",
+    ajax: {
+      url: "/maestros/getEstudiantesAll",
+      type: "post",
+      dataType: "json",
+      delay: 250,
+      data(params) {
+        return {
+          searchTerm: params.term, // search term
+        };
+      },
+      results(response) {
+        console.log(response);
+        $.map(response, (item) => ({
+          id: item.id,
+          text: item.text,
+        }));
+      },
+      cache: true,
+    },
+  });
+  

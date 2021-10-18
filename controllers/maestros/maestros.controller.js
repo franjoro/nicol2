@@ -607,5 +607,29 @@ const formatExtension = (ext) => {
     return ext;
 };
 
+maestros.editIndicadores = async (req, res) => {
+    try {
+        const { indicador, id } = req.body;
+        await pool.query("UPDATE indicadoresparvularia SET indicador = ? WHERE id = ? ", [indicador , id]);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+maestros.getEstudiantesAll = async (req, res) => {
+    const { searchTerm } = req.body;
+    let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%' GROUP BY Carnet  ORDER By Nombre LIMIT 5`;
+    if (!searchTerm) query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos GROUP BY Carnet ORDER BY Nombre LIMIT 5`;
+    try {
+        const data = await pool.query(query);
+        return res.json({ results: data });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error });
+    }
+};
 
 module.exports = maestros;

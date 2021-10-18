@@ -98,7 +98,14 @@ router.get('/indicadores', maestros.indicadores);
 
 /* POST Agregar nuevo indicador */
 router.post('/indicadores', maestros.newIndicadores);
-// =============================================== FIN MATRICULAS
+
+/* PUT actualizar indicador */
+router.put('/indicadores',  maestros.editIndicadores);
+
+/* POST retorna JSON para select de alumnos  */
+router.post('/getEstudiantesAll',  maestros.getEstudiantesAll);
+
+// =============================================== FIN INDICADORES
 
 
 
