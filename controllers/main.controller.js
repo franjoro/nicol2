@@ -3,6 +3,7 @@ const main = {};
 const pool = require("../models/db");
 const { firmar, getUserDataByToken } = require("../middlewares/auth");
 const { encriptar, desincriptar } = require("../utils/decrypt");
+const { sendEmail } = require("../utils/mailer");
 
 main.main = function (req, res) {
   res.render("index");
@@ -84,32 +85,88 @@ main.remindSender = async (req, res) => {
 
   let Nombre, code, toSendEmail;
   if (email.includes("@")) {
-     data = await pool.query(
-      "SELECT CONCAT(Nombres,' ',Apellidos) AS Nombre FROM maestros WHERE Email = ? LIMIT 1 ; SELECT Password AS code FROM usuarios WHERE Username = ?",
-      [email, email]
-    );
-    Nombre  = data[0][0].Nombre;
-    code  = data[1][0].code;
-    toSendEmail  = email;
-  } else {
     data = await pool.query(
       "SELECT CONCAT(Nombres,' ',Apellidos) AS Nombre FROM maestros WHERE Email = ? LIMIT 1 ; SELECT Password AS code FROM usuarios WHERE Username = ?",
       [email, email]
     );
+    Nombre = data[0][0].Nombre;
+    code = data[1][0].code;
+    toSendEmail = email;
+  } else {
+    data = await pool.query(
+      "SELECT CONCAT(Nombre,' ',Apellido) AS Nombre, Email FROM alumnos WHERE Carnet = ? LIMIT 1 ; SELECT Password AS code FROM usuarios WHERE Username = ?",
+      [email, email]
+    );
+    Nombre = data[0][0].Nombre;
+    code = data[1][0].code;
+    toSendEmail = data[0][0].Email;
   }
 
-  console.log(Nombre, code , toSendEmail);
-  // const data = await pool.query( 
-  //   "SELECT email, Nombre FROM tb_empresa WHERE tb_empresa.NIT = ? LIMIT 1 ; SELECT Password AS code FROM tb_usuarios WHERE id_usuario = ?",
-  //   [nit, nit]
-  // );
-  // const { email } = data[0][0];
-  // const { Nombre } = data[0][0];
-  // const { code } = data[1][0];
-  // const enlace = `https://cfp.ricaldone.edu.sv/public/password?code=${code}`;
-  // const html = `<h1>Cambio de contraseña usuario empresarial</h1><br><p>Ha solicitado el cambio de contraseña correspondiente al usuario empresarial, por favor de click en el siguiente enlace : <a href="${enlace}" >${enlace}</a>, de no haber solicitado el cambio por favor omita este correo. Cualquier consulta o solicitud de información puede hacerla respondiendo este correo.  </p><p><b>Empresa: </b>${Nombre}</p>`;
-  // sendEmail(email, "CAMBIO DE CONTRASEÑA USUARIO CFP RICALDONE", html);
-  // res.json({ email }).status(200);
+  // const enlace = `http://18.216.11.101/password?code=${code}`;
+  const enlace = `http://localhost:3000/password?code=${code}`;
+  const html = `<h1>Cambio de contraseña usuario, Colegio Salesiano San Juan Bosco </h1><br><p>Ha solicitado el cambio de contraseña correspondiente al usuario, por favor de click en el siguiente enlace : <a href="${enlace}" >${enlace}</a>, de no haber solicitado el cambio por favor omita este correo. Cualquier consulta o solicitud de información puede hacerla respondiendo este correo.  </p><p><b>Usuario : </b>${Nombre}</p>`;
+
+
+  sendEmail(toSendEmail, "CAMBIO DE CONTRASEÑA USUARIO COLEGIO SAN JUAN BOSCO", " ", html);
+  res.json({ email }).status(200);
 };
 
+main.remindPassword = async (req, res) => {
+  const { code } = req.query;
+  let check = await pool.query(
+    "SELECT COUNT(*) AS ca FROM usuarios WHERE Password = ? ",
+    [code]
+  );
+  check = check[0].ca;
+  if (check) {
+    let Username = await pool.query(
+      "SELECT Username AS user FROM usuarios WHERE Password = ? ",
+      [code]
+    );
+    Username = Username[0].user;
+    res.render("password", { Username, code });
+  } else {
+    res
+      .send(
+        "Error: código no valido por favor comuniquese con el Centro de Formación"
+      )
+      .status(404);
+  }
+};
+
+
+main.ChangePasswordwithReminder = async (req, res) => {
+  const { username, code, password1 } = req.body;
+  const encrip = await encriptar(password1);
+  try {
+    await pool.query(
+      "UPDATE usuarios SET Password = ? WHERE Username = ? AND Password = ? ",
+      [encrip, username, code]
+    );
+    let table = 'alumnos';
+    let campo = 'Carnet';
+    if (username.includes("@"))  {
+      table = 'maestros';
+      campo = 'Email';
+    }
+
+    const data = await pool.query(`SELECT email FROM ${table} WHERE ${campo} = ? LIMIT 1 `,[ username]);
+    console.log(data);
+    const { email } = data[0];
+
+  // const enlace = `http://18.216.11.101/password?code=${code}`;
+  const enlace = `http://localhost:3000/`;
+
+
+    const html = `<h1>Cambio de contraseña usuario realizado</h1> <p>Se ha actualizado la contraseña del usuario  , puede ingresar a la plataforma en el siguiente enlace : <a href="${enlace}">${enlace}</a> </p> <br> <p>Si usted no ha hecho este cambio por favor comuniquese respondiendo este correo. O con soporte técnico </p>`;
+    sendEmail(email, "CAMBIO DE CONTRASEÑA HECHO"," " , html);
+    res.json({ status: true }).status(200);
+
+
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error });
+  }
+};
 module.exports = main;

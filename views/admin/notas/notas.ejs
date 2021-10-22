@@ -71,6 +71,7 @@
                 <label>Seleccione alumno para ver notas</label>
                 <select name="" id="selectEstudiantes" class="form-control selectEstudiantes"></select>
                 <div id="notasAlumno"></div>
+                <hr>
               </div>
 
               <div class="tab-pane fade" id="profile" aria-labelledby="example-pill">
@@ -91,13 +92,13 @@
                   </div>
                   <hr>
                   <div class="row table-responsive" id="htmlByGrado"></div>
+                  <label>Agregar observaciones en reporte (Opcional)</label>
+                  <textarea class="form-control disabled" id="textAreaConsolidadoBimestral" cols="30" rows="3"></textarea>
                   <div class="d-flex flex-row-reverse">
                     <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoBimestral">Generar reporte PDF </button></div>
                   </div>
                 </div>
               </div>
-
-
 
 
               <div class="tab-pane fade" id="con" aria-labelledby="example-pill">
@@ -108,7 +109,7 @@
                       <i data-feather="users"></i>
                     </span>
                     <select class="form-control form-control-solid" id="selectConsolidado">
-                      <option disabled selected>Seleccionar grado</option>
+                      <option disabled>Seleccionar grado</option>
                       <% grados.forEach( grado=> { %>
                         <option value=" <%=grado.idGrado%> ">
                           <%= grado.nombreGrado%>
@@ -118,6 +119,8 @@
                   </div>
                   <hr>
                   <div class="row table-responsive" id="htmlByConsolidado"></div>
+                  <label>Agregar observaciones en reporte (Opcional)</label>
+                  <textarea class="form-control disabled" id="textAreaConsolidadoAnual" cols="30" rows="3"></textarea>
                   <div class="d-flex flex-row-reverse">
                     <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoAnual">Generar reporte PDF </button></div>
                   </div>
@@ -130,19 +133,22 @@
                     <select name="" id="selectEstudiantesBoleta" class="form-control selectEstudiantes"></select>
                   <hr>
                   <div class="row table-responsive" id="HtmlBoletaFinal"></div>
+                  <label>Agregar observaciones en reporte (Opcional)</label>
+                  <textarea class="form-control disabled" id="textAreaBoletaFinal" cols="30" rows="3"></textarea>
                   <div class="d-flex flex-row-reverse">
                     <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteFinal">Generar reporte PDF </button></div>
                   </div>
                 </div>
               </div>
 
-              
               <div class="tab-pane fade" id="boletaAcumulados" aria-labelledby="example-pill">
                 <div class="pt-1">
                   <label>Selecciona alumno para verficar boleta bimestral</label>
                     <select id="selectBoletaAcumulados" class="form-control selectEstudiantes"></select>
                   <hr>
                   <div class="row table-responsive" id="HtmlBoletaAcumulados"></div>
+                  <label>Agregar observaciones en reporte (Opcional)</label>
+                  <textarea class="form-control disabled" id="textAreaBoletaBimestral" cols="30" rows="3"></textarea>
                   <div class="d-flex flex-row-reverse">
                     <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteBimestral">Generar reporte PDF </button></div>
                   </div>

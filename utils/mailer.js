@@ -14,9 +14,9 @@ const transporter = nodemailer.createTransport({
 mailer.sendEmail = (to, sub, text , html = "") => {
   // Definimos el email
   const mailOptions = {
-    to: to || "franklin_lopez@ricaldone.edu.sv",
-    subject: sub || "",
-    text: text || "",
+    to: to || "no-reply@cssjb.edu.ni",
+    subject: sub || "Error",
+    text: text || "Message not sent",
     html
   };
   // Enviamos el email

@@ -212,7 +212,7 @@ const fillNotasByGrado = async (idGrado) => {
         const query = await $.ajax({ url: `/admin/notas/getNotasGrado/${idGrado}/${idBimestre}` });
         let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
         if (query.length) {
-            html = `<table class="table table-bordered table-striped"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
+            html = `<table class="table table-bordered table-striped table-sm"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
             query[0].notas.forEach(not => {
                 html += `<th>${not.Nombre}</th>`;
             });
@@ -239,7 +239,7 @@ const fillBoletaFinal = async (idAlumno) => {
         const query = await $.ajax({ url: `/admin/notas/getBoletaFinal/${idAlumno}` });
         let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
         if (query.length) {
-            html = `<table class="table table-bordered table-striped">
+            html = `<table class="table table-bordered table-sm table-striped">
          <thead>
            <tr class="bg-blue text-black">
              <th>Materia</th>
@@ -282,7 +282,7 @@ const fillBoletaBimestral = async (idAlumno) => {
         console.log(query);
 
         if (query.length) {
-            html = `<table class="table table-bordered table-striped">
+            html = `<table class="table table-bordered table-sm table-striped" >
          <thead>
            <tr class="bg-blue text-black">
              <th>Materia</th>
@@ -316,7 +316,7 @@ const fillConsolidadoAnual = async (idGrado) => {
         const query = await $.ajax({ url: `/admin/notas/getConsolidadoAnual/${idGrado}` });
         let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
         if (query.length) {
-            html = `<table class="table table-bordered table-striped"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
+            html = `<table class="table table-bordered table-striped table-sm"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
             query[0].notas.forEach(not => {
                 html += `<th>${not.Nombre}</th>`;
             });
@@ -374,11 +374,11 @@ $("#btnReporteFinal").click(() => {
             <tbody>
                 <tr>
                     <td>Carnet: <span class="font-weight-bold">${$("#selectEstudiantesBoleta").val()}</span></td>
-                    <td>Nombre: <span class="font-weight-bold">${$("#selectEstudiantesBoleta").text().split("-")[1].trim()}</span></td>
+                    <td>Nombre: <span class="font-weight-bold">${$("#selectEstudiantesBoleta").text().split("-")[2].trim()}</span></td>
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_boletaFinal !== null) sendDataToPdf(global_json_boletaFinal, html);
+    if (global_json_boletaFinal !== null) sendDataToPdf(global_json_boletaFinal, html, false , $("#textAreaBoletaFinal").val() );
 });
 
 $("#btnReporteBimestral").click(() => {
@@ -388,12 +388,12 @@ $("#btnReporteBimestral").click(() => {
             <tbody>
                 <tr>
                     <td>Carnet: <span class="font-weight-bold">${$("#selectBoletaAcumulados").val()}</span></td>
-                    <td>Nombre: <span class="font-weight-bold">${$("#selectBoletaAcumulados").text().split("-")[1].trim()}</span></td>
+                    <td>Nombre: <span class="font-weight-bold">${$("#selectBoletaAcumulados").text().split("-")[2].trim()}</span></td>
                     <td>Bimestre: <span class="font-weight-bold">${$("#roleBimestre").val()}</span></td>
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_bimestral !== null) sendDataToPdf(global_json_bimestral, html);
+    if (global_json_bimestral !== null) sendDataToPdf(global_json_bimestral, html  , false , $("#textAreaBoletaBimestral").val());
 });
 
 $("#btnReporteConsolidadoAnual").click(() => {
@@ -406,12 +406,12 @@ $("#btnReporteConsolidadoAnual").click(() => {
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_conAnual !== null) sendDataToPdf(global_json_conAnual, html);
+    if (global_json_conAnual !== null) sendDataToPdf(global_json_conAnual, html ,  false , $("#textAreaConsolidadoAnual").val());
 });
 
 $("#btnReporteConsolidadoBimestral").click(() => {
     const html = `
-            <h3>Consolidado anual </h3>
+            <h3>Consolidado bimestral </h3>
             <table class="table">
             <tbody>
                 <tr>
@@ -420,16 +420,16 @@ $("#btnReporteConsolidadoBimestral").click(() => {
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_conBimestral !== null) sendDataToPdf(global_json_conBimestral, html, true);
+    if (global_json_conBimestral !== null) sendDataToPdf(global_json_conBimestral, html, true , $("#textAreaConsolidadoBimestral").val() );
 });
 
 
-const sendDataToPdf = async (data, header, landscape = false) => {
+const sendDataToPdf = async (data, header, landscape = false , observaciones) => {
     const plainText = data.trim();
     const plainHeader = header.trim();
     try {
         alertas.loaderAlert();
-        const query = await $.ajax({ url: `/admin/notas/generatePdfHtml`, type: "POST", data: { html: plainText, header: plainHeader , landscape} });
+        const query = await $.ajax({ url: `/admin/notas/generatePdfHtml`, type: "POST", data: { html: plainText, header: plainHeader , landscape, observaciones} });
         if (query.status) {
             swal.close();
             window.open(`/admin/notas/getFile `);

@@ -46,5 +46,5 @@ $("#loginForm").submit(async function (e) {
     const data = await $.ajax({ url: `/recover?email=${email}`, type: "GET" });
     if (data.error == "USER_NOT_EXIST") return NotFoundM();
     FoundedEmailM(data.email);
-    $("#exampleModal").modal('hide');
+    $("#passwordRecover").modal('hide');
   });

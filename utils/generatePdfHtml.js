@@ -1,5 +1,6 @@
 const html_to_pdf = require("html-pdf-node");
-const GenerarPdf = (data, header ,landscape = false ) => {
+const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
+    console.log(observaciones);
     if(landscape) landscape = true;
      const html = `<!DOCTYPE html>
      <html lang="en">
@@ -22,15 +23,26 @@ const GenerarPdf = (data, header ,landscape = false ) => {
                     ${header}
                  </div>
              </div>
-             <div class="row">
-                 <div class="col-md-12">
-                     <div class="card border">
-                         <div class="card-body ">${data}</div>
-                     </div>
-                 </div>
-             </div>
+                ${data}
+
                  <hr>
                  <h4 class="pt-1">Observaciones: </h4>
+                 <textarea class="form-control disabled"  cols="30" rows="4">${observaciones}</textarea>
+                 <hr>
+                 <br>
+                 <br>
+                 <br>
+                 <br>
+                 <br>
+                 <br>
+                 <div class="row">
+                    <div class="col-md-6 text-center">
+                        <h4 class="pt-1">Firma profesor Guía </h4>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h4 class="pt-1">Firma Director </h4>
+                    </div>
+                 </div>
          </div>
      </body>
      </html>`;
@@ -39,6 +51,12 @@ const GenerarPdf = (data, header ,landscape = false ) => {
         const options = {
             format: "Letter",
             path: `./public/files/${tmpName}`,
+            margin: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            }
         };
         const file = {content: html};
         html_to_pdf.generatePdf(file, options).then((output) => {

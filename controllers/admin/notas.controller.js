@@ -66,19 +66,19 @@ notas.getNotasByAlumnos = async (req, res) => {
 
 
 
-notas.getNotasByAlumnosParvularia = async (req, res) => {
-    try {
-        const { idAlumno, idBimestre } = req.params;
-        const { [0]: { idGrado } } = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]);
+// notas.getNotasByAlumnosParvularia = async (req, res) => {
+//     try {
+//         const { idAlumno, idBimestre } = req.params;
+//         const { [0]: { idGrado } } = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]);
 
 
         
 
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({ status: false, error });
-    }
-};
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).json({ status: false, error });
+//     }
+// };
 
 
 notas.getConsolidadoAnual = async (req, res) => {
@@ -301,8 +301,8 @@ notas.getConsolidadoBimestral = async (req, res) => {
 
 notas.generateFichaByHtml = async (req, res) => {
     try {
-        const { html , header , landscape} = req.body;
-        const pdf = await GenerarPdf(html , header , landscape);
+        const { html , header , landscape , observaciones} = req.body;
+        const pdf = await GenerarPdf(html , header , landscape , observaciones);
         console.log(pdf);
         res.json({ status: true });
     } catch (error) {
