@@ -14,4 +14,8 @@ router.post("/", main.signin);
 /* POST Funcion Cambiar contraseña */
 router.put("/", main.password);
 
+
+/* POST Funcion restaurar password */
+router.get("/recover", main.remindSender);
+
 module.exports = router;
