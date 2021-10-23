@@ -36,6 +36,7 @@ const loadTable = () => {
                 "render": function (data, type, row) {
                     const html = `
                     <div class="btn-group" role="group" aria-label="Basic example">
+                        <a href="/admin/estudiantes/perfilac/${row.Carnet}" class="btn btn-success btn-sm">Conducta</a> 
                         <a href="/admin/estudiantes/matriculas/${row.Carnet}" class="btn btn-primary btn-sm">Matriculas</a> 
                         <button type="button" data-id="${row.Carnet}" class="btn btn-danger btnDelete">Eliminar</button>
                         <button type="button" class="btn btn-info btnEdit">Editar</button>

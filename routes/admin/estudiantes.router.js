@@ -37,4 +37,9 @@ router.get('/matriculas/:idAlumno',  estudiantes.getMatriculas);
 router.get('/vermatricula/:idMatricula',  estudiantes.viewMatricula);
 
 
+/* GET Perfil Académico  */
+router.get('/perfilac/:idAlumno',  estudiantes.perfilAcademico);
+
+
+
 module.exports = router;

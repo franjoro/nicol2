@@ -190,4 +190,31 @@ estudiantes.viewMatricula = async (req, res) => {
     }
 };
 
+
+estudiantes.perfilAcademico = async (req, res) =>{
+    const { idAlumno } = req.params;
+    try {
+    const {  [0]: { [0]:  datosGrado  }  , [1]: { [0]:  datosBimestre  }   } =  await Promise.all([
+        // TRAER ID GRADO DEL ALUMNO
+        pool.query("SELECT grados.id AS idGrado, grados.nombre FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]),
+        // TRAER ROLE DEL BIMESTRE
+        pool.query("SELECT id, Role AS roleBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Estado= 1")
+     ]);
+     const columna = `Conducta${datosBimestre.roleBimestre}`;
+     const { [0]:  datosAlumno  } = await pool.query(`SELECT Nombre, Apellido, ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE alumnos.Carnet = ? ` , idAlumno);
+
+
+     const codigos = await pool.query("SELECT Codigo, valor, Observacion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro  FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id INNER JOIN maestros ON maestros.id = codigo_alumno.idMaestro WHERE idBimestre = ? AND codigo_alumno.idAlumno = ? ORDER BY valor ASC" ,[ datosBimestre.id , idAlumno ]);
+
+
+
+        console.log(codigos);
+        res.render('./admin/estudiantes/perfilconducta.ejs' , {idAlumno , datosGrado, datosAlumno , codigos});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error });  
+    }
+};
+
+
 module.exports = estudiantes;
