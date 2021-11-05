@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#selectBimestre").val(roleBimestre);
 
 });
-let global_json_boletaFinal = null, global_json_bimestral = null, global_json_conAnual = null, global_json_conBimestral = null;
+let global_json_boletaFinal = null, global_json_bimestral = null, global_json_conAnual = null, global_json_conBimestral = null , global_idGrado = null;
 
 
 $("#selectBimestre").change(function () {
@@ -196,6 +196,7 @@ $("#selectBoletaAcumulados").change(async function () {
 
 $("#selectNotaGrado").change(async function () {
     const value = $(this).val();
+    global_idGrado = value;
     fillNotasByGrado(value);
 });
 
@@ -439,3 +440,13 @@ const sendDataToPdf = async (data, header, landscape = false , observaciones) =>
         alertas.newErrorMessage("Error al generar documento");
     }
 };
+
+$("#btnReporteConsolidadoBimestralExcel").click(async () => {
+    const idBimestre = $("#idBimestre").val();
+    const query = await $.ajax({ url: `/admin/notas/getNotasGradoExcel/${global_idGrado}/${idBimestre}` });
+    if (query.status) {
+        swal.close();
+        window.open(`/admin/notas/download/${query.path} `);
+    }
+    console.log(query);
+});

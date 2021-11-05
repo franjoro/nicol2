@@ -102,8 +102,8 @@ main.remindSender = async (req, res) => {
     toSendEmail = data[0][0].Email;
   }
 
-  // const enlace = `http://18.216.11.101/password?code=${code}`;
-  const enlace = `http://localhost:3000/password?code=${code}`;
+  const enlace = `http://18.216.11.101/password?code=${code}`;
+  // const enlace = `http://localhost:3000/password?code=${code}`;
   const html = `<h1>Cambio de contraseña usuario, Colegio Salesiano San Juan Bosco </h1><br><p>Ha solicitado el cambio de contraseña correspondiente al usuario, por favor de click en el siguiente enlace : <a href="${enlace}" >${enlace}</a>, de no haber solicitado el cambio por favor omita este correo. Cualquier consulta o solicitud de información puede hacerla respondiendo este correo.  </p><p><b>Usuario : </b>${Nombre}</p>`;
 
 

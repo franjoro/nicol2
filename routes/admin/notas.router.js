@@ -40,9 +40,26 @@ router.get('/getFile',  notas.openFile);
 router.put('/', authCheckAdmin  , notas.updateNota);
 
 
+
+
+
+// REPORTES EXCEL
+
+
+router.get('/getNotasGradoExcel/:idGrado/:idBimestre',  notas.getConsolidadoBimestralExcel);
+
+
+router.get('/download/:nameFile',  notas.download);
+
+
+
+
+
+
+
+
 /* GET Pantalla principal de notas */
 router.get('/:roleBimestre?',  notas.main);
-
 
 
 module.exports = router;
