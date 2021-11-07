@@ -221,7 +221,10 @@ const fillNotasByGrado = async (idGrado) => {
             query.forEach(estudiante => {
                 html += `<tr><td>${estudiante.nombreAlumno}</td> `;
                 estudiante.notas.forEach(nota => {
-                    html += `<td>${nota.nota}</td>`;
+                    let color = "black";
+                    if(nota.nota <60) color = "red";
+                    if(nota.nota >=60 && nota.nota <= 69) color = "blue";
+                    html += `<td style="color:${color}">${nota.nota}</td>`;
                 });
                 html += `</tr>`;
             });
@@ -325,7 +328,11 @@ const fillConsolidadoAnual = async (idGrado) => {
             query.forEach(estudiante => {
                 html += `<tr><td>${estudiante.nombreAlumno}</td> `;
                 estudiante.notas.forEach(nota => {
-                    html += `<td>${nota.notaGlobal}</td>`;
+                    let color = "black";
+                    if(nota.notaGlobal <60) color = "red";
+                    if(nota.notaGlobal >=60 && nota.notaGlobal <= 69) color = "blue";
+                    html += `<td style="color:${color}">${nota.notaGlobal}</td>`;
+
                 });
                 html += `<td>${estudiante.notaPromedio}</td></tr>`;
             });

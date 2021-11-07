@@ -30,14 +30,13 @@ $("#loginForm").submit(async function (e) {
       }
     } catch (error) {
       swal.close();
-      if(error == "ERROR_ESTADO") return alertas.newErrorMessage("Usuario bloqueado, por favor comunicate con registro acádemico o la administración más cercana.");
+      console.log(error.responseJSON.error);
+      if(error.responseJSON.error == "ERROR_ESTADO") return alertas.newErrorMessage("Usuario bloqueado, por favor comunicate con registro acádemico o administración general.");
       alertas.errorLogin();
     }
   });
 
   $("#btnGuardar").click(()=> { $("#loginForm").submit();  } );
-
-
 
   $("#restaurar").submit(async e => {
     e.preventDefault();

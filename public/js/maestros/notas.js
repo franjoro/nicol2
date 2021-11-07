@@ -21,7 +21,7 @@ $("#btnGuardar").click(async () => {
             dataarr.push(data);
             console.log(data);
         });
-        const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador y los alumnos");
+        const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador, los docentes y alumnos.");
         if (isConfirmed) {
             dataarr = JSON.stringify(dataarr);
             await $.ajax({
@@ -49,7 +49,7 @@ $("#btnGuardarParvularia").click(async () => {
             dataarr.push(data);
             console.log(data);
         });
-        const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador y los alumnos");
+        const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador, los docentes y alumnos.");
         if (isConfirmed) {
             dataarr = JSON.stringify(dataarr);
             await $.ajax({

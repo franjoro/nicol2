@@ -35,6 +35,7 @@
               <thead>
                 <tr>
                   <th scope="col">Materias</th>
+                  <th scope="col">Siglas</th>
                   <th scope="col">Área</th>
                   <th scope="col">Acciones</th>
                 </tr>
@@ -44,6 +45,9 @@
                   <tr>
                     <td scope="row">
                       <%= materia.Nombre %>
+                    </td>
+                    <td scope="row">
+                      <%= materia.Siglas %>
                     </td>
                     <td scope="row">
                       <%= materia.areaNombre %>
@@ -82,6 +86,10 @@
                 <label for="exampleInputEmail1">Nombre materia</label>
                 <input type="email" class="form-control" id="NombreMateriaInput" name="Nombre" />
               </div>
+              <div class="form-group pb-1">
+                <label for="exampleInputEmail1">Siglas</label>
+                <input type="email" class="form-control" id="NombreMateriaInput" name="Siglas" />
+              </div>
               <div class="form-group pt-1">
                 <label for="exampleInputEmail1">Área perteneciente</label>
                 <select name="idArea" class="form-control" id="AreaMateriaSelect">
@@ -107,3 +115,4 @@
     <%- include('../../partials/footer.ejs'); %>
       <script src="/static/js/alertas.js"></script>
       <script src="/static/js/admin/catalogos/materias/materias.js"></script>
+

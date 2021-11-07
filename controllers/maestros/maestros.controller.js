@@ -65,9 +65,10 @@ maestros.addCodigo = async (req, res) => {
         const { idCodigo, idAlumno, descripcion, idGrado } = req.body;
 
 
-        const { [0]: { [0]: { id, Role } }, [1]: { [0]: { valor, Codigo } } } = await Promise.all([
+        const { [0]: { [0]: { id, Role } }, [1]: { [0]: { valor, Codigo } } , [2]: { [0]: {  Email } } } = await Promise.all([
             pool.query("SELECT id , Role FROM bimestres WHERE Estado = 1"),
             pool.query("SELECT valor, Codigo FROM codigos WHERE id = ?", idCodigo),
+            pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno),
         ]);
         const columna = `Conducta${Role}`;
         let { [0]: { puntaje } } = await pool.query(`SELECT ${columna} AS puntaje FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? `, [idGrado, idAlumno]);
@@ -84,8 +85,7 @@ maestros.addCodigo = async (req, res) => {
         ];
         await Promise.all(promesas);
         res.json({ status: true });
-
-        sendEmail('fral_98@outlook.com', `Código de conducta aplicado ${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p>`);
+        sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p>`);
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -109,8 +109,9 @@ maestros.addObservacion = async (req, res) => {
 
         res.json({ status: true });
 
+        const {[0]: {Email}} = await pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno);
+        sendEmail(Email, `Observación del maestro aplicada  #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de observación aplicada</h5><p>Por favor acceda a su usuario en la plataforma de registro acádemico para visualizar la observación <p>Carnet Alumno : ${idAlumno}</p>`);
 
-        // sendEmail('fral_98@outlook.com', 'Código de conducta aplicado' , '', '<h1>CODIGO DE CONDUCATA APLICADO</h1>');
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });

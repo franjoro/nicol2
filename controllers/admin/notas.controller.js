@@ -115,7 +115,7 @@ notas.getConsolidadoAnual = async (req, res) => {
         [idGrado]
       ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+        "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
         [idGrado]
       ),
 
@@ -148,7 +148,7 @@ notas.getConsolidadoAnual = async (req, res) => {
           RoleFour = 0;
         let objInsede = {};
         objInsede.idUnion = materia.idUnion;
-        objInsede.Nombre = materia.Nombre;
+        objInsede.Nombre = materia.Siglas;
         // const arrNota = [];
         notas.forEach((nota) => {
           if (
@@ -363,7 +363,7 @@ notas.getConsolidadoBimestral = async (req, res) => {
         [idGrado, idBimestre]
       ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+        "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
         [idGrado]
       ),
 
@@ -380,6 +380,8 @@ notas.getConsolidadoBimestral = async (req, res) => {
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
 
+
+
     estudiantes.forEach((estudiante) => {
       const materiasArr = [];
       let obj = {
@@ -391,7 +393,7 @@ notas.getConsolidadoBimestral = async (req, res) => {
         /* MUESTRA LAS NOTA SUMADA POR MATERIA */
         let objInsede = {};
         objInsede.idUnion = materia.idUnion;
-        objInsede.Nombre = materia.Nombre;
+        objInsede.Nombre = materia.Siglas;
         let sumaNota = 0;
         notas.forEach((nota) => {
           if (
@@ -427,7 +429,7 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
         [idGrado, idBimestre]
       ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+        "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
         [idGrado]
       ),
 
@@ -455,7 +457,7 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
         /* MUESTRA LAS NOTA SUMADA POR MATERIA */
         let objInsede = {};
         objInsede.idUnion = materia.idUnion;
-        objInsede.Nombre = materia.Nombre;
+        objInsede.Nombre = materia.Siglas;
         let sumaNota = 0;
         notas.forEach((nota) => {
           if (

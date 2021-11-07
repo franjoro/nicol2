@@ -5,7 +5,7 @@ materias.main = async (req, res) => {
     try {
         const { [0]: materias, [1]: areas } = await Promise.all([
             pool.query(
-                "SELECT id, Nombre, (SELECT Nombre FROM areas WHERE id =  modelomaterias.idArea) AS areaNombre , idArea FROM modelomaterias"
+                "SELECT id, Nombre, Siglas, (SELECT Nombre FROM areas WHERE id =  modelomaterias.idArea) AS areaNombre , idArea FROM modelomaterias"
             ),
             pool.query("SELECT * FROM areas"),
         ]);
@@ -18,14 +18,15 @@ materias.main = async (req, res) => {
 
 materias.addNewModelo = async (req, res) => {
     try {
-        const { Nombre, idArea } = req.body;
+        const { Nombre, idArea , Siglas} = req.body;
         const { insertId } = await pool.query(
-            "INSERT INTO modelomaterias(Nombre, idArea) VALUES(? , ?)",
-            [Nombre, idArea]
+            "INSERT INTO modelomaterias(Nombre, Siglas, idArea) VALUES(? , ?, ?)",
+            [Nombre, Siglas, idArea]
         );
         res.json({ status: true, insertId });
     } catch (error) {
-        res.json({ status: false, error }).status(400);
+        console.log(error);
+        res.status(400).json({ status: false, error });
     }
 };
 
@@ -37,6 +38,7 @@ materias.getModelos = async (req, res) => {
         const data = await pool.query(query);
         return res.json({ results: data });
     } catch (error) {
+        console.log(error);
         return res.status(400).json({ error });
     }
 };
@@ -46,11 +48,12 @@ materias.getModelos = async (req, res) => {
 materias.edit = async (req , res) => {
     try {
         console.log(req.body);
-        const {codigoInput , id } = req.body;
-        await pool.query("UPDATE modelomaterias SET Nombre = ? WHERE id = ? ", [codigoInput , id]);
+        const {Materia, Siglas , id } = req.body;
+        await pool.query("UPDATE modelomaterias SET Nombre = ? , Siglas = ? WHERE id = ? ", [Materia, Siglas , id]);
         res.json({ status: true});
     } catch (error) {
-        res.status(400).json({ status: false, error});
+        console.log(error);
+        return res.status(400).json({ error });
     }
 };
 

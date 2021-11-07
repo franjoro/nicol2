@@ -30,26 +30,31 @@ $(".btnDelete").on("click", function () {
 });
 
 $('#datatable tbody').on('click', '.btnEdit', async function () {
+
     const data = $('#datatable').DataTable().row(this.closest('tr')).data();
     const { id } = $(this).data();
-    const { value: codigoInput } = await Swal.fire({
-        title: 'Editar nombre de materia',
-        input: 'text',
-        inputValue: data[0],
-        showCancelButton: true,
-        inputValidator: (value) => {
-            if (!value) {
-                return 'You need to write something!';
-            }
+
+    const { value: formValues } = await Swal.fire({
+        title: 'Editar Materia',
+        html:
+          `<label>Nombre materia:</label><input id="swal-input1" class="form-control" value="${data[0]}">
+           <label>Siglas : </label> <input id="swal-input2" class="form-control" value="${data[1]}">`,
+        focusConfirm: false,
+        preConfirm: () => {
+          return [
+            document.getElementById('swal-input1').value,
+            document.getElementById('swal-input2').value
+          ];
         }
-    });
-    if (codigoInput) {
+      });
+      
+    if (formValues) {
         try {
             alertas.loaderAlert();
             const query = await $.ajax({
                 type: "PUT",
                 url: "/admin/materias",
-                data: {codigoInput , id},
+                data: {Materia: formValues[0]  , Siglas: formValues[1] , id},
             });
             if (query.status) return location.reload();
         } catch (error) {
