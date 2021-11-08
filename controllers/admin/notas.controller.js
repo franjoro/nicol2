@@ -357,6 +357,12 @@ notas.getConsolidadoBimestral = async (req, res) => {
   try {
     const { idGrado, idBimestre } = req.params;
 
+    // RoleBimestre 
+    const  { [0]:  {roleBimestre}  }  =  await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]) ; 
+
+
+    const columna = `Conducta${roleBimestre}`;
+
     const queryPromesas = [
       /* NOTAS */ pool.query(
         "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
@@ -371,22 +377,30 @@ notas.getConsolidadoBimestral = async (req, res) => {
         "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? ",
         [idGrado]
       ),
+
+      /* CONDUCTA */
+      pool.query(`SELECT ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE idGrado = ?` , [idGrado])  
     ];
+
+
+
 
     const {
       [0]: notas,
       [1]: materias,
-      [2]: estudiantes /* Select todas las materias de ese grado */,
+      [2]: estudiantes, /* Select todas las materias de ese grado */
+      [3]: puntajeConducta
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
 
+  
 
-
-    estudiantes.forEach((estudiante) => {
+    estudiantes.forEach((estudiante, index) => {
       const materiasArr = [];
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
+        puntaje : puntajeConducta[index].puntaje
       };
 
       materias.forEach((materia) => {
@@ -411,8 +425,8 @@ notas.getConsolidadoBimestral = async (req, res) => {
       dataOrdenada.push(obj);
     });
     res.json(dataOrdenada);
-    // const util = require('util');
-    // console.log(util.inspect(dataOrdenada, false, null, true));
+    const util = require('util');
+    console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, error });
