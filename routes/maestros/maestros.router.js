@@ -109,4 +109,15 @@ router.post('/getEstudiantesAll',  maestros.getEstudiantesAll);
 
 
 
+// =============================================== Visualizar notas
+
+// GET Diario pedagogico  
+
+router.get('/reportes', maestros.viewNotasGrados);
+
+
+
+// =============================================== FIN Visualizar notas
+
+
 module.exports = router;

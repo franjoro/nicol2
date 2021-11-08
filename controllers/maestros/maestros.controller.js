@@ -633,4 +633,19 @@ maestros.getEstudiantesAll = async (req, res) => {
     }
 };
 
+
+
+maestros.viewNotasGrados = async (req, res) => {
+    try {
+        const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
+        // const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
+        const asignaciones = await pool.query("SELECT idGrado , nombre FROM grados INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id WHERE idMaestro = ? GROUP BY nombre", [identificador]);
+        res.render('./maestros/viewNotasGrados', { asignaciones, permisosSend, usuario });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
 module.exports = maestros;

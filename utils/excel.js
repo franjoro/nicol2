@@ -5,7 +5,7 @@
 const Excel = {};
 
 Excel.CreateNewExcel = (titulos, datos) => {
-  return new Promise(async function (Resolve, Reject) {
+  return new Promise(async function (Resolve) {
     const xl = require("excel4node");
     const wb = new xl.Workbook();
     const NameSheet = "Hoja de trabajo";

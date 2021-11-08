@@ -135,6 +135,7 @@ notas.getConsolidadoAnual = async (req, res) => {
     estudiantes.forEach((estudiante) => {
       const materiasArr = [];
       let notaPromedio = 0;
+      // Marca
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
@@ -397,6 +398,8 @@ notas.getConsolidadoBimestral = async (req, res) => {
 
     estudiantes.forEach((estudiante, index) => {
       const materiasArr = [];
+      let notaPromedio = 0;
+
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
@@ -419,14 +422,16 @@ notas.getConsolidadoBimestral = async (req, res) => {
         });
 
         objInsede.nota = sumaNota;
+        notaPromedio = notaPromedio +sumaNota;
         materiasArr.push(objInsede);
       });
       obj.notas = materiasArr;
+      obj.promedio = notaPromedio;
       dataOrdenada.push(obj);
     });
     res.json(dataOrdenada);
-    const util = require('util');
-    console.log(util.inspect(dataOrdenada, false, null, true));
+    // const util = require('util');
+    // console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, error });

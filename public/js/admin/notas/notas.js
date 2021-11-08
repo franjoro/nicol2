@@ -217,7 +217,8 @@ const fillNotasByGrado = async (idGrado) => {
             query[0].notas.forEach(not => {
                 html += `<th>${not.Nombre}</th>`;
             });
-            html += ` </tr></thead><tbody>`;
+            html += `<td>Conducta</td> <td>Prom.</td> </tr></thead><tbody>`;
+
             query.forEach(estudiante => {
                 html += `<tr><td>${estudiante.nombreAlumno}</td> `;
                 estudiante.notas.forEach(nota => {
@@ -226,7 +227,8 @@ const fillNotasByGrado = async (idGrado) => {
                     if(nota.nota >=60 && nota.nota <= 69) color = "blue";
                     html += `<td style="color:${color}">${nota.nota}</td>`;
                 });
-                html += `</tr>`;
+                html += `<td>${estudiante.puntaje}</td><td>${estudiante.promedio}</td></tr>`;
+
             });
             html += `</tbody></table>`;
         }

@@ -4,7 +4,7 @@
 
 *** Verificar el mensaje al estar el usuario bloqueado. "Administración".
 
-* Agregar conducta a la boleta bimestral y Anual , verificar promedio en ambos.
+*** Agregar conducta a la boleta bimestral y Anual , verificar promedio en ambos.
 
 *** Agregar color de rojo <59 , 60 -69 Color Azul Color de la plataforma.
 
@@ -12,9 +12,9 @@
 
 *** Agregar campo de sigla de materia, manual
 
-* Agregar bordes en excel.
+*** Agregar bordes en excel.
 
-* Estadisticas en segunda hoja de excel.
+*** Estadisticas en segunda hoja de excel.
 
 * Reporte de matricula en pdf tratar de poner dos alumnos por hoja.  1 vez al año 
 
