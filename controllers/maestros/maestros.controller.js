@@ -65,7 +65,7 @@ maestros.addCodigo = async (req, res) => {
         const { idCodigo, idAlumno, descripcion, idGrado } = req.body;
 
 
-        const { [0]: { [0]: { id, Role } }, [1]: { [0]: { valor, Codigo } } , [2]: { [0]: {  Email } } } = await Promise.all([
+        const { [0]: { [0]: { id, Role } }, [1]: { [0]: { valor, Codigo } }, [2]: { [0]: { Email } } } = await Promise.all([
             pool.query("SELECT id , Role FROM bimestres WHERE Estado = 1"),
             pool.query("SELECT valor, Codigo FROM codigos WHERE id = ?", idCodigo),
             pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno),
@@ -109,7 +109,7 @@ maestros.addObservacion = async (req, res) => {
 
         res.json({ status: true });
 
-        const {[0]: {Email}} = await pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno);
+        const { [0]: { Email } } = await pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno);
         sendEmail(Email, `Observación del maestro aplicada  #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de observación aplicada</h5><p>Por favor acceda a su usuario en la plataforma de registro acádemico para visualizar la observación <p>Carnet Alumno : ${idAlumno}</p>`);
 
     } catch (error) {
@@ -140,7 +140,9 @@ maestros.perfilActividades = async (req, res) => {
         const permisosSend = JSON.parse(Permisos);
         const { idUnion } = req.params;
         const { [0]: { [0]: { id, Role, idYear } }, [1]: { [0]: dataGradoMateria } } = await Promise.all([
+            /* BIMESTRE */
             pool.query("SELECT id, Role, idYear FROM bimestres WHERE Estado = 1"),
+            /* Datos del grado y la materia */
             pool.query("SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , idGrado, (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion])
         ]);
 
@@ -464,13 +466,13 @@ maestros.notasAddParv = async (req, res) => {
             } else {
                 if (valores.nota) {
                     arrQueries.push(
-                        pool.query("INSERT INTO notas_parvularia(NotaRole,idAlumno, idUnionMateriaIndicador ,idUnionMateriaGrado ) VALUES(?,?,?,?)", [valores.nota, valores.alumno, valores.idunion ,idGradoMateria ])
+                        pool.query("INSERT INTO notas_parvularia(NotaRole,idAlumno, idUnionMateriaIndicador ,idUnionMateriaGrado ) VALUES(?,?,?,?)", [valores.nota, valores.alumno, valores.idunion, idGradoMateria])
                     );
                 }
             }
         });
 
-            console.log(arrQueries);
+        console.log(arrQueries);
         await Promise.all(arrQueries);
         res.json({ status: true });
     } catch (error) {
@@ -585,7 +587,7 @@ maestros.indicadores = async (req, res) => {
         const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
 
-        res.render("./maestros/indicadores.ejs", { indicadores, permisosSend, usuario});
+        res.render("./maestros/indicadores.ejs", { indicadores, permisosSend, usuario });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });
@@ -611,7 +613,7 @@ const formatExtension = (ext) => {
 maestros.editIndicadores = async (req, res) => {
     try {
         const { indicador, id } = req.body;
-        await pool.query("UPDATE indicadoresparvularia SET indicador = ? WHERE id = ? ", [indicador , id]);
+        await pool.query("UPDATE indicadoresparvularia SET indicador = ? WHERE id = ? ", [indicador, id]);
         res.json({ status: true });
     } catch (error) {
         console.log(error);
@@ -640,12 +642,83 @@ maestros.viewNotasGrados = async (req, res) => {
         const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
 
-        // const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
-        const asignaciones = await pool.query("SELECT idGrado , nombre FROM grados INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id WHERE idMaestro = ? GROUP BY nombre", [identificador]);
-        res.render('./maestros/viewNotasGrados', { asignaciones, permisosSend, usuario });
+        const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado , materia_grado.id AS idUnion  FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
+        res.render('./maestros/viewgrades', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
     }
 };
+
+
+maestros.viewNotasViewer = async (req, res) => {
+    try {
+        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+        const { idUnion } = req.params;
+
+
+        const queries = [
+
+            /** BIMESTRE */
+            pool.query("SELECT id, Role AS roleBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Estado= 1"),
+            /** ID DEL GRADO */
+            pool.query("SELECT idGrado FROM materia_grado WHERE id = ? ", [idUnion])
+        ];
+
+
+        const { [0]: { [0]: datosBimestre }, [1]: { [0]: { idGrado } } } = await Promise.all(queries);
+
+
+        const notas = await pool.query(
+            "SELECT actividades.Role AS Role , notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND actividades.Bimestre = ? ORDER BY actividades.Role;",
+            [idGrado, datosBimestre.id]
+        );
+
+
+
+
+        let dataOrdenada= [];
+
+        notas.forEach((nota1) => {
+            let filteredData = notas.filter(nota => {
+                if (nota.idAlumno === nota1.idAlumno) {
+
+                    return nota;
+                }
+            });
+            const obj = {
+                "nota1": 0,
+                "nota2": 0,
+                "nota3": 0,
+                "prom" : 0,
+                "idAlumno" : ""
+            };
+
+            filteredData.forEach(element => {
+                if (element.Role == 1) obj.nota1 = Number(obj.nota1) + Number(element.nota) ;
+                if (element.Role == 2) obj.nota2 = Number(obj.nota2) + Number(element.nota) ;
+                if (element.Role == 3) obj.nota3 = Number(obj.nota3) + Number(element.nota) ;
+                obj.prom = obj.nota1 + obj.nota2 + obj.nota3;
+                obj.idAlumno = element.idAlumno;
+            });
+            dataOrdenada.push(obj);
+        });
+        // console.log(dataOrdenada.length);
+
+        const dataFiltrada = [...new Set(dataOrdenada)];
+
+        console.log(dataFiltrada);
+
+
+        res.render('./maestros/gradesviewer', { permisosSend, usuario });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+
+
 module.exports = maestros;

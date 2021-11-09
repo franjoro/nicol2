@@ -281,12 +281,9 @@ notas.getBoletaFinalByAlumno = async (req, res) => {
 notas.getBoletaBimestral = async (req, res) => {
   try {
     const { idAlumno, idBimestre } = req.params;
-    const {
-      [0]: { idGrado },
-    } = await pool.query(
-      "SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno",
-      [idAlumno]
-    );
+    
+    const {[0]: { idGrado }} = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno",[idAlumno]);
+
     const queryPromesas = [
       /* NOTAS */ pool.query(
         "SELECT actividades.Role AS RoleActivida, actividades.Role AS Role ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND actividades.Bimestre = ?  ORDER BY actividades.Role",

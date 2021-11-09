@@ -111,9 +111,11 @@ router.post('/getEstudiantesAll',  maestros.getEstudiantesAll);
 
 // =============================================== Visualizar notas
 
-// GET Diario pedagogico  
-
+// GET Selector de grados para ver notas
 router.get('/reportes', maestros.viewNotasGrados);
+
+// GET Visor de notas
+router.get('/viewer/:idUnion', maestros.viewNotasViewer);
 
 
 
