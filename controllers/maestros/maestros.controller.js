@@ -669,49 +669,39 @@ maestros.viewNotasViewer = async (req, res) => {
 
         const { [0]: { [0]: datosBimestre }, [1]: { [0]: { idGrado } } } = await Promise.all(queries);
 
-
         const notas = await pool.query(
-            "SELECT actividades.Role AS Role , notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND actividades.Bimestre = ? ORDER BY actividades.Role;",
+            "SELECT actividades.Role AS Role, SUM(notas.Nota) AS nota, CONCAT(alumnos.Nombre , ' ' , alumnos.Apellido) AS NombreAlumno, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN alumnos ON alumnos.Carnet = notas.idAlumno INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND actividades.Bimestre = ? GROUP BY idAlumno , Role",
             [idGrado, datosBimestre.id]
         );
 
+        let dataOrdenada = [];
 
+        let alumnos = [];
+        notas.forEach(elemet => {
+            alumnos.push(elemet.idAlumno);
+        });
 
+        const uniqueAlumnos = [...new Set(alumnos)];
 
-        let dataOrdenada= [];
-
-        notas.forEach((nota1) => {
-            let filteredData = notas.filter(nota => {
-                if (nota.idAlumno === nota1.idAlumno) {
-
-                    return nota;
-                }
+        uniqueAlumnos.forEach(idAlumno => {
+            const obj = {};
+            obj.idAlumno = idAlumno;
+            obj.nota1 = 0;
+            obj.nota2 = 0;
+            obj.nota3 = 0;
+            
+            notas.forEach(elemet => {
+                    if(idAlumno === elemet.idAlumno){
+                        if(elemet.Role === 1) obj.nota1 = Number(elemet.nota);
+                        if(elemet.Role === 2) obj.nota2 = Number(elemet.nota);
+                        if(elemet.Role === 3) obj.nota3 = Number(elemet.nota);
+                        obj.nombreAlumno = elemet.NombreAlumno;
+                    }
             });
-            const obj = {
-                "nota1": 0,
-                "nota2": 0,
-                "nota3": 0,
-                "prom" : 0,
-                "idAlumno" : ""
-            };
-
-            filteredData.forEach(element => {
-                if (element.Role == 1) obj.nota1 = Number(obj.nota1) + Number(element.nota) ;
-                if (element.Role == 2) obj.nota2 = Number(obj.nota2) + Number(element.nota) ;
-                if (element.Role == 3) obj.nota3 = Number(obj.nota3) + Number(element.nota) ;
-                obj.prom = obj.nota1 + obj.nota2 + obj.nota3;
-                obj.idAlumno = element.idAlumno;
-            });
+            obj.promedio = obj.nota1 + obj.nota2 + obj.nota3;
             dataOrdenada.push(obj);
         });
-        // console.log(dataOrdenada.length);
-
-        const dataFiltrada = [...new Set(dataOrdenada)];
-
-        console.log(dataFiltrada);
-
-
-        res.render('./maestros/gradesviewer', { permisosSend, usuario });
+        res.render('./maestros/gradesviewer', { permisosSend, usuario, dataOrdenada });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });

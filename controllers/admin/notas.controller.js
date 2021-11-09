@@ -1,6 +1,6 @@
 const notas = {};
 const pool = require("../../models/db");
-const { GenerarPdf } = require("../../utils/generatePdfHtml");
+const { GenerarPdf, GenerarBoletaFinal } = require("../../utils/generatePdfHtml");
 const fs = require("fs");
 const {
   getConsolidadoBimestralExcel,
@@ -270,6 +270,98 @@ notas.getBoletaFinalByAlumno = async (req, res) => {
       dataOrdenada.push(obj);
     });
     res.json(dataOrdenada);
+    // const util = require('util');
+    // console.log(util.inspect(dataOrdenada, false, null, true));
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, error });
+  }
+};
+
+notas.getBoletaFinalByGrado = async (req, res) => {
+  try {
+    const { idGrado, roleBimestre } = req.params;
+
+
+
+    const queryPromesas = [
+      /* NOTAS */ pool.query(
+        "SELECT actividades.Role AS RoleActivida, actividades.Bimestre AS Bimestre ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ?  ORDER BY actividades.Role",
+        [idGrado]
+      ),
+      /* MATERIAS */ pool.query(
+        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+        [idGrado]
+      ),
+
+      /* ESTUDIANTES */ pool.query(
+        "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ?  ",
+        [idGrado]
+      ),
+    ];
+
+    const {
+      [0]: notas,
+      [1]: materias,
+      [2]: estudiantes /* Select todas las materias de ese grado */,
+    } = await Promise.all(queryPromesas);
+    const dataOrdenada = [];
+
+    estudiantes.forEach((estudiante) => {
+      const materiasArr = [];
+      let notaPromedio = 0;
+      let obj = {
+        idAlumno: estudiante.idAlumno,
+        nombreAlumno: estudiante.Nombre,
+      };
+
+      materias.forEach((materia) => {
+        /* MUESTRA LAS NOTAS SUMADAS POR ROLE */
+        let roleOneNota = 0,
+          roleTwo = 0,
+          RoleTree = 0,
+          RoleFour = 0;
+        let objInsede = {};
+        objInsede.idUnion = materia.idUnion;
+        objInsede.Nombre = materia.Nombre;
+        const arrNota = [];
+        notas.forEach((nota) => {
+          if (
+            nota.idUnion == materia.idUnion &&
+            nota.idAlumno == estudiante.idAlumno
+          ) {
+            if (nota.Bimestre === 1)
+              roleOneNota = Number(nota.nota) + Number(roleOneNota);
+            if (nota.Bimestre === 2)
+              roleTwo = Number(nota.nota) + Number(roleTwo);
+            if (nota.Bimestre === 3)
+              RoleTree = Number(nota.nota) + Number(RoleTree);
+            if (nota.Bimestre === 4)
+              RoleFour = Number(nota.nota) + Number(RoleFour);
+          }
+        });
+        const notaGlobal =
+          roleOneNota * 0.2 + roleTwo * 0.3 + RoleTree * 0.2 + RoleFour * 0.3;
+        arrNota.push({
+          Bimestre: 1,
+          nota: roleOneNota,
+          prom: roleOneNota * 0.2,
+        });
+        arrNota.push({ Bimestre: 2, nota: roleTwo, prom: roleTwo * 0.3 });
+        arrNota.push({ Bimestre: 3, nota: RoleTree, prom: RoleTree * 0.2 });
+        arrNota.push({ Bimestre: 4, nota: RoleFour, prom: RoleFour * 0.3 });
+        objInsede.notaGlobal = notaGlobal;
+        objInsede.notas = arrNota;
+        notaPromedio = notaPromedio + notaGlobal;
+        materiasArr.push(objInsede);
+      });
+      obj.notas = materiasArr;
+      obj.notaPromedio = notaPromedio / materias.length;
+      dataOrdenada.push(obj);
+    });
+
+    const pdf = await GenerarBoletaFinal(dataOrdenada);
+    res.json({status: true});
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {

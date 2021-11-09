@@ -29,7 +29,8 @@
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr class="bg-blue text-black">
-                                    <th>Alumno</th>
+                                    <th>Carnet</th>
+                                    <th>Nombre</th>
                                     <th>I 30%</th>
                                     <th>II 30%</th>
                                     <th>Examen</th>
@@ -37,6 +38,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+
+                                <%dataOrdenada.forEach(element => {   %>
+                                    <tr>
+                                        <td><%= element.idAlumno %></td>
+                                        <td><%= element.nombreAlumno %></td>
+                                        <td><%= element.nota1 %></td>
+                                        <td><%= element.nota2 %></td>
+                                        <td><%= element.nota3 %></td>
+                                        <td><%= element.promedio %></td>
+                                    </tr>
+                                <%})%>
                             </tbody>
                         </table>
                     </div>

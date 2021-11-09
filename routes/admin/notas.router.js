@@ -40,7 +40,8 @@ router.get('/getFile',  notas.openFile);
 router.put('/', authCheckAdmin  , notas.updateNota);
 
 
-
+/* GET obtener Boleta Final  Por grado */
+router.get('/boletaFinal/:idGrado/:roleBimestre',  notas.getBoletaFinalByGrado);
 
 
 // REPORTES EXCEL

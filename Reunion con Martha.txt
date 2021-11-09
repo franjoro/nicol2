@@ -32,4 +32,4 @@
 
 *** Notificar observaciones de alumnos.
 
-* Agregar mostrar notas en maestros consolidado bimestral sin poder editar, sin reporte.
+*** Agregar mostrar notas en maestros consolidado bimestral sin poder editar, sin reporte.

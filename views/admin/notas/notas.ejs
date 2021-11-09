@@ -63,6 +63,10 @@
                 <a class="nav-link " id="boletaFinal-tab" data-toggle="tab" href="#boletaFinal" role="tab"
                   aria-controls="boletaFinal" aria-selected="false">Boleta Final</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link " id="GenerarboletaFinal-tab" data-toggle="tab" href="#GenerarboletaFinal" role="tab"
+                  aria-controls="boletaFinal" aria-selected="false">Generar boleta final</a>
+              </li>
             </ul>
           </div>
           <div class="card-body">
@@ -142,6 +146,29 @@
                 </div>
               </div>
 
+
+              <div class="tab-pane fade" id="GenerarboletaFinal" aria-labelledby="example-pill">
+                <div class="pt-1">
+                  <label>Selecciona el grado que desea visualizar</label>
+                  <div class="input-group input-group-joined">
+                    <span class="input-group-text">
+                      <i data-feather="users"></i>
+                    </span>
+                    <select class="form-control form-control-solid" id="selectNotaGrado">
+                      <option disabled selected>Seleccionar grado</option>
+                      <% grados.forEach( grado=> { %>
+                        <option value=" <%=grado.idGrado%> ">
+                          <%= grado.nombreGrado%>
+                        </option>
+                        <%})%>
+                    </select>
+                  </div>
+                  <hr>
+                  <div class="d-flex flex-row-reverse">
+                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteFinal">Generar reporte </button></div>
+                  </div>
+                </div>
+              </div>
               <div class="tab-pane fade" id="boletaAcumulados" aria-labelledby="example-pill">
                 <div class="pt-1">
                   <label>Selecciona alumno para verficar boleta bimestral</label>
@@ -169,8 +196,6 @@
 
     <%- include('../partials/footer.ejs'); %>
       <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
 
       <script src="/static/js/alertas.js"></script>
       <script src="/static/js/admin/notas/notas.js"></script>
