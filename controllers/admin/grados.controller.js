@@ -24,7 +24,7 @@ grados.main = async (req, res) => {
             pool.query("SELECT year FROM year WHERE year>=(SELECT year FROM year WHERE estado = 1)"),
 
         ]);
-        res.render("./admin/grados/grados", { years, grados, ciclos , yearToAdd , yearActivo});
+        res.render("./admin/grados/grados", { years, grados, ciclos, yearToAdd, yearActivo });
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -181,7 +181,7 @@ grados.assingEstudiantesGrado = async (req, res) => {
 
 grados.edicionIndividual = async (req, res) => {
     try {
-        const { idunion, role , status } = req.body;
+        const { idunion, role, status } = req.body;
         console.log(req.body);
         await pool.query(`UPDATE materia_grado SET EstadoAct${role} = ? WHERE id = ?  `, [status, idunion]);
         res.json({ status: true });
@@ -191,13 +191,46 @@ grados.edicionIndividual = async (req, res) => {
     }
 };
 
-grados.edit = async (req , res) => {
+grados.edicionGlobalGrado = async (req, res) => {
     try {
-        const {codigoInput , id } = req.body;
-        await pool.query("UPDATE grados SET nombre = ? WHERE id = ? ", [codigoInput , id]);
-        res.json({ status: true});
+        const { idGrado, role, statoch } = req.body;
+        await pool.query(`UPDATE materia_grado SET EstadoAct${role} = ? WHERE idGrado = ?  `, [statoch, idGrado]);
+        res.json({ status: true });
     } catch (error) {
-        res.status(400).json({ status: false, error});
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+grados.edicionGlobal = async (req, res) => {
+    try {
+        const { yearActivo, role, statoch } = req.body;
+        const grados = await pool.query(" SELECT id FROM grados WHERE idYear = ?", [yearActivo]);
+        const promises = [];
+
+
+        grados.forEach(element => {
+            promises.push( 
+                pool.query(`UPDATE materia_grado SET EstadoAct${role} = ? WHERE idGrado = ?  `, [statoch, element.id])
+            );
+        });
+
+        await Promise.all(promises);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+grados.edit = async (req, res) => {
+    try {
+        const { codigoInput, id } = req.body;
+        await pool.query("UPDATE grados SET nombre = ? WHERE id = ? ", [codigoInput, id]);
+        res.json({ status: true });
+    } catch (error) {
+        res.status(400).json({ status: false, error });
     }
 };
 

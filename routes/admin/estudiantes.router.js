@@ -38,8 +38,13 @@ router.get('/vermatricula/:idMatricula',  estudiantes.viewMatricula);
 
 
 /* GET Perfil Académico  */
-router.get('/perfilac/:idAlumno',  estudiantes.perfilAcademico);
+router.get('/perfilac/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademico);
 
 
+/* GET Generar perfil Académico Reporte  */
+router.get('/perfilacreporte/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademicoReporte);
+
+/* GET Reporte generado de conducta*/
+router.get('/getReport',  estudiantes.openReporte);
 
 module.exports = router;

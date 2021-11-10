@@ -154,10 +154,10 @@
                     <span class="input-group-text">
                       <i data-feather="users"></i>
                     </span>
-                    <select class="form-control form-control-solid" id="selectNotaGrado">
+                    <select class="form-control form-control-solid" id="selectGradoReporte">
                       <option disabled selected>Seleccionar grado</option>
                       <% grados.forEach( grado=> { %>
-                        <option value=" <%=grado.idGrado%> ">
+                        <option value="<%=grado.idGrado%>">
                           <%= grado.nombreGrado%>
                         </option>
                         <%})%>
@@ -165,7 +165,7 @@
                   </div>
                   <hr>
                   <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteFinal">Generar reporte </button></div>
+                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteGenerado">Generar reporte </button></div>
                   </div>
                 </div>
               </div>

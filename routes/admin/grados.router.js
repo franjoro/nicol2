@@ -33,6 +33,14 @@ router.post('/assingEstudiantes',  grados.assingEstudiantesGrado);
 router.put('/edicion',  grados.edicionIndividual);
 
 
+/* PUT Actualizar el estado de los permisos de edición globales en grado*/
+router.put('/edicionGrado',  grados.edicionGlobalGrado);
+
+
+/* PUT Actualizar el estado de los permisos de edición globales */
+router.put('/edicionglobal',  grados.edicionGlobal);
+
+
 /* PUT actualizar información de grado */
 router.put('/',  grados.edit);
 

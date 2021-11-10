@@ -260,3 +260,27 @@ $("#editGrado").on("click", async function () {
     }
   }
 });
+
+$(".changeStatus").on("click", async function () {
+  try {
+    let { role, statoch } = $(this).data();
+    const idGrado = $("#idGrado").val();
+    const { isConfirmed } = await alertas.ConfirmAlert(
+      "¿Actualizar permisos de edición?",
+      "Este cambio afectara el permiso de edición para profesores"
+    );
+    if (isConfirmed) {
+      alertas.loaderAlert();
+      const query = await $.ajax({
+        type: "PUT",
+        url: "/admin/grados/edicionGrado",
+        data: { role, statoch, idGrado },
+      });
+      swal.close();
+      if (query.status) return location.reload();
+    }
+  } catch (error) {
+    console.log(error);
+    return alertas.newErrorMessage();
+  }
+});

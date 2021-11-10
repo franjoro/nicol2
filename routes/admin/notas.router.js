@@ -32,7 +32,7 @@ router.get('/getBoletaBimestral/:idAlumno/:idBimestre',  notas.getBoletaBimestra
 router.post('/generatePdfHtml',  notas.generateFichaByHtml);
 
 
-/* GET Pantalla principal de notas */
+/* GET Reporte generado por HTML en notas */
 router.get('/getFile',  notas.openFile);
 
 
@@ -41,7 +41,11 @@ router.put('/', authCheckAdmin  , notas.updateNota);
 
 
 /* GET obtener Boleta Final  Por grado */
-router.get('/boletaFinal/:idGrado/:roleBimestre',  notas.getBoletaFinalByGrado);
+router.get('/boletaFinal/:idGrado',  notas.getBoletaFinalByGrado);
+
+
+/* GET Reporte generado por HTML en notas */
+router.get('/getReport',  notas.openReporte);
 
 
 // REPORTES EXCEL

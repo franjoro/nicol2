@@ -39,6 +39,29 @@
                 <div class="card card-header-actions mb-4">
                     <div class="card-header p-5">
                         Grados
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Editar permisos de edición
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <h6 class="dropdown-header text-green">Activar edición</h6>
+                                <a class="dropdown-item changeStatus" data-role="1" data-statoch="1" href="#">Primera
+                                    actividad 30% </a>
+                                <a class="dropdown-item changeStatus" data-role="2" data-statoch="1" href="#">Segunda
+                                    actividad 30% </a>
+                                <a class="dropdown-item changeStatus" data-role="3" data-statoch="1" href="#">Examen 40%
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <h6 class="dropdown-header text-red">Desactivar edición</h6>
+                                <a class="dropdown-item changeStatus" data-role="1" data-statoch="0" href="#">Primera
+                                    actividad 30% </a>
+                                <a class="dropdown-item changeStatus" data-role="2" data-statoch="0" href="#">Segunda
+                                    actividad 30% </a>
+                                <a class="dropdown-item changeStatus" data-role="3" data-statoch="0" href="#">Examen 40%
+                                </a>
+                            </div>
+                        </div>
                         <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
                             data-target="#modalGrados">Agregar Grado</button>
                     </div>
@@ -54,18 +77,18 @@
                             <tbody>
                                 <% grados.forEach( grado=> {%>
                                     <tr>
-                                        <td>
+                                        <td class="col-md-4">
                                             <%= grado.nombre%>
                                         </td>
                                         <td>
                                             <%= grado.ciclo %>
                                         </td>
-                                        <td class="col-md-6">
+                                        <td class="col-md-4">
                                             <div class="btn-group" role="group">
 
                                                 <a href="/admin/grados/detalle/<%= grado.id %>"
                                                     class="btn btn-primary"><i class="me-2"
-                                                        data-feather="file-plus"></i>Asignar materias y alumnos</a>
+                                                        data-feather="settings"></i>Configuración</a>
                                                 <button class="btn btn-danger btnDelete" data-id="<%= grado.id %>"><i
                                                         class="me-2" data-feather="trash-2"></i>Eliminar</button>
                                             </div>
@@ -134,7 +157,10 @@
         </div>
 
         <input type="hidden" id="yearActivo" value="<%=yearActivo%>">
-
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+        
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>
             <script src="/static/js/admin/grados/grados.js"></script>

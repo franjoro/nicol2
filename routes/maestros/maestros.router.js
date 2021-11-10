@@ -34,7 +34,7 @@ router.post('/observacion', maestros.addObservacion);
 
 
 // =============================================== PERFIL ACADEMICO
-// GET Perfil academico ************************************************************************************************************* PENDIENTE A HACER CARDS MIENTRAS TABLA
+// GET Perfil academico 
 router.get('/perfil', maestros.perfil);
 
 // GET Perfil academico muestra las 3 actividades disponibles o los indicadores de logro de parvularia
@@ -53,7 +53,7 @@ router.post('/addPerfil/:idUnion/:Role', maestros.addPerfil);
 
 
 // =============================================== INGRESO DE NOTAS
-// GET Ingreso de notas************************************************************************************************************* PENDIENTE A HACER CARDS MIENTRAS TABLA
+// GET Ingreso de notas
 router.get('/notas', maestros.notasViewMain);
 
 // GET Ingreso de notas actividades muestra las 3 actividades disponibles  O Ingreso de notas de parvularia

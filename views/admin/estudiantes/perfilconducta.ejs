@@ -12,6 +12,21 @@
                                 </h1>
                                 <div class="page-header-subtitle">
                                     Visualiza todos los códigos aplicados del alumno
+                                    <div class="pt-4">
+                                        <label for="exampleFormControlSelect1">Selecciona el año que quieres
+                                            visualizar</label>
+                                        <div class="input-group input-group-joined">
+                                            <span class="input-group-text">
+                                                <i data-feather="calendar"></i>
+                                            </span>
+                                            <select class="form-control form-control-solid" id="selectBimestre">
+                                                <option value="1">Bimestre #1</option>
+                                                <option value="2">Bimestre #2</option>
+                                                <option value="3">Bimestre #3</option>
+                                                <option value="4">Bimestre #4</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -21,34 +36,46 @@
             <!-- Main page content-->
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <div class="px-4 mt-n10">
                         <div class="card card-header-actions mb-4">
                             <div class="card-header p-5">
                                 Información personal
+                                <div>
+                                    <button class="btn btn-md btn-success" type="button" id="generateReporte">
+                                        Descargar reporte
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body table-responsive">
-                                <p> <span class="fw-700">Carnet: </span> <%= idAlumno %> </p>
-                                <p> <span class="fw-700">Nombre: </span>  <%= datosAlumno.Nombre %> </p>
-                                <p> <span class="fw-700">Apellidos: </span> <%= datosAlumno.Apellido %> </p>
-                                <p> <span class="fw-700">Grado: </span> <%= datosGrado.nombre %> </p>
-                                <p> <span class="fw-700">Puntaje bimestre: </span> <%= datosAlumno.puntaje %>  </p>
+                                <table class="table">
+                                    <tr>
+                                        <td> <span class="fw-700">Carnet: </span>
+                                            <%= idAlumno %>
+                                        </td>
+                                        <td> <span class="fw-700">Nombre: </span>
+                                            <%= datosAlumno.Nombre %>
+                                        </td>
+                                        <td> <span class="fw-700">Apellidos: </span>
+                                            <%= datosAlumno.Apellido %>
+                                        </td>
+                                        <td> <span class="fw-700">Grado: </span>
+                                            <%= datosGrado.nombre %>
+                                        </td>
+                                        <td> <span class="fw-700">Puntaje bimestre: </span>
+                                            <%= datosAlumno.puntaje %>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8">
-
-                    <div class="px-4 mt-n10">
+                <div class="col-md-12">
+                    <div class="px-4">
                         <div class="card card-header-actions mb-4">
                             <div class="card-header p-5">
                                 Códigos aplicados
-                                <div>
-                                    <button class="btn btn-md btn-success" type="button" data-toggle="modal"
-                                        data-target="#agregarAlumno">
-                                        Descargar reporte
-                                    </button>
-                                </div>
                             </div>
                             <div class="card-body table-responsive">
                                 <table class="table table-striped table-hover">
@@ -58,17 +85,64 @@
                                             <th>Valor</th>
                                             <th>Maestro</th>
                                             <th>Descripción</th>
+                                            <th>Fecha</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% codigos.forEach( codigo=> {  %>
-                                           <tr>
-                                               <td><%= codigo.Codigo %></td>
-                                               <td><%= codigo.valor %></td>
-                                               <td><%= codigo.NombreMaestro %></td>
-                                               <td><%= codigo.Observacion %></td>
-                                           </tr> 
-                                        <%})%>
+                                        <% codigos.forEach( codigo=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= codigo.Codigo %>
+                                                </td>
+                                                <td>
+                                                    <%= codigo.valor %>
+                                                </td>
+                                                <td>
+                                                    <%= codigo.NombreMaestro %>
+                                                </td>
+                                                <td>
+                                                    <%= codigo.Observacion %>
+                                                </td>
+                                                <td>
+                                                    <%= codigo.Date %>
+                                                </td>
+                                            </tr>
+                                            <%})%>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="px-4">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header p-5">
+                                Observaciones aplicadas
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Observación</th>
+                                            <th>Maestro</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% observaciones.forEach( observacion=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= observacion.descripcion %>
+                                                </td>
+                                                <td>
+                                                    <%= observacion.NombreMaestro %>
+                                                </td>
+                                                <td>
+                                                    <%= observacion.Date %>
+                                                </td>
+                                            </tr>
+                                            <%})%>
                                     </tbody>
                                 </table>
                             </div>
@@ -77,9 +151,10 @@
                 </div>
             </div>
         </main>
-
+        <input type="hidden" id="roleBimestre" value="<%= roleBimestre %>">
+        <input type="hidden" id="idAlumno" value="<%= idAlumno %>">
 
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>
-            <!-- <script src="/static/js/admin/estudiantes/estudiantes.js"></script> -->
+            <script src="/static/js/admin/estudiantes/conducta.js"></script>
     </div>

@@ -1,6 +1,6 @@
 // ADMINISTRADOR 
 
-* En conducta colocar selector de bimestres y agregar columna de fecha, junto a observaciones. Formato PDF
+*** En conducta colocar selector de bimestres y agregar columna de fecha, junto a observaciones. Formato PDF
 
 *** Verificar el mensaje al estar el usuario bloqueado. "Administración".
 
@@ -8,7 +8,7 @@
 
 *** Agregar color de rojo <59 , 60 -69 Color Azul Color de la plataforma.
 
-* Boleta final generar PDF por todo el grado.
+*** Boleta final generar PDF por todo el grado.
 
 *** Agregar campo de sigla de materia, manual
 
@@ -18,12 +18,7 @@
 
 * Reporte de matricula en pdf tratar de poner dos alumnos por hoja.  1 vez al año 
 
-* Habilitar y bloqueo de materias para todos. 
-
-
-// ALUMNOS
-
-* Verificar si el usuario de alumnos unicamente mira acumulados.
+*** Habilitar y bloqueo de materias para todos. 
 
 
 //MAESTROS

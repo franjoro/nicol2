@@ -280,7 +280,7 @@ notas.getBoletaFinalByAlumno = async (req, res) => {
 
 notas.getBoletaFinalByGrado = async (req, res) => {
   try {
-    const { idGrado, roleBimestre } = req.params;
+    const { idGrado } = req.params;
 
 
 
@@ -359,9 +359,10 @@ notas.getBoletaFinalByGrado = async (req, res) => {
       obj.notaPromedio = notaPromedio / materias.length;
       dataOrdenada.push(obj);
     });
-
+    
     const pdf = await GenerarBoletaFinal(dataOrdenada);
-    res.json({status: true});
+    res.json({status: true, pdf});
+    console.log(pdf);
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {
@@ -617,6 +618,12 @@ notas.updateNota = async (req, res) => {
 
 notas.openFile = (req, res) => {
   const file = fs.readFileSync("./public/files/ficha.pdf");
+  res.contentType("application/pdf");
+  res.send(file);
+};
+
+notas.openReporte = (req, res) => {
+  const file = fs.readFileSync("./public/files/boletaFinal.pdf");
   res.contentType("application/pdf");
   res.send(file);
 };

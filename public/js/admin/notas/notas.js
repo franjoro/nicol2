@@ -434,7 +434,7 @@ $("#btnReporteConsolidadoBimestral").click(() => {
 });
 
 
-const sendDataToPdf = async (data, header, landscape = false , observaciones) => {
+const sendDataToPdf = async (data, header, landscape = false , observaciones ="")  => {
     const plainText = data.trim();
     const plainHeader = header.trim();
     try {
@@ -458,4 +458,20 @@ $("#btnReporteConsolidadoBimestralExcel").click(async () => {
         window.open(`/admin/notas/download/${query.path} `);
     }
     console.log(query);
+});
+
+$("#btnReporteGenerado").click(async () => {
+    try {
+        const idGrado = $("#selectGradoReporte").val();
+        alertas.loaderAlert();
+        const query = await $.ajax({ url: `/admin/notas/boletaFinal/${idGrado}` });
+        if (query.status) {
+            swal.close();
+            window.open(`/admin/notas/getReport `);
+        }
+        console.log(query);
+    } catch (error) {
+        console.log(error);
+        alertas.newErrorMessage("Error al generar documento");
+    }
 });
