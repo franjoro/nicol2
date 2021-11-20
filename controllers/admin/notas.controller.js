@@ -543,7 +543,10 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
       ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? ",
+        `SELECT idAlumno , 
+        (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre ,
+        (SELECT Genero FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS genero
+        FROM grado_alumno WHERE idGrado = ? `,
         [idGrado]
       ),
     ];
@@ -560,6 +563,7 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
+        genero: estudiante.genero,
       };
 
       materias.forEach((materia) => {

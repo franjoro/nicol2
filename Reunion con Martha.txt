@@ -16,7 +16,6 @@
 
 *** Estadisticas en segunda hoja de excel.
 
-* Reporte de matricula en pdf tratar de poner dos alumnos por hoja.  1 vez al año 
 
 *** Habilitar y bloqueo de materias para todos. 
 
