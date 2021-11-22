@@ -188,6 +188,32 @@ maestros.addPerfilView = async (req, res) => {
 };
 
 
+maestros.editPerfilView = async (req, res) => {
+    try {
+        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+        const permisosSend = JSON.parse(Permisos);
+
+        const { idUnion, Role, idActividad } = req.params;
+        let textoRole = "";
+        if (Role == 1) textoRole = "Actividad 1 (30%)";
+        if (Role == 2) textoRole = "Actividad 2 (30%)";
+        if (Role == 3) textoRole = "Examen (40%)";
+
+
+        const arrPro = [
+            pool.query("SELECT Titulo, Descripcion FROM actividades WHERE id = ?", [idActividad]),
+            pool.query("SELECT id, Descripcion, Porcentaje FROM acumulados WHERE idActividad = ?", [idActividad]),
+        ];
+
+        const { [0]: { [0]: headerInfo }, [1]: acumuladosInfo } = await Promise.all(arrPro);
+        res.render('./maestros/perfilAcademicoEdit', { idUnion, Role, textoRole, permisosSend, usuario , headerInfo , acumuladosInfo , idActividad});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
 
 maestros.addPerfil = async (req, res) => {
     try {
@@ -206,13 +232,48 @@ maestros.addPerfil = async (req, res) => {
         const arrayAcumulados = req.body["acumulados[]"];
         const arraValor = req.body["valor[]"];
         const arrPromesas = [];
-        console.log(req.body);
         for (let index = 0; index < cantidadAcumulados; index++) {
             arrPromesas.push(
                 pool.query("INSERT INTO acumulados(Descripcion , Porcentaje, idActividad) VALUES(?,?,?) ", [arrayAcumulados[index], arraValor[index], insertId])
             );
         }
         await Promise.all(arrPromesas);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+
+maestros.editPerfil = async (req, res) => {
+    try {        
+        const { idActividad } = req.params;
+        const { titulo, descripcion, acumulados } = req.body;
+        const acumuladosJson = JSON.parse(acumulados); 
+        const arrPromesas = [];
+        arrPromesas.push(
+            pool.query("UPDATE actividades SET Titulo = ? ,  Descripcion = ? WHERE id = ? ", [titulo, descripcion , idActividad])
+        );
+        acumuladosJson.forEach( (element )=>{   
+            arrPromesas.push(
+                pool.query("UPDATE acumulados SET Descripcion = ? WHERE id = ? ", [element.value, element.id])
+            );
+        });
+
+        await Promise.all(arrPromesas);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+maestros.deletePerfil = async (req, res) => {
+    try {        
+        const { idActividad } = req.body;
+        console.log(req.body);
+        await pool.query("DELETE FROM actividades WHERE id = ?" , [idActividad]);
         res.json({ status: true });
     } catch (error) {
         console.log(error);
@@ -689,14 +750,14 @@ maestros.viewNotasViewer = async (req, res) => {
             obj.nota1 = 0;
             obj.nota2 = 0;
             obj.nota3 = 0;
-            
+
             notas.forEach(elemet => {
-                    if(idAlumno === elemet.idAlumno){
-                        if(elemet.Role === 1) obj.nota1 = Number(elemet.nota);
-                        if(elemet.Role === 2) obj.nota2 = Number(elemet.nota);
-                        if(elemet.Role === 3) obj.nota3 = Number(elemet.nota);
-                        obj.nombreAlumno = elemet.NombreAlumno;
-                    }
+                if (idAlumno === elemet.idAlumno) {
+                    if (elemet.Role === 1) obj.nota1 = Number(elemet.nota);
+                    if (elemet.Role === 2) obj.nota2 = Number(elemet.nota);
+                    if (elemet.Role === 3) obj.nota3 = Number(elemet.nota);
+                    obj.nombreAlumno = elemet.NombreAlumno;
+                }
             });
             obj.promedio = obj.nota1 + obj.nota2 + obj.nota3;
             dataOrdenada.push(obj);

@@ -1,0 +1,128 @@
+<%- include('header.maestros.ejs'); %>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-dark pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="edit"></i></div>
+                                    Editar perfil acádemico en: "<%= textoRole %>"
+                                </h1>
+                                <div class="page-header-subtitle">Editar acumulados en su actividad.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <div>
+                            <a class="btn btn-primary me-2" href="/maestros/perfil/<%=idUnion%>"><i class="me-2"
+                                    data-feather="arrow-left"></i> Atrás</a>
+                            <a class="btn btn-danger me-2" id="btnDelete" href="#"><i class="me-2"
+                                    data-feather="trash"></i> Eliminar actividad </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <% if(Role !=3) {%>
+                            <form id="formPerfil">
+                                <input type="hidden" name="idActividad" id="idActividad" value="<%= idActividad %>">
+                                <input type="hidden" name="idUnion" id="idUnion" value="<%= idUnion %>">
+                                <input type="hidden" name="Role" id="Role" value="<%= Role %>">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span>Titulo de la actividad:</span>
+                                        <textarea name="titulo" class="form-control"
+                                            id="titulo"><%= headerInfo.Titulo %></textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>¿Que se evaluara en la actividad? </span>
+                                        <textarea name="descripcion" class="form-control"
+                                            id="descripcion"><%= headerInfo.Descripcion %></textarea>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <span>¿Cantidad de acumulados?</span>
+                                        <input type="text" class="form-control" disabled
+                                            value="<%= acumuladosInfo.length %>">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span>Descripción de acumulados</span>
+                                        <% acumuladosInfo.forEach( (element)=>{%>
+                                            <textarea name="acumulados[]" rows="1" data-id="<%= element.id %>"
+                                                class="form-control"><%= element.Descripcion %></textarea>
+                                            <% })%>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span>Sumatoria de acumulados</span>
+                                        <% acumuladosInfo.forEach( (element)=>{%>
+                                            <input type="number" class="form-control" disabled
+                                                value="<%= element.Porcentaje %>">
+                                            <% })%>
+
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row mt-4 float-right d-none" id="alertaRoja">
+                                <div class="alert alert-danger alert-icon" role="alert">
+                                    <div class="alert-icon-aside">
+                                        <i data-feather="alert-octagon"></i>
+                                    </div>
+                                    <div class="alert-icon-content">
+                                        <h6 class="alert-heading">Sumatoria de acumulados total : <span
+                                                id="total">0</span></h6>
+                                        Recuerda que la sumatoria debe ser el total de la actividad (30)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-row-reverse mt-2">
+                                <button class="btn btn-success float-right" id="btnEdit"> <i data-feather="edit"></i>
+                                    Editar actividad</button>
+                            </div>
+                            <% }else{ %>
+                                <form id="formPerfil">
+                                    <input type="hidden" name="idActividad" id="idActividad" value="<%= idActividad %>">
+                                    <input type="hidden" name="idUnion" id="idUnion" value="<%= idUnion %>">
+                                    <input type="hidden" name="Role" id="Role" value="<%= Role %>">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <span>Titulo:</span>
+                                            <textarea name="titulo" class="form-control" id="titulo"><%= headerInfo.Titulo %></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span>¿Que se evaluara en el examen? </span>
+                                            <textarea name="descripcion" class="form-control"
+                                                id="descripcion"><%= headerInfo.Descripcion %></textarea>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="acumulados[]" value="Examen">
+                                    <input type="hidden" name="acumulados[]" value="Examen">
+                                    <input type="hidden" name="valor[]" id="val1" value="40">
+                                    <input type="hidden" name="valor[]" id="val1" value="40">
+                                    <input type="hidden" name="cantidadAcumulados" value="1">
+
+
+                                </form>
+                                <div class="d-flex flex-row-reverse mt-2">
+                                    <button class="btn btn-success float-right" id="btnEditExamen"> <i
+                                            data-feather="edit"></i> Editar Examen</button>
+                                </div>
+                                <% } %>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+        <%- include('footer.maestros.ejs'); %>
+            <script src="/static/js/maestros/perfilAcademico.js"></script>

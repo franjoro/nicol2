@@ -45,6 +45,16 @@ router.get('/addPerfil/:idUnion/:Role', maestros.addPerfilView);
 
 // POST Funcion agregar actividad
 router.post('/addPerfil/:idUnion/:Role', maestros.addPerfil);
+
+// GET Panel para editar actividad
+router.get('/editPerfil/:idUnion/:idActividad/:Role', maestros.editPerfilView);
+
+// POST Funcion agregar actividad
+router.post('/editPerfil/:idActividad', maestros.editPerfil);
+
+// DELETE Funcion agregar actividad
+router.delete('/deletePerfil', maestros.deletePerfil);
+
 // =============================================== FIN PERFIL ACADEMICO
 
 
