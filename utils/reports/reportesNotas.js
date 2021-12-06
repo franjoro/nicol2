@@ -11,7 +11,7 @@ Excel.getConsolidadoBimestralExcel = (datos) => {
     try {
       const xl = require("excel4node");
       const wb = new xl.Workbook();
-      const NameSheet = "Consolidado bimestral";
+      const NameSheet = "Consolidado Bimestral";
       const ws = wb.addWorksheet(NameSheet);
 
       const allBorder = {

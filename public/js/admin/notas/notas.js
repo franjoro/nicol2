@@ -408,7 +408,7 @@ $("#btnReporteBimestral").click(() => {
 
 $("#btnReporteConsolidadoAnual").click(() => {
     const html = `
-            <h3>Consolidado anual </h3>
+            <h3>Consolidado Anual </h3>
             <table class="table">
             <tbody>
                 <tr>
@@ -421,7 +421,7 @@ $("#btnReporteConsolidadoAnual").click(() => {
 
 $("#btnReporteConsolidadoBimestral").click(() => {
     const html = `
-            <h3>Consolidado bimestral </h3>
+            <h3>Consolidado Bimestral </h3>
             <table class="table">
             <tbody>
                 <tr>
