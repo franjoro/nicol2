@@ -44,6 +44,7 @@ router.get('/perfilac/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademico);
 /* GET Generar perfil Académico Reporte  */
 router.get('/perfilacreporte/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademicoReporte);
 
+
 /* GET Reporte generado de conducta*/
 router.get('/getReport',  estudiantes.openReporte);
 

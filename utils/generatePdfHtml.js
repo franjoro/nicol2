@@ -36,10 +36,10 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
                  <br>
                  <div class="row">
                     <div class="col-md-6 text-center">
-                        <h4 class="pt-1">Firma profesor Guía </h4>
+                        <h4 class="pt-1">Profesor Guía </h4>
                     </div>
                     <div class="col-md-6 text-center">
-                        <h4 class="pt-1">Firma Director </h4>
+                        <h4 class="pt-1">Director </h4>
                     </div>
                  </div>
          </div>
@@ -144,10 +144,10 @@ const GenerarBoletaFinal = (data) => {
                 <br>
                 <div class="row">
                    <div class="col-md-6 text-center">
-                       <h4 class="pt-1">Firma profesor Guía </h4>
+                       <h4 class="pt-1">Profesor Guía </h4>
                    </div>
                    <div class="col-md-6 text-center">
-                       <h4 class="pt-1">Firma Director </h4>
+                       <h4 class="pt-1">Director </h4>
                    </div>
                 </div>
         </div>

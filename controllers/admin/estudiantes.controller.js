@@ -163,8 +163,11 @@ estudiantes.viewMatricula = async (req, res) => {
             "SELECT * FROM matriculas WHERE id = ? ",
             [idMatricula]
         );
+        let img = "";
         const datos = JSON.parse(matriculas.data);
-        const img = await getImgMatricula(matriculas.s3Key);
+        if(matriculas.s3Key != ""){
+            img = await getImgMatricula(matriculas.s3Key);
+        }
 
         const arrFamiliaresPromesas = [];
 
