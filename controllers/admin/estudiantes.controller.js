@@ -167,6 +167,8 @@ estudiantes.viewMatricula = async (req, res) => {
 
         let img = {};
         img.path =  "files/not-found.png";
+
+        let existFamiliares;
         if (matriculas.s3Key.trim().length) {
             img = await getImgMatricula(matriculas.s3Key);
         }
@@ -178,8 +180,10 @@ estudiantes.viewMatricula = async (req, res) => {
             datos["idEstudiantes[]"].forEach(async (carnet) => {
                 hrmans.push(carnet);
             });
+            existFamiliares = true;
         } else {
             hrmans.push(datos["idEstudiantes[]"]);
+            existFamiliares = false;
         }
 
 
@@ -192,7 +196,6 @@ estudiantes.viewMatricula = async (req, res) => {
         });
 
         const arrFamiliares = await Promise.all(arrFamiliaresPromesas);
-        const existFamiliares = datos["idEstudiantes[]"].length ? true : false;
         res.render("./admin/estudiantes/vermatricula", {
             datos,
             img: img.path,
