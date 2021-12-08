@@ -163,22 +163,35 @@ estudiantes.viewMatricula = async (req, res) => {
             "SELECT * FROM matriculas WHERE id = ? ",
             [idMatricula]
         );
-        let img = "";
         const datos = JSON.parse(matriculas.data);
-        if(matriculas.s3Key != ""){
+
+        let img = {};
+        img.path =  "files/not-found.png";
+        if (matriculas.s3Key.trim().length) {
             img = await getImgMatricula(matriculas.s3Key);
         }
-
+        
         const arrFamiliaresPromesas = [];
+        const hrmans = [];
 
-        datos["idEstudiantes[]"].forEach(async (carnet) => {
+        if (Array.isArray(datos["idEstudiantes[]"])) {
+            datos["idEstudiantes[]"].forEach(async (carnet) => {
+                hrmans.push(carnet);
+            });
+        } else {
+            hrmans.push(datos["idEstudiantes[]"]);
+        }
+
+
+        hrmans.forEach(async (carnet) => {
             arrFamiliaresPromesas.push(
                 pool.query("SELECT Nombre, Apellido FROM alumnos WHERE Carnet = ?", [
                     carnet,
                 ])
             );
         });
-        const arrFamiliares  = await Promise.all(arrFamiliaresPromesas);
+
+        const arrFamiliares = await Promise.all(arrFamiliaresPromesas);
         const existFamiliares = datos["idEstudiantes[]"].length ? true : false;
         res.render("./admin/estudiantes/vermatricula", {
             datos,
@@ -193,87 +206,87 @@ estudiantes.viewMatricula = async (req, res) => {
 };
 
 
-estudiantes.perfilAcademico = async (req, res) =>{
+estudiantes.perfilAcademico = async (req, res) => {
     let roleBimestre = req.params;
     if (
-      roleBimestre.roleBimestre == undefined ||
-      roleBimestre.roleBimestre === null
+        roleBimestre.roleBimestre == undefined ||
+        roleBimestre.roleBimestre === null
     ) {
-      roleBimestre = await pool.query(
-        "SELECT Role AS roleBimestre FROM bimestres WHERE Estado = 1 "
-      );
-      roleBimestre = roleBimestre[0].roleBimestre;
+        roleBimestre = await pool.query(
+            "SELECT Role AS roleBimestre FROM bimestres WHERE Estado = 1 "
+        );
+        roleBimestre = roleBimestre[0].roleBimestre;
     } else {
-      roleBimestre = roleBimestre.roleBimestre;
+        roleBimestre = roleBimestre.roleBimestre;
     }
 
     const { idAlumno } = req.params;
     try {
-    const {  [0]: { [0]:  datosGrado  }  , [1]: { [0]:  {idBimestre}  }   } =  await Promise.all([
-        // TRAER ID GRADO DEL ALUMNO
-        pool.query("SELECT grados.id AS idGrado, grados.nombre FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]),
-        // TRAER ROLE DEL BIMESTRE
-        pool.query("SELECT id AS idBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Role= ?" , [roleBimestre])
-     ]);
-     const columna = `Conducta${roleBimestre}`;
+        const { [0]: { [0]: datosGrado }, [1]: { [0]: { idBimestre } } } = await Promise.all([
+            // TRAER ID GRADO DEL ALUMNO
+            pool.query("SELECT grados.id AS idGrado, grados.nombre FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]),
+            // TRAER ROLE DEL BIMESTRE
+            pool.query("SELECT id AS idBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Role= ?", [roleBimestre])
+        ]);
+        const columna = `Conducta${roleBimestre}`;
 
 
-     const { [0] : {[0]: datosAlumno}  , [1] : codigos   , [2] : observaciones   } =  await Promise.all([
-        /** DATOS DEL ALUMNO */
-        pool.query(`SELECT Nombre, Apellido, ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE alumnos.Carnet = ? ` , idAlumno),
-        /** CODIGOS */
-        pool.query("SELECT Codigo, valor, Observacion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro,  DATE_FORMAT(Date, '%d/%m/%Y') AS Date   FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id INNER JOIN maestros ON maestros.id = codigo_alumno.idMaestro WHERE idBimestre = ? AND codigo_alumno.idAlumno = ? ORDER BY valor ASC" ,[ idBimestre, idAlumno ]),
-        /** OBSERVACIONES */
-        pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?" ,[ idBimestre, idAlumno ])
-    ]);
+        const { [0]: { [0]: datosAlumno }, [1]: codigos, [2]: observaciones } = await Promise.all([
+            /** DATOS DEL ALUMNO */
+            pool.query(`SELECT Nombre, Apellido, ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE alumnos.Carnet = ? `, idAlumno),
+            /** CODIGOS */
+            pool.query("SELECT Codigo, valor, Observacion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro,  DATE_FORMAT(Date, '%d/%m/%Y') AS Date   FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id INNER JOIN maestros ON maestros.id = codigo_alumno.idMaestro WHERE idBimestre = ? AND codigo_alumno.idAlumno = ? ORDER BY valor ASC", [idBimestre, idAlumno]),
+            /** OBSERVACIONES */
+            pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?", [idBimestre, idAlumno])
+        ]);
 
 
-        res.render('./admin/estudiantes/perfilconducta.ejs' , {idAlumno , datosGrado, datosAlumno , codigos, observaciones , roleBimestre});
+        res.render('./admin/estudiantes/perfilconducta.ejs', { idAlumno, datosGrado, datosAlumno, codigos, observaciones, roleBimestre });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({ status: false, error });  
+        return res.status(400).json({ status: false, error });
     }
 };
 
 
 
-estudiantes.perfilAcademicoReporte = async (req, res) =>{
+estudiantes.perfilAcademicoReporte = async (req, res) => {
     let roleBimestre = req.params;
     if (
-      roleBimestre.roleBimestre == undefined ||
-      roleBimestre.roleBimestre === null
+        roleBimestre.roleBimestre == undefined ||
+        roleBimestre.roleBimestre === null
     ) {
-      roleBimestre = await pool.query(
-        "SELECT Role AS roleBimestre FROM bimestres WHERE Estado = 1 "
-      );
-      roleBimestre = roleBimestre[0].roleBimestre;
+        roleBimestre = await pool.query(
+            "SELECT Role AS roleBimestre FROM bimestres WHERE Estado = 1 "
+        );
+        roleBimestre = roleBimestre[0].roleBimestre;
     } else {
-      roleBimestre = roleBimestre.roleBimestre;
+        roleBimestre = roleBimestre.roleBimestre;
     }
 
     const { idAlumno } = req.params;
     try {
-    const { [0]: { [0]:  {idBimestre}  }   } =  await Promise.all([
-        // TRAER ROLE DEL BIMESTRE
-        pool.query("SELECT id AS idBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Role= ?" , [roleBimestre])
-     ]);
-     const columna = `Conducta${roleBimestre}`;
+        const { [0]: { [0]: { idBimestre } } } = await Promise.all([
+            // TRAER ROLE DEL BIMESTRE
+            pool.query("SELECT id AS idBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Role= ?", [roleBimestre])
+        ]);
+        const columna = `Conducta${roleBimestre}`;
 
 
-     const { [0] : {[0]: datosAlumno}  , [1] : codigos   , [2] : observaciones   } =  await Promise.all([
-        /** DATOS DEL ALUMNO */
-        pool.query(`SELECT Nombre, Apellido, ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE alumnos.Carnet = ? ` , idAlumno),
-        /** CODIGOS */
-        pool.query("SELECT Codigo, valor, Observacion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro,  DATE_FORMAT(Date, '%d/%m/%Y') AS Date   FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id INNER JOIN maestros ON maestros.id = codigo_alumno.idMaestro WHERE idBimestre = ? AND codigo_alumno.idAlumno = ? ORDER BY valor ASC" ,[ idBimestre, idAlumno ]),
-        /** OBSERVACIONES */
-        pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?" ,[ idBimestre, idAlumno ])
-    ]);
-    datosAlumno.Carnet = idAlumno;
-    await GenerarReporteDeConducta(codigos, observaciones , datosAlumno, roleBimestre);
-        res.json({status: true});
+        const { [0]: { [0]: datosAlumno }, [1]: codigos, [2]: observaciones } = await Promise.all([
+            /** DATOS DEL ALUMNO */
+            pool.query(`SELECT Nombre, Apellido, ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE alumnos.Carnet = ? `, idAlumno),
+            /** CODIGOS */
+            pool.query("SELECT Codigo, valor, Observacion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro,  DATE_FORMAT(Date, '%d/%m/%Y') AS Date   FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id INNER JOIN maestros ON maestros.id = codigo_alumno.idMaestro WHERE idBimestre = ? AND codigo_alumno.idAlumno = ? ORDER BY valor ASC", [idBimestre, idAlumno]),
+            /** OBSERVACIONES */
+            pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?", [idBimestre, idAlumno])
+        ]);
+        datosAlumno.Carnet = idAlumno;
+        await GenerarReporteDeConducta(codigos, observaciones, datosAlumno, roleBimestre);
+        res.json({ status: true });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({ status: false, error });  
+        return res.status(400).json({ status: false, error });
     }
 };
 
@@ -283,7 +296,7 @@ estudiantes.openReporte = (req, res) => {
     const file = fs.readFileSync("./public/files/boletaDeConducta.pdf");
     res.contentType("application/pdf");
     res.send(file);
-  };
-  
+};
+
 
 module.exports = estudiantes;

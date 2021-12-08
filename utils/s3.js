@@ -57,6 +57,7 @@ s3Functions.getImgMatricula = (Key) =>
         });
       });
     } catch (error) {
+      console.log("Error handling");
       resolve(error);
     }
   });
