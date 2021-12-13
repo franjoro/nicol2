@@ -36,6 +36,8 @@ router.get('/matriculas/:idAlumno',  estudiantes.getMatriculas);
 /* GET Pantalla de matriculas  */
 router.get('/vermatricula/:idMatricula',  estudiantes.viewMatricula);
 
+/* PUT Pantalla de matriculas  */
+router.put('/editMatricula/:idMatricula',  estudiantes.updateMatricula);
 
 /* GET Perfil Académico  */
 router.get('/perfilac/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademico);

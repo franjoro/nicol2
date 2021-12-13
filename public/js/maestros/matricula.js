@@ -1,4 +1,4 @@
-// Agregar OBSERVACION 
+// matricula
 $("#formMatricula").submit(async function (e) {
     e.preventDefault();
     const data = $(this).serializeArray();

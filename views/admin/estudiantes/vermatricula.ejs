@@ -41,40 +41,39 @@
                                 <div class="form-group col-md-3">
                                     <label>Nombres</label>
                                     <input type="text" class="form-control" id="Nombres" name="Nombres"
-                                        autocomplete="off" disabled value="<%= datos.Nombres %>">
+                                        autocomplete="off"  value="<%= datos.Nombres %>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Apellidos</label>
                                     <input type="text" class="form-control" id="Apellidos" name="Apellidos"
-                                        autocomplete="off" disabled value="<%= datos.Apellidos %>">
+                                        autocomplete="off"  value="<%= datos.Apellidos %>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Correo electrónico</label>
                                     <input type="email" class="form-control" id="EmailMain" name="EmailMain"
-                                        autocomplete="off" disabled value="<%= datos.EmailMain %>">
+                                        autocomplete="off"  value="<%= datos.EmailMain %>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-5">
                                     <label>Dirección</label>
                                     <input type="text" class="form-control" id="Direccion" name="Direccion"
-                                        autocomplete="off" disabled value="<%= datos.Direccion %>">
+                                        autocomplete="off"  value="<%= datos.Direccion %>">
                                 </div>
-                                <!-- <div class="form-group col-md-2">
-                                    <label>Sexo</label>
-                                    <select name="Sexo" id="Sexo" class="form-control">
-                                        <option selected disabled>Seleccione</option>
-                                    </select>
-                                </div> -->
                                 <div class="form-group col-md-2">
                                     <label>Télefono</label>
                                     <input type="text" class="form-control" id="Tel" name="Tel"
-                                        autocomplete="off" disabled value="<%= datos.Tel %>">
+                                        autocomplete="off"  value="<%= datos.Tel %>">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Fecha de nacimiento</label>
                                     <input type="date" class="form-control" id="FechaNac" name="FechaNac"
-                                        autocomplete="off" disabled value="<%= datos.FechaNac %>">
+                                        autocomplete="off"  value="<%= datos.FechaNac %>">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Código contable</label>
+                                    <input type="text" class="form-control" id="codigoContable" name="codigoContable"
+                                        autocomplete="off"  value="<%= datos.codigoContable %>">
                                 </div>
                             </div>
                             <hr>
@@ -89,17 +88,17 @@
                                                 <div class="col-md-12">
                                                     <label>Nombre</label>
                                                     <input type="text" class="form-control" id="NombreMadre" name="NombreMadre"
-                                                        autocomplete="off" disabled value="<%= datos.NombreMadre %>">
+                                                        autocomplete="off"  value="<%= datos.NombreMadre %>">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label>Cédula</label>
                                                     <input type="text" class="form-control" id="CedulaMadre" name="CedulaMadre"
-                                                        autocomplete="off" disabled value="<%= datos.CedulaMadre %>">
+                                                        autocomplete="off"  value="<%= datos.CedulaMadre %>">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label>Teléfono</label>
                                                     <input type="tel" class="form-control" id="TelMadre" name="TelMadre"
-                                                        autocomplete="off" disabled value="<%= datos.TelMadre %>">
+                                                        autocomplete="off"  value="<%= datos.TelMadre %>">
                                                 </div>
                                             </div>
                                         </div>
@@ -115,17 +114,17 @@
                                                 <div class="col-md-12">
                                                     <label>Nombre</label>
                                                     <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
-                                                        autocomplete="off" disabled value="<%= datos.NombrePadre %>">
+                                                        autocomplete="off"  value="<%= datos.NombrePadre %>">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label>Cédula</label>
                                                     <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
-                                                        autocomplete="off" disabled value="<%= datos.CedulaPadre %>">
+                                                        autocomplete="off"  value="<%= datos.CedulaPadre %>">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label>Teléfono</label>
                                                     <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
-                                                        autocomplete="off" disabled value="<%= datos.TelPadre %>">
+                                                        autocomplete="off"  value="<%= datos.TelPadre %>">
                                                 </div>
                                             </div>
                                         </div>
@@ -140,18 +139,18 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <label>Nombre</label>
-                                                    <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
-                                                        autocomplete="off" disabled value="<%= datos.NombreTutor %>">
+                                                    <input type="text" class="form-control" id="NombreTutor" name="NombreTutor"
+                                                        autocomplete="off"  value="<%= datos.NombreTutor %>">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label>Cédula</label>
-                                                    <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
-                                                        autocomplete="off" disabled value="<%= datos.CedulaTutor %>">
+                                                    <input type="text" class="form-control" id="CedulaTutor" name="CedulaTutor"
+                                                        autocomplete="off"  value="<%= datos.CedulaTutor %>">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label>Teléfono</label>
-                                                    <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
-                                                        autocomplete="off" disabled value="<%= datos.TelTutor %>">
+                                                    <input type="tel" class="form-control" id="TelTutor" name="TelTutor"
+                                                        autocomplete="off"  value="<%= datos.TelTutor %>">
                                                 </div>
                                             </div>
                                         </div>
@@ -167,26 +166,39 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label>El alumno vive con : </label>
-                                            <select name="ViveCon" id="ViveCon" disabled class="form-control">
-                                                <option selected disabled value="null"><%= datos.ViveCon %></option>
+                                            <select name="ViveCon" id="ViveCon"  class="form-control">
+                                                <option selected  value="<%= datos.ViveCon %>"><%= datos.ViveCon %></option>
+                                                <option value="Ambos padres">Ambos padres</option>
+                                                <option value="Solo con papá">Solo con papá</option>
+                                                <option value="Solo con mamá">Solo con mamá</option>
+                                                <option value="Con otro tipo de familiar">Con otro tipo de familiar</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Situación de los padres </label>
-                                            <select name="SiticionPadres" disabled id="SiticionPadres" class="form-control">
-                                                <option selected value="null"><%= datos.SiticionPadres %></option>
-
+                                            <select name="SiticionPadres"  id="SiticionPadres" class="form-control">
+                                                <option selected value="<%= datos.SiticionPadres %>"><%= datos.SiticionPadres %></option>
+                                                <option value="Padres Divorciados">Padres Divorciados</option>
+                                                <option value="Padres en unión sentimental">Padres en unión sentimental</option>
+                                                <option value="Padres en unión civil">Padres en unión civil</option>
+                                                <option value="Padres en unión religiosa">Padres en unión religiosa</option>
+                                                <option value="Madre fallecida">Madre fallecida</option>
+                                                <option value="Padre fallecido">Padre fallecido</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Resposabilidad económica</label>
-                                            <select name="ResEcono" disabled id="ResEcono" class="form-control">
-                                                <option selected value="null"><%= datos.ResEcono %></option>
+                                            <select name="ResEcono"  id="ResEcono" class="form-control">
+                                                <option selected value="<%= datos.ResEcono %>"><%= datos.ResEcono %></option>
+                                                <option value="Ambos padres">Ambos padres</option>
+                                                <option value="Solo de papá">Solo de papá</option>
+                                                <option value="Solo de mamá">Solo de mamá</option>
+                                                <option value="Con otro tipo de familiar">Con otro tipo de familiar</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Condición de salud diagnosticada</label>
-                                            <input type="text" class="form-control" disabled id="condicionMedica" name="condicionMedica"
+                                            <input type="text" class="form-control"  id="condicionMedica" name="condicionMedica"
                                             autocomplete="off" value="<%= datos.condicionMedica %>">
                                         </div>
                                         <hr>
@@ -204,28 +216,10 @@
                                 </div>
                             </div>
                             <hr>
+                            
                         </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        <button class="btn btn-success btn-lg" id="btnGuardar" >Actualizar matricula</button>
+                        <input type="hidden" id="idMatricula" value="<%= idMatricula  %>">
                     </div>
                 </div>
             </div>
@@ -233,4 +227,5 @@
 
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/admin/estudiantes/matriculas.js"></script>
     </div>

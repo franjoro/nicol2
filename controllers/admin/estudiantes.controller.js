@@ -142,6 +142,45 @@ estudiantes.getEstudiantes = async (req, res) => {
     }
 };
 
+
+estudiantes.updateMatricula = async (req, res) => {
+    
+    try {
+        const { idMatricula } = req.params;
+
+        const {[0] : obj } = await pool.query("SELECT data FROM matriculas WHERE id=?", [idMatricula]);
+        let completeObj = JSON.parse(obj.data);
+        let newObjct = req.body;
+
+        completeObj.Nombres = newObjct.Nombres;
+        completeObj.Apellidos = newObjct.Apellidos;
+        completeObj.EmailMain = newObjct.EmailMain;
+        completeObj.Direccion = newObjct.Direccion;
+        completeObj.Tel = newObjct.Tel;
+        completeObj.FechaNac = newObjct.FechaNac;
+        completeObj.NombreMadre = newObjct.NombreMadre ;
+        completeObj.CedulaMadre = newObjct.CedulaMadre ;
+        completeObj.TelMadre = newObjct.TelMadre ;
+        completeObj.NombrePadre = newObjct.NombrePadre ;
+        completeObj.CedulaPadre = newObjct.CedulaPadre ;
+        completeObj.TelPadre = newObjct.TelPadre ;
+        completeObj.NombreTutor = newObjct.NombreTutor ;
+        completeObj.CedulaTutor = newObjct.CedulaTutor ;
+        completeObj.TelTutor = newObjct.TelTutor ;
+        completeObj.ViveCon = newObjct.ViveCon ;
+        completeObj.SiticionPadres = newObjct.SiticionPadres ;
+        completeObj.ResEcono = newObjct.ResEcono ;
+        completeObj.condicionMedica = newObjct.condicionMedica ;
+
+        completeObj = JSON.stringify(completeObj);
+        await pool.query("UPDATE matriculas SET data= ? WHERE id=?", [completeObj, idMatricula]);
+        return res.json({ status:true });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error });
+    }
+};
+
 estudiantes.getEstudiantesAll = async (req, res) => {
     const { searchTerm } = req.body;
     let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%' GROUP BY Carnet  ORDER By Nombre LIMIT 5`;
@@ -200,7 +239,8 @@ estudiantes.viewMatricula = async (req, res) => {
             datos,
             img: img.path,
             arrFamiliares,
-            existFamiliares
+            existFamiliares,
+            idMatricula
         });
     } catch (error) {
         console.log(error);
