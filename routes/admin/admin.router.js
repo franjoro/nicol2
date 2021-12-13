@@ -21,10 +21,12 @@ const { authCheckAdmin  } = require('../../middlewares/auth');
 router.use('/notas', rutaNotas);
 router.use('/indicadores', rutaIndicadores);
 
+router.get('/correccion' , admin.matriculas);
+
 /* USE especificar las rutas competentes a los grados */
 router.use(authCheckAdmin);
 router.get('/', admin.main);
-router.delete('/', admin.delete);
+router.delete('/', admin.matriculas);
 router.use('/years', rutaYears);
 router.use('/grados', rutaGrados);
 router.use('/materias', rutaMaterias);
