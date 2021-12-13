@@ -577,15 +577,15 @@ maestros.matriculaRegtistro = async (req, res) => {
             );
         } else {
             // Alumno no existe
-
-            await pool.query("INSERT INTO alumnos(Carnet, Nombre , Apellido, Genero , FechaNac , Email) VALUES(?,?,?,?,?,?)", [carnet, Nombres, Apellidos, Sexo, FechaNac, EmailMain]);
-            adddUsuarioFunction({ user: carnet, passwordPlain: carnet, role: 2 });
+            const carnetT = carnet.trim();
+            await pool.query("INSERT INTO alumnos(Carnet, Nombre , Apellido, Genero , FechaNac , Email) VALUES(?,?,?,?,?,?)", [carnetT, Nombres, Apellidos, Sexo, FechaNac, EmailMain]);
+            adddUsuarioFunction({ user: carnetT, passwordPlain: carnetT, role: 2 });
 
             promesas.push(
                 /* Registro de matricula*/  pool.query("INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ", [
-                carnet, idYear, JSON.stringify(req.body)
+                    carnetT, idYear, JSON.stringify(req.body)
             ]),
-                /* Registro de alumno en grado */  pool.query("INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ", [idGrado, carnet])
+                /* Registro de alumno en grado */  pool.query("INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ", [idGrado, carnetT])
             );
         }
         const { [0]: { insertId } } = await Promise.all(promesas);

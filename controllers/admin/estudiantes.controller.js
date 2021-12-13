@@ -272,8 +272,7 @@ estudiantes.perfilAcademico = async (req, res) => {
             pool.query("SELECT id AS idBimestre FROM bimestres INNER JOIN year ON year.year = bimestres.idYear WHERE year.Estado = 1 AND bimestres.Role= ?", [roleBimestre])
         ]);
         const columna = `Conducta${roleBimestre}`;
-
-
+        if(!datosGrado) return res.json({status: "Alumno no matriculado en año activo"});
         const { [0]: { [0]: datosAlumno }, [1]: codigos, [2]: observaciones } = await Promise.all([
             /** DATOS DEL ALUMNO */
             pool.query(`SELECT Nombre, Apellido, ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE alumnos.Carnet = ? `, idAlumno),
@@ -282,7 +281,6 @@ estudiantes.perfilAcademico = async (req, res) => {
             /** OBSERVACIONES */
             pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?", [idBimestre, idAlumno])
         ]);
-
 
         res.render('./admin/estudiantes/perfilconducta.ejs', { idAlumno, datosGrado, datosAlumno, codigos, observaciones, roleBimestre });
     } catch (error) {

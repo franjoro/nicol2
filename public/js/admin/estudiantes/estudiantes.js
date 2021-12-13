@@ -83,6 +83,7 @@ $("#formEstudiantesEdit").submit(async function (e) {
             data: data,
         });
         if (query.status) { $('#editAlumno').modal('hide'); $("#formEstudiantesEdit")[0].reset(); swal.close(); return loadTable(); }
+        console.log(query);
     } catch (error) {
         console.log(error);
         if (error.responseJSON.error == "CARNET_NO_EXISTENTE") return alertas.newErrorMessage('Carnet no encontrado');
