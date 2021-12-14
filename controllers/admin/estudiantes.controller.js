@@ -171,7 +171,8 @@ estudiantes.updateMatricula = async (req, res) => {
         completeObj.SiticionPadres = newObjct.SiticionPadres ;
         completeObj.ResEcono = newObjct.ResEcono ;
         completeObj.condicionMedica = newObjct.condicionMedica ;
-
+        completeObj.codigoContable = newObjct.codigoContable ;
+        console.log(req.body);
         completeObj = JSON.stringify(completeObj);
         await pool.query("UPDATE matriculas SET data= ? WHERE id=?", [completeObj, idMatricula]);
         return res.json({ status:true });

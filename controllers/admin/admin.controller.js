@@ -39,31 +39,7 @@ admin.delete = async (req, res) => {
 
 admin.matriculas = async (req, res) => {
     try {
-        const matriculas = await pool.query("SELECT id, data FROM matriculas");
-
-        const arrPromesas = [];
-        let newobj;
-        matriculas.forEach(element => {
-
-            let obj = JSON.parse(element.data);
-
-            obj.NombrePadre = obj.NombreMadre[1];
-            obj.CedulaPadre = obj.CedulaMadre[1];
-            obj.TelPadre = obj.TelMadre[1];
-
-            obj.NombreMadre = obj.NombreMadre[0];
-            obj.CedulaMadre = obj.CedulaMadre[0];
-            obj.TelMadre = obj.TelMadre[0];
-            newobj = JSON.stringify(obj);
-
-            arrPromesas.push(
-                pool.query("UPDATE matriculas SET data = ? WHERE id = ? " , [newobj, element.id])
-            );
-        });
-
-        const respuesta = await Promise.all(arrPromesas);
-
-        res.json({respuesta});
+        res.json({ status: true });
     } catch (error) {
         console.error(error);
         res.status(400).json({ status: false, error });
