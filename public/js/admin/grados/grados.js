@@ -37,7 +37,7 @@ $("#selectorYear").on("change", function(){
 
 $(".btnDelete").on("click", function () {
     const { id } = $(this).data();
-    alertas.deleteAlertAjx("Eliminar grado", "¿Desea eliminar el grado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "grados", "id", id);
+     alertas.deleteAlertAjx("Eliminar grado", "¿Desea eliminar el grado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "grados", "id", id);
 });
 
 

@@ -65,7 +65,8 @@ $('#datatable tbody').on('click', '.btnEdit', function () {
 });
 $('#datatable tbody').on('click', '.btnDelete', function () {
         const { id } = $(this).data();
-        alertas.deleteAlertAjx("Eliminar estudiante", "¿Desea eliminar el estudiante seleccionado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "alumnos", "Carnet", `'${id}'`);
+        alertas.deleteAlertAjxAlumnnos("Eliminar estudiante", "¿Desea eliminar el estudiante seleccionado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "alumnos", "Carnet", `'${id}'`);
+        
 });
 
 $("#btnGuardarEdit").click(() => {

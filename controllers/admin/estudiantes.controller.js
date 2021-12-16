@@ -341,4 +341,24 @@ estudiantes.openReporte = (req, res) => {
 };
 
 
+estudiantes.delete = async (req, res) => {
+    try {
+        const { id, tabla, column } = req.body;
+
+        if (!id || !tabla || !column) return res.json({ status: false, error: "PARAMS_NOT_COMPLETE" });
+
+        const stament = `DELETE FROM alumnos WHERE Carnet = ${id.trim()}`;
+        await pool.query(stament);
+
+
+        const stament1 = `DELETE FROM usuarios WHERE Username = ${id.trim()}`;
+        await pool.query(stament1);
+
+        res.json({ status: true });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
 module.exports = estudiantes;

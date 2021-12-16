@@ -4,6 +4,8 @@ const estudiantes = require('../../controllers/admin/estudiantes.controller');
 
 var router = express.Router();
 
+/* DELETE ELIMINAR ESTUDIANTE */
+router.delete('/', estudiantes.delete);
 
 /* GET Pantalla principal de estudiantes */
 router.get('/',  estudiantes.main);
