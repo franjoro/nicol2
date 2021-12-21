@@ -23,3 +23,33 @@ $("#btnGuardar").click(() => {
     $("#formMatricula").submit();
 });
 
+
+
+$(".btnDeleteMatricula").on("click", function () {
+    const { id } = $(this).data();
+    console.log(id);
+    alertas.deleteAlertAjx(
+      "Eliminar matricula",
+      "Se borrara la información registrada, nota: si desea eliminar al estudiante del grado debera hacerlo manualmente.",
+      "matriculas",
+      "id",
+      id
+    );
+  });
+
+  
+$("#generateReporte").click( async() => {
+    try {
+        const {id} =  $("#generateReporte").data();
+        alertas.loaderAlert();
+        const query = await $.ajax({ url: `/admin/estudiantes/createMatriculaReport/${id}` });
+        if (query.status) {
+            swal.close();
+            window.open(`/admin/estudiantes/getReportMatricula `);
+        }
+        console.log(query);
+    } catch (error) {
+        console.log(error);
+        alertas.newErrorMessage("Error al generar documento");
+    }
+});

@@ -38,8 +38,10 @@ router.get('/matriculas/:idAlumno',  estudiantes.getMatriculas);
 /* GET Pantalla de matriculas  */
 router.get('/vermatricula/:idMatricula',  estudiantes.viewMatricula);
 
+
 /* PUT Pantalla de matriculas  */
 router.put('/editMatricula/:idMatricula',  estudiantes.updateMatricula);
+
 
 /* GET Perfil Académico  */
 router.get('/perfilac/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademico);
@@ -51,5 +53,12 @@ router.get('/perfilacreporte/:idAlumno/:roleBimestre?',  estudiantes.perfilAcade
 
 /* GET Reporte generado de conducta*/
 router.get('/getReport',  estudiantes.openReporte);
+
+
+/* GET Generar reporte de matricula  */
+router.get('/createMatriculaReport/:idMatricula',  estudiantes.generarReporteMatricula);
+
+/* GET Reporte generado de conducta*/
+router.get('/getReportMatricula',  estudiantes.openReporteMatricula);
 
 module.exports = router;

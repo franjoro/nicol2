@@ -221,7 +221,6 @@ $(".btnDelete").on("click", function () {
 
 $(".btnDeleteAlumno").on("click", function () {
   const { id } = $(this).data();
-  console.log(id);
   alertas.deleteAlertAjx(
     "Eliminar alumno asignado",
     "Remover asignación de alumno en materia",

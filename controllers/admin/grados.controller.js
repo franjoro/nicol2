@@ -49,7 +49,7 @@ grados.detalleGrado = async (req, res) => {
                 [idGrado]
             ), // Trae todas los maestros asignados
             pool.query(
-                "SELECT Carnet , Nombre , Apellido, grado_alumno.id AS idGradoAlumno FROM alumnos INNER JOIN grado_alumno  ON grado_alumno.idAlumno = alumnos.Carnet  WHERE idGrado = ? GROUP BY Carnet",
+                "SELECT Carnet , Nombre , Apellido, grado_alumno.id AS idGradoAlumno FROM alumnos INNER JOIN grado_alumno  ON grado_alumno.idAlumno = alumnos.Carnet  WHERE idGrado = ? GROUP BY Carnet ORDER BY Apellido ASC ",
                 [idGrado]
             ), // Trae todos los alumnos inscritos
         ];

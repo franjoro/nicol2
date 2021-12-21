@@ -1,6 +1,6 @@
 const estudiantes = {};
 const pool = require("../../models/db");
-const { GenerarReporteDeConducta } = require("../../utils/generatePdfHtml");
+const { GenerarReporteDeConducta, GenerarMatricula } = require("../../utils/generatePdfHtml");
 const { getImgMatricula } = require("../../utils/s3");
 const { adddUsuarioFunction } = require("./usuarios.controller");
 const fs = require("fs");
@@ -339,6 +339,11 @@ estudiantes.openReporte = (req, res) => {
     res.contentType("application/pdf");
     res.send(file);
 };
+estudiantes.openReporteMatricula = (req, res) => {
+    const file = fs.readFileSync("./public/files/reporte_matricula.pdf");
+    res.contentType("application/pdf");
+    res.send(file);
+};
 
 
 estudiantes.delete = async (req, res) => {
@@ -360,5 +365,60 @@ estudiantes.delete = async (req, res) => {
         res.status(400).json({ status: false, error });
     }
 };
+
+
+
+
+estudiantes.generarReporteMatricula = async (req, res) => {
+    try{
+        const { idMatricula } = req.params;
+        const { [0]: matriculas } = await pool.query(
+            "SELECT * FROM matriculas WHERE id = ? ",
+            [idMatricula]
+        );
+        const datos = JSON.parse(matriculas.data);
+
+        let img = {};
+        img.path =  "files/not-found.png";
+
+        let existFamiliares;
+        if (matriculas.s3Key.trim().length) {
+            img = await getImgMatricula(matriculas.s3Key);
+        }
+        
+        const arrFamiliaresPromesas = [];
+        const hrmans = [];
+
+        if (Array.isArray(datos["idEstudiantes[]"])) {
+            datos["idEstudiantes[]"].forEach(async (carnet) => {
+                hrmans.push(carnet);
+            });
+            existFamiliares = true;
+        } else {
+            hrmans.push(datos["idEstudiantes[]"]);
+            existFamiliares = false;
+        }
+
+
+        hrmans.forEach(async (carnet) => {
+            arrFamiliaresPromesas.push(
+                pool.query("SELECT Nombre, Apellido FROM alumnos WHERE Carnet = ?", [
+                    carnet,
+                ])
+            );
+        });
+
+
+        const arrFamiliares = await Promise.all(arrFamiliaresPromesas);
+        await GenerarMatricula(datos, img.path, arrFamiliares, existFamiliares  );
+        res.json({ status: true });
+    
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error });
+    }
+};
+
+
 
 module.exports = estudiantes;

@@ -34,6 +34,7 @@
                                 <tr>
                                     <th>Matricula Año</th>
                                     <th>Ver información</th>
+                                    <th>Eliminar</th>
                                 </tr>
                             </thead>
                             <tbody> 
@@ -41,6 +42,7 @@
                                     <tr>
                                         <td><%= matricula.idYear%></td>
                                         <td> <a class="btn btn-success" href="/admin/estudiantes/vermatricula/<%= matricula.id%>"> Ver información</a> </td>
+                                        <td> <button class="btn btn-danger btnDeleteMatricula"  data-id="<%= matricula.id %>"> <i class="me-2" data-feather="trash-2"></i>Eliminar</button></td>
                                     </tr>
                                 <%})%>
                             </tbody>
@@ -52,4 +54,6 @@
 
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/admin/estudiantes/matriculas.js"></script>
+
     </div>
