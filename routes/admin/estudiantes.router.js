@@ -1,5 +1,6 @@
 var express = require('express');
 const estudiantes = require('../../controllers/admin/estudiantes.controller');
+const fileUpload = require("express-fileupload");
 
 
 var router = express.Router();
@@ -60,5 +61,10 @@ router.get('/createMatriculaReport/:idMatricula',  estudiantes.generarReporteMat
 
 /* GET Reporte generado de conducta*/
 router.get('/getReportMatricula',  estudiantes.openReporteMatricula);
+
+
+/* PUT Registro de imagen matricula */
+router.put('/img', fileUpload(), estudiantes.uploadImg);
+
 
 module.exports = router;

@@ -38,6 +38,39 @@ $(".btnDeleteMatricula").on("click", function () {
   });
 
   
+$("#updatePicture").click( async() => {
+    const { value: alert } = await Swal.fire({
+        title: 'Actualizar imagen',
+        showCancelButton: true,
+        html: `<input type="file" name="imagen" class="form-control" id="imagen">`,
+      });
+      
+      if (alert) {
+        try {
+            const fd = new FormData();
+            fd.append("idAlumno", $("#carnet").val().trim());
+            fd.append("idMatricula", $("#idMatricula").val());
+            fd.append('imagen', $(`#imagen`)[0].files[0]);
+    
+            const respuesta = await $.ajax({
+                url: "/admin/estudiantes/img",
+                type: "PUT",
+                data: fd,
+                processData: false,
+                contentType: false,
+            });
+            if(respuesta.status){
+                location.reload();
+            }
+            console.log(respuesta);
+        } catch (error) {
+            console.error(error);
+        }
+      }
+});
+
+
+
 $("#generateReporte").click( async() => {
     try {
         const {id} =  $("#generateReporte").data();

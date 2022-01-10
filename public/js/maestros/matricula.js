@@ -41,7 +41,7 @@ $("#carnet").on("blur", async function () {
 });
 
 
-const sendFile = async (idMatricula = 2) => {
+const sendFile = async (idMatricula) => {
     try {
         const fd = new FormData();
         fd.append("idAlumno", $("#carnet").val());
@@ -59,7 +59,6 @@ const sendFile = async (idMatricula = 2) => {
     } catch (error) {
         console.error(error);
     }
-
 };
 
 
