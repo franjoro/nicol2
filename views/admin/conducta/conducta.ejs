@@ -43,20 +43,26 @@
           <div class="card-header p-5">
             Códigos de conducta aplicados
           </div>
-          <div class="card-body">
+          <div class="card-body table-responsive">
             <table id="datatable">
               <thead>
                 <tr>
+                  <th>Carnet</th>
                   <th>Código Aplicado</th>
                   <th>Estudiante</th>
                   <th>Maestro</th>
                   <th>Descripción</th>
+                  <th>Grado</th>
+                  <th>Fecha</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <% codigos.forEach( codigo=> { %>
                   <tr>
+                    <td>
+                      <%= codigo.Carnet %> 
+                    </td>
                     <td>
                       <%= codigo.Codigo %>   <b>  ( Valor <%= codigo.valor %> )</b>
                     </td>
@@ -69,10 +75,15 @@
                     <td>
                       <%= codigo.Observacion %>
                     </td>
-                    <td class="col-md-4">
-                      <button class="btn btn-danger">
-                        <i class="me-2" data-feather="trash-2"></i>Eliminar
-                      </button>
+                    <td>
+                      <%= codigo.nombreGrado %>
+                    </td>
+                    <td>
+                      <%= codigo.Date %>
+                    </td>
+                    <td>
+                      <button class="btn btn-danger btnDeleteCodigo" data-carnet="<%= codigo.Carnet %>" data-codigo="<%= codigo.idCodigo %>" data-idcodigoalumno="<%= codigo.idCodigoAlumno%>" >
+                        <i class="me-2" data-feather="trash-2"></i>Eliminar</button>
                     </td>
                     <%})%>
                   </tr>

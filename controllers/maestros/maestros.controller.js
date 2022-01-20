@@ -26,8 +26,15 @@ maestros.conducta = async (req, res) => {
         const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
 
-        // const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
-        const asignaciones = await pool.query("SELECT idGrado , nombre FROM grados INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id WHERE idMaestro = ? GROUP BY nombre", [identificador]);
+        const asignaciones = await pool.query(`
+        SELECT 
+        idGrado ,
+        nombre
+             FROM grados 
+        INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id
+             WHERE idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) 
+             GROUP BY nombre`, [identificador]);
+
         res.render('./maestros/conducta', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);
@@ -125,7 +132,20 @@ maestros.perfil = async (req, res) => {
         const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
 
-        const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado , materia_grado.id AS idUnion  FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
+        const asignaciones = await pool.query(`
+        SELECT
+    modelomaterias.Nombre,
+    grados.nombre AS Grado,
+    materia_grado.idGrado AS idGrado,
+    materia_grado.id AS idUnion
+    FROM
+        maestros_materias
+    INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id
+    INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
+    INNER JOIN grados ON grados.id = materia_grado.idGrado
+    WHERE
+    maestros_materias.idMaestro = 26 AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
+        console.log(identificador);
         res.render('./maestros/perfilAcademico', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);
@@ -288,7 +308,19 @@ maestros.notasViewMain = async (req, res) => {
         const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
 
-        const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado , materia_grado.id AS idUnion  FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
+        const asignaciones = await pool.query(`
+        SELECT
+        grados.nombre AS Grado,
+        modelomaterias.Nombre,
+        materia_grado.idGrado AS idGrado,
+        materia_grado.id AS idUnion
+        FROM
+        maestros_materias
+        INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id
+        INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
+        INNER JOIN grados ON grados.id = materia_grado.idGrado
+            WHERE
+        maestros_materias.idMaestro = 26 AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) ;`, [identificador]);
         res.render('./maestros/mainNotas', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);
@@ -703,7 +735,19 @@ maestros.viewNotasGrados = async (req, res) => {
         const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
 
-        const asignaciones = await pool.query("SELECT modelomaterias.Nombre , (SELECT nombre FROM grados WHERE id = materia_grado.idGrado ) AS Grado , materia_grado.idGrado AS idGrado , materia_grado.id AS idUnion  FROM maestros_materias INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE maestros_materias.idMaestro = ?", [identificador]);
+        const asignaciones = await pool.query(`
+        SELECT
+    modelomaterias.Nombre,
+    grados.nombre AS Grado,
+    materia_grado.idGrado AS idGrado,
+    materia_grado.id AS idUnion
+    FROM
+        maestros_materias
+    INNER JOIN materia_grado ON idUnionGradoMateria = materia_grado.id
+    INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
+    INNER JOIN grados ON grados.id = materia_grado.idGrado
+    WHERE
+    maestros_materias.idMaestro = 26 AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
         res.render('./maestros/viewgrades', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);

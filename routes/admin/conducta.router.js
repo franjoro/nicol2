@@ -9,4 +9,8 @@ var router = express.Router();
 router.get('/:roleBimestre?',  conducta.main);
 
 
+/*DELETE borrar codigo ya asignado */
+router.delete('/codigo',  conducta.delete);
+
+
 module.exports = router;
