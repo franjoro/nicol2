@@ -1,7 +1,7 @@
 const estudiantes = {};
 const pool = require("../../models/db");
 const { GenerarReporteDeConducta, GenerarMatricula } = require("../../utils/generatePdfHtml");
-const { getImgMatricula } = require("../../utils/s3");
+const { getImgMatricula, upload } = require("../../utils/s3");
 const { adddUsuarioFunction } = require("./usuarios.controller");
 const fs = require("fs");
 
@@ -419,6 +419,26 @@ estudiantes.generarReporteMatricula = async (req, res) => {
     }
 };
 
+
+estudiantes.uploadImg = async (req, res) => {
+    try {        
+        const { idAlumno, idMatricula } = req.body;
+        const ext = formatExtension(req.files.imagen.name.split("."));
+        const fileContent = Buffer.from(req.files.imagen.data, "binary");
+        const s3key = await upload(fileContent, `alumnos/${idAlumno}/${Date.now()}.${ext}`);
+        await pool.query("UPDATE matriculas SET s3Key = ? WHERE id = ?", [s3key.key, idMatricula]);
+        res.json({ status: true });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ status: false, error });
+    }
+};
+
+const formatExtension = (ext) => {
+    ext = ext[ext.length - 1].toLowerCase();
+    if (ext == "jpg") ext = "jpeg";
+    return ext;
+};
 
 
 module.exports = estudiantes;

@@ -26,7 +26,7 @@
                             <a href="/admin/estudiantes" class="btn btn-sm btn-primary" >
                                 Volver Atrás
                             </a>
-                            <a href="/admin/estudiantes" class="btn btn-sm btn-secondary" >
+                            <a id="updatePicture" class="btn btn-sm btn-secondary" >
                                 Actualizar fotografía
                             </a>
                             <button id="generateReporte" data-id="<%= idMatricula %>" class="btn btn-sm btn-success" >
@@ -226,6 +226,7 @@
                         </form>
                         <button class="btn btn-success btn-lg" id="btnGuardar" >Actualizar matricula</button>
                         <input type="hidden" id="idMatricula" value="<%= idMatricula  %>">
+                        <input type="hidden" id="carnet" value="<%= datos.carnet %>">
                     </div>
                 </div>
             </div>
