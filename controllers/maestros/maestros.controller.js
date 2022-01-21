@@ -92,7 +92,7 @@ maestros.addCodigo = async (req, res) => {
         ];
         await Promise.all(promesas);
         res.json({ status: true });
-        sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p>`);
+        sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p><br><h6><b>ESTE MENSAJE SE GENERA AUTOMATICAMENTE. FAVOR NO RESPONDER</b></h6>`);
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -144,7 +144,7 @@ maestros.perfil = async (req, res) => {
     INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
     INNER JOIN grados ON grados.id = materia_grado.idGrado
     WHERE
-    maestros_materias.idMaestro = 26 AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
+    maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
         console.log(identificador);
         res.render('./maestros/perfilAcademico', { asignaciones, permisosSend, usuario });
     } catch (error) {
@@ -320,7 +320,7 @@ maestros.notasViewMain = async (req, res) => {
         INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
         INNER JOIN grados ON grados.id = materia_grado.idGrado
             WHERE
-        maestros_materias.idMaestro = 26 AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) ;`, [identificador]);
+        maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) ;`, [identificador]);
         res.render('./maestros/mainNotas', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);
@@ -747,7 +747,7 @@ maestros.viewNotasGrados = async (req, res) => {
     INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
     INNER JOIN grados ON grados.id = materia_grado.idGrado
     WHERE
-    maestros_materias.idMaestro = 26 AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
+    maestros_materias.idMaestro =? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
         res.render('./maestros/viewgrades', { asignaciones, permisosSend, usuario });
     } catch (error) {
         console.log(error);
