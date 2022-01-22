@@ -27,9 +27,11 @@
         <div class="card card-header-actions mb-4">
           <div class="card-header p-5">
             Código
+            <% if(permisos.catalogos.create){ %>
             <button class="btn btn-md btn-warning" type="button" data-toggle="modal" data-target="#agregarAno">
               Agregar código
             </button>
+            <% } %>
           </div>
           <div class="card-body">
             <table id="datatable">
@@ -51,13 +53,15 @@
                     </td>
                     <td scoper="row" class="col-md-4">
                       <div class="btn-group" role="group">
-
+                        <% if(permisos.catalogos.update){ %>
                         <button class="btn btn-primary btnEdit" data-id="<%= codigo.id %>">
                           <i class="me-2" data-feather="edit"></i>Editar
                         </button>
+                        <% }if(permisos.catalogos.delete){ %>
                         <button class="btn btn-danger btnDelete" data-id="<%= codigo.id %>">
                           <i class="me-2" data-feather="trash-2"></i>Eliminar
                         </button>
+                        <% } %>
                       </div>
                     </td>
                     <%})%>

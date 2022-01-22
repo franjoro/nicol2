@@ -68,7 +68,6 @@ main.password = async (req, res) => {
       newPassword,
       idUsuario,
     ]);
-    console.log(newPassword);
     return res.status(200).json({ status: true });
   } catch (error) {
     console.log(error);
@@ -79,7 +78,6 @@ main.password = async (req, res) => {
 main.remindSender = async (req, res) => {
   const { email } = req.query;
   let { [0]: { ca } } = await pool.query("SELECT COUNT(*) AS ca FROM usuarios WHERE Username = ? ", [email]);
-  console.log(ca);
   if (!ca) return res.json({ status: false, error: "USER_NOT_EXIST" });
 
 
@@ -102,8 +100,7 @@ main.remindSender = async (req, res) => {
     toSendEmail = data[0][0].Email;
   }
 
-  const enlace = `http://18.216.11.101/password?code=${code}`;
-  // const enlace = `http://localhost:3000/password?code=${code}`;
+  const enlace = `https://plataforma.cssjb.edu.ni/password?code=${code}`;
   const html = `<h1>Cambio de contraseña usuario, Colegio Salesiano San Juan Bosco </h1><br><p>Ha solicitado el cambio de contraseña correspondiente al usuario, por favor de click en el siguiente enlace : <a href="${enlace}" >${enlace}</a>, de no haber solicitado el cambio por favor omita este correo. Cualquier consulta o solicitud de información puede hacerla respondiendo este correo.  </p><p><b>Usuario : </b>${Nombre}</p>`;
 
 
@@ -145,21 +142,20 @@ main.ChangePasswordwithReminder = async (req, res) => {
     );
     let table = 'alumnos';
     let campo = 'Carnet';
-    if (username.includes("@"))  {
+    if (username.includes("@")) {
       table = 'maestros';
       campo = 'Email';
     }
 
-    const data = await pool.query(`SELECT email FROM ${table} WHERE ${campo} = ? LIMIT 1 `,[ username]);
-    console.log(data);
+    const data = await pool.query(`SELECT email FROM ${table} WHERE ${campo} = ? LIMIT 1 `, [username]);
     const { email } = data[0];
 
-  // const enlace = `http://18.216.11.101/password?code=${code}`;
-  const enlace = `http://localhost:3000/`;
+    // const enlace = `http://18.216.11.101/password?code=${code}`;
+    const enlace = `http://localhost:3000/`;
 
 
     const html = `<h1>Cambio de contraseña usuario realizado</h1> <p>Se ha actualizado la contraseña del usuario  , puede ingresar a la plataforma en el siguiente enlace : <a href="${enlace}">${enlace}</a> </p> <br> <p>Si usted no ha hecho este cambio por favor comuniquese respondiendo este correo. O con soporte técnico </p>`;
-    sendEmail(email, "CAMBIO DE CONTRASEÑA HECHO"," " , html);
+    sendEmail(email, "CAMBIO DE CONTRASEÑA HECHO", " ", html);
     res.json({ status: true }).status(200);
 
 

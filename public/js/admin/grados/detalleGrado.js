@@ -230,6 +230,17 @@ $(".btnDeleteAlumno").on("click", function () {
   );
 });
 
+$(".btnDeleteGrado").on("click", function () {
+  const { id } = $(this).data();
+  alertas.deleteAlertAjx(
+    "Eliminar asignación de materia en grado",
+    "ATENCIÓN: ELIMINAR ESTA INFORMACIÓN TENDRA REPERCUCIONES EN LAS NOTAS YA ASIGNADAS",
+    "materia_grado",
+    "id",
+    id
+  );
+});
+
 $("#editGrado").on("click", async function () {
   const nombreGrado = $("#nombreGrado").text();
   const id = $("#idGrado").val();

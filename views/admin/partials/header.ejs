@@ -71,33 +71,40 @@
                         <div class="nav accordion" id="accordionSidenav">
                             <!-- Sidenav Heading (Opciones)-->
                             <div class="sidenav-menu-heading">opciones</div>
-                            <!-- Sidenav Accordion (opciones menú)-->
+                            <% if(permisos.estudiantes.read){ %>
                             <a class="nav-link collapsed" href="/admin/estudiantes">
                                 <div class="nav-link-icon"><i data-feather="book-open"></i></div>
                                 Estudiantes
                             </a>
+                            <% }if(permisos.maestros.read){ %>
                             <a class="nav-link collapsed" href="/admin/maestros">
                                 <div class="nav-link-icon"><i data-feather="book"></i></div>
                                 Maestros
                             </a>
+                            <% }if(permisos.grados.read){ %>
                             <a class="nav-link collapsed" href="/admin/grados">
                                 <div class="nav-link-icon"><i data-feather="archive"></i></div>
                                 Grados
                             </a> 
+                            <% }if(permisos.notas.read){ %>
                             <a class="nav-link collapsed" href="/admin/notas">
                                 <div class="nav-link-icon"><i data-feather="edit"></i></div>
                                 Notas
                             </a>  
+                            <% }if(permisos.conducta.read){ %>
                             <a class="nav-link collapsed" href="/admin/conducta">
                                 <div class="nav-link-icon"><i data-feather="award"></i></div>
                                 Conducta
                             </a>  
+                            <% }if(permisos.usuarios.read){ %>
                             <a class="nav-link collapsed" href="/admin/usuarios">
                                 <div class="nav-link-icon"><i data-feather="user"></i></div>
                                 Usuarios y permisos
                             </a>                     
-                            
+                            <% } %>
                             <!-- Sidenav Heading (Catalogo)-->
+                            <% if(permisos.catalogos.read){ %>
+
                             <div class="sidenav-menu-heading">Catálogo</div>
                             <!-- Sidenav Accordion (Catalogo)-->
                             <a class="nav-link collapsed" href="/admin/years">
@@ -124,6 +131,8 @@
                                 <div class="nav-link-icon"><i data-feather="list"></i></div>
                                 Indicadores preescolar
                             </a> 
+                            <% } %>
+
                             <div class="sidenav-menu-heading">Sesión</div>
                             <a class="nav-link collapsed" href="/">
                                 <div class="nav-link-icon"><i data-feather="log-out"></i></div>

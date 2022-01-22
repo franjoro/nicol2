@@ -4,10 +4,14 @@ const { GenerarReporteDeConducta, GenerarMatricula } = require("../../utils/gene
 const { getImgMatricula, upload } = require("../../utils/s3");
 const { adddUsuarioFunction } = require("./usuarios.controller");
 const fs = require("fs");
+const { getUserDataByToken } = require("../../middlewares/auth");
 
 estudiantes.main = async (req, res) => {
     try {
-        res.render("./admin/estudiantes/estudiantes");
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+        console.log(permisos);
+        res.render("./admin/estudiantes/estudiantes" , {permisos});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });
@@ -17,7 +21,8 @@ estudiantes.main = async (req, res) => {
 estudiantes.getMatriculas = async (req, res) => {
     try {
         const { idAlumno } = req.params;
-
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
         const {
             [0]: { Nombre, Apellido },
         } = await pool.query(
@@ -32,6 +37,7 @@ estudiantes.getMatriculas = async (req, res) => {
             Nombre,
             Apellido,
             matriculas,
+            permisos
         });
     } catch (error) {
         console.log(error);
@@ -198,6 +204,8 @@ estudiantes.getEstudiantesAll = async (req, res) => {
 
 estudiantes.viewMatricula = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
         const { idMatricula } = req.params;
         const { [0]: matriculas } = await pool.query(
             "SELECT * FROM matriculas WHERE id = ? ",
@@ -241,7 +249,8 @@ estudiantes.viewMatricula = async (req, res) => {
             img: img.path,
             arrFamiliares,
             existFamiliares,
-            idMatricula
+            idMatricula,
+            permisos
         });
     } catch (error) {
         console.log(error);
@@ -251,6 +260,10 @@ estudiantes.viewMatricula = async (req, res) => {
 
 
 estudiantes.perfilAcademico = async (req, res) => {
+    const { Permisos } = getUserDataByToken(req.cookies.token).data;
+    const permisos = JSON.parse(Permisos);
+
+
     let roleBimestre = req.params;
     if (
         roleBimestre.roleBimestre == undefined ||
@@ -283,7 +296,7 @@ estudiantes.perfilAcademico = async (req, res) => {
             pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?", [idBimestre, idAlumno])
         ]);
 
-        res.render('./admin/estudiantes/perfilconducta.ejs', { idAlumno, datosGrado, datosAlumno, codigos, observaciones, roleBimestre });
+        res.render('./admin/estudiantes/perfilconducta.ejs', { permisos , idAlumno, datosGrado, datosAlumno, codigos, observaciones, roleBimestre });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });

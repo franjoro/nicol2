@@ -1,56 +1,50 @@
-// $("#formEstudiantes").submit(async function (e) {
-//     e.preventDefault();
-//     const data = $(this).serialize();
-//     try {
-//         alertas.loaderAlert();
-//         const query = await $.ajax({
-//             type: "POST",
-//             url: "/admin/estudiantes",
-//             data: data,
-//         });
-//         if (query.status) {$('#agregarAlumno').modal('hide') ; $("#formEstudiantes")[0].reset(); swal.close(); return loadTable(); }
-//     } catch (error) {
-//         console.log(error);
-//         if (error.responseJSON.error == "CARNET_EXISTENTE") return alertas.newErrorMessage('Carnet dúplicado');
-//         return alertas.newErrorMessage();
-//     }
-// });
-
-
 const loadTable = () => {
     $("#datatable").DataTable().destroy();
     $("#datatable").DataTable({
         ajax: "/admin/usuarios/table",
         columns: [
-            { data: "Permisos" , "visible": false },
-            { data: "Role" , "visible": false},
+            { data: "Permisos", "visible": false },
+            { data: "Role", "visible": false },
             { data: "Username" },
             { data: "RoleText" },
             { data: "Estado" },
             {
                 "render": function (data, type, row) {
                     let html = `
-                    <div class="btn-group" role="group">
-                    <button class="btn btn-primary btn-sm btnPermisos">Ver permisos</button>`;
+                    <div class="btn-group" role="group">`;
 
-                     if( row.estadoNum ) { 
-                        html += `  <button class="btn btn-red btn-sm changeEstado" data-estado="0" data-idusuario="${row.Username}">Deshabilitar
+
+                    if ($("#permisosUpdate").val() == 'true') {
+                        html += `<button class="btn btn-primary btn-sm btnPermisos">Ver permisos</button>`;
+                    }
+
+                    if ($("#permisosStatus").val() == 'true') {
+                        if (row.estadoNum) {
+                            html += `  <button class="btn btn-red btn-sm changeEstado" data-estado="0" data-idusuario="${row.Username}">Deshabilitar
                         </button>`;
-                      } else{
+                        } else {
                             html += `<button class="btn btn-success btn-sm changeEstado" data-estado="1" data-idusuario="${row.Username}">Habilitar
                             </button>`;
-                      }
-                         html += `<button class="btn btn-warning btn-sm btnPassword"
-                                    data-id="${row.Username}">
-                                    <i class="me-2" data-feather="key"></i>Cambiar
-                                    contraseña
-                                </button>
-                           </div>`;
+                        }
+                    }
+
+
+                    if ($("#permisosUpdate").val() == 'true') {
+                        html += `<button class="btn btn-warning btn-sm btnPassword"
+                        data-id="${row.Username}">
+                        <i class="me-2" data-feather="key"></i>Cambiar
+                        contraseña
+                        </button>`;
+                    }
+
+
+
+                    html += `</div>`;
                     return html;
                 }
             },
         ]
-    } );
+    });
 };
 
 
@@ -92,7 +86,6 @@ $(document).ready(function () {
 $('#datatable tbody').on('click', '.btnPermisos', function () {
     const data = $('#datatable').DataTable().row(this.closest('tr')).data();
     const role = data.Role;
-    console.log(data);
     const permisos = JSON.parse(data.Permisos);
     global_permisos = permisos;
 
@@ -101,6 +94,9 @@ $('#datatable tbody').on('click', '.btnPermisos', function () {
         $("#selectIndicadores").val(`${permisos.indicadores}`);
         $("#textMaestros").text(data.Username);
         $("#modalMaestros").modal();
+    }
+    if (role == 1) {
+        location.replace('/admin/usuarios/administrator/' + data.Username);
     }
 });
 
@@ -141,9 +137,9 @@ $('#datatable tbody').on('click', '.btnPassword', async function () {
             const query = await $.ajax({
                 type: "PUT",
                 url: "/admin/usuarios/password",
-                data: {idUsuario : id, newPass: password},
+                data: { idUsuario: id, newPass: password },
             });
-            if(query.status) return alertas.Success();
+            if (query.status) return alertas.Success();
         } catch (error) {
             console.log(error);
             alertas.newErrorMessage(error);

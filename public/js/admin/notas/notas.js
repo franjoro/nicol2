@@ -135,9 +135,12 @@ const fillNotasByAlumno = async (idAlumno) => {
                              <tr>        
                                  <td>${nota1.tituloAcumulado}</td>
                                  <td>${nota1.acumuladoPorcentaje}</td>
-                                 <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button></td>
-                             </tr>        
                              `;
+                            if ($("#permisoUpdate").val() == 'true') {
+                                html += `<td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button></td>`;
+                            }
+                             html += `</tr>`;
+                             
         });
         html += `
                         <tr class="table-primary">

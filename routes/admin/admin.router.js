@@ -1,6 +1,6 @@
-var express = require('express');
+const express = require('express');
 const admin = require('../../controllers/admin/admin.controller');
-var router = express.Router();
+const router = express.Router();
 
 // DIRECCIONES DE RUTEO
 const rutaGrados = require('./grados.router');
@@ -18,8 +18,8 @@ const rutaIndicadores= require('./indicadores.router');
 const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
-router.use('/notas', rutaNotas);
-router.use('/indicadores', rutaIndicadores);
+router.use('/notas', rutaNotas); // checkx
+router.use('/indicadores', rutaIndicadores); // check
 
 router.get('/correccion' , admin.matriculas);
 
@@ -27,15 +27,15 @@ router.get('/correccion' , admin.matriculas);
 router.use(authCheckAdmin);
 router.get('/', admin.main);
 router.delete('/', admin.delete);
-router.use('/years', rutaYears);
-router.use('/grados', rutaGrados);
-router.use('/materias', rutaMaterias);
-router.use('/areas', rutaAreas);
-router.use('/estudiantes', rutaEstudiantes);
-router.use('/usuarios', rutaUsuarios);
-router.use('/maestros', rutaMaestros);
-router.use('/ciclos', rutaciclos);
-router.use('/codigos', rutaCodigos);
-router.use('/conducta', rutaConducta);
+router.use('/years', rutaYears); // check
+router.use('/grados', rutaGrados); // check
+router.use('/materias', rutaMaterias); // check
+router.use('/areas', rutaAreas); // check
+router.use('/estudiantes', rutaEstudiantes); // Check
+router.use('/usuarios', rutaUsuarios); // check
+router.use('/maestros', rutaMaestros); //  check
+router.use('/ciclos', rutaciclos); // check
+router.use('/codigos', rutaCodigos); // Check
+router.use('/conducta', rutaConducta); // Check
 
 module.exports = router;

@@ -1,11 +1,15 @@
 const indicadores = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 indicadores.main = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+        
         const indicadores = await pool.query("SELECT id, indicador FROM indicadoresparvularia");
 
-        res.render("./admin/catalogos/indicadores/indicadores", { indicadores });
+        res.render("./admin/catalogos/indicadores/indicadores", { indicadores , permisos });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });

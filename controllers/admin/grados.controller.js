@@ -1,9 +1,12 @@
 const grados = {};
 
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 grados.main = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
         let { year: yearActivo } = req.params;
         if (!yearActivo) {
             year = await pool.query("SELECT year AS yearActivo FROM year WHERE estado = 1");
@@ -24,7 +27,7 @@ grados.main = async (req, res) => {
             pool.query("SELECT year FROM year WHERE year>=(SELECT year FROM year WHERE estado = 1)"),
 
         ]);
-        res.render("./admin/grados/grados", { years, grados, ciclos, yearToAdd, yearActivo });
+        res.render("./admin/grados/grados", { years, grados, ciclos, yearToAdd, yearActivo , permisos});
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
@@ -33,6 +36,9 @@ grados.main = async (req, res) => {
 
 grados.detalleGrado = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+
         const { idGrado } = req.params;
         const promesas = [
             pool.query(
@@ -83,6 +89,7 @@ grados.detalleGrado = async (req, res) => {
             dataFiltrada,
             idGrado,
             Estudiantes,
+            permisos
         });
     } catch (error) {
         console.log(error);

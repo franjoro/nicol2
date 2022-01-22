@@ -54,7 +54,9 @@
                   <th>Descripción</th>
                   <th>Grado</th>
                   <th>Fecha</th>
+                  <% if(permisos.estudiantes.create){ %>
                   <th>Acciones</th>
+                  <% } %>
                 </tr>
               </thead>
               <tbody>
@@ -80,11 +82,13 @@
                     </td>
                     <td>
                       <%= codigo.Date %>
-                    </td>
+                    </td> 
+                    <% if(permisos.estudiantes.create){ %>
                     <td>
                       <button class="btn btn-danger btnDeleteCodigo" data-carnet="<%= codigo.Carnet %>" data-codigo="<%= codigo.idCodigo %>" data-idcodigoalumno="<%= codigo.idCodigoAlumno%>" >
                         <i class="me-2" data-feather="trash-2"></i>Eliminar</button>
                     </td>
+                      <%}%>
                     <%})%>
                   </tr>
               </tbody>

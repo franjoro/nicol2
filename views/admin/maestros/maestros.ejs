@@ -24,10 +24,12 @@
                     <div class="card-header p-5">
                         Directorio de maestros
                         <div>
+                            <% if(permisos.maestros.create){ %>
                             <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
                                 data-target="#modalMaestros">
                                 Agregar maestro
                             </button>
+                            <% } %>
                         </div>
                     </div>
                     <div class="card-body table-responsive">
@@ -164,6 +166,12 @@
                 </div>
             </div>
         </div>
+
+
+        <input type="hidden" id="permisoDelete" value="<%= permisos.maestros.delete %>">
+        <input type="hidden" id="permisoUpdate" value="<%= permisos.maestros.update %>">
+
+
 
         <%- include('../partials/footer.ejs'); %>
             <script src="/static/js/alertas.js"></script>

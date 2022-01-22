@@ -1,10 +1,14 @@
 const maestros = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 const { adddUsuarioFunction } = require('./usuarios.controller');
 
 maestros.main = async (req, res) => {
     try {
-        res.render('./admin/maestros/maestros');
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+
+        res.render('./admin/maestros/maestros', {permisos});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });

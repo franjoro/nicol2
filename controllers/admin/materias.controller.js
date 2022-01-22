@@ -1,15 +1,19 @@
 const materias = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 materias.main = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+        
         const { [0]: materias, [1]: areas } = await Promise.all([
             pool.query(
                 "SELECT id, Nombre, Siglas, (SELECT Nombre FROM areas WHERE id =  modelomaterias.idArea) AS areaNombre , idArea FROM modelomaterias"
             ),
             pool.query("SELECT * FROM areas"),
         ]);
-        res.render("./admin/catalogos/materias/materia", { materias, areas });
+        res.render("./admin/catalogos/materias/materia", { materias, areas, permisos });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });

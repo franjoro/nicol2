@@ -1,11 +1,15 @@
 const years = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 years.main =async (req, res) => {
   try {
+    const { Permisos } = getUserDataByToken(req.cookies.token).data;
+    const permisos = JSON.parse(Permisos);
+    
     const years = await pool.query("SELECT year, IF(estado = 1 , 'Activo','Inactivo') AS estadoText , estado AS estadoID ,  IF(estado = 1 , 'green','red') AS color  FROM year ORDER BY year DESC");
     const {[0]:dataActual} = await pool.query("SELECT year , Role FROM year INNER JOIN bimestres ON bimestres.idYear = year.year WHERE bimestres.Estado = 1 AND year.estado = 1");
-    res.render("./admin/catalogos/years/years" , {years, dataActual});
+    res.render("./admin/catalogos/years/years" , {years, dataActual , permisos});
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, error }); 

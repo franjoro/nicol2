@@ -26,14 +26,17 @@
           <div class="card-header p-5">
             Años
             <div>
+              <% if(permisos.catalogos.update){ %>
               <button class="btn btn-md btn-primary" type="button" data-toggle="modal" data-target="#settings"> <i
                   class="me-2" data-feather="settings"></i>
                 Configurar año y bimestres activos
               </button>
+              <% } if(permisos.catalogos.create){ %>
               <button class="btn btn-md btn-success" type="button" data-toggle="modal" data-target="#agregarAno"><i
                   class="me-2" data-feather="plus"></i>
                 Agregar año
               </button>
+              <% }%>
             </div>
           </div>
           <div class="card-body">
@@ -42,7 +45,9 @@
                 <tr>
                   <th scope="col">Año</th>
                   <th scope="col">Estado</th>
+                  <% if(permisos.catalogos.delete){ %>
                   <th scope="col">Acciones</th>
+                  <%} %>
                 </tr>
               </thead>
               <tbody>
@@ -54,11 +59,13 @@
                     <td class="text-<%= year.color %>">
                       <%= year.estadoText %>
                     </td>
+                    <% if(permisos.catalogos.delete){ %>
                     <td style="width: 30%;">
                       <button class="btn btn-danger btnDelete" data-id="<%= year.year %>">
                         <i class="me-2 " data-feather="trash-2"></i>Eliminar
                       </button>
                     </td>
+                    <% }%>
                   </tr>
                   <%})%>
               </tbody>

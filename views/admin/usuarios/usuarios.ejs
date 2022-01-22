@@ -23,9 +23,11 @@
                 <div class="card card-header-actions mb-4">
                     <div class="card-header p-5">
                         Directorio de usuarios
-                        <button class="btn btn-md btn-warning" type="button">
+                        <% if(permisos.usuarios.create){ %>
+                        <a class="btn btn-md btn-warning" href="/admin/usuarios/administrator">
                             Crear usuario administrador
-                        </button>
+                        </a>
+                        <% } %>
                     </div>
                     <div class="card-body">
                         <table id="datatable">
@@ -39,54 +41,6 @@
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
-                          <!--   <tbody>
-                                <% usuarios.forEach((usuario)=> { %>
-                                    <tr>
-                                        <td class="d-none">
-                                            <%= usuario.Permisos %>
-                                        </td>
-                                        <td class="d-none">
-                                            <%= usuario.Role %>
-                                        </td>
-                                        <td>
-                                            <%= usuario.Username %>
-                                        </td>
-                                        <td>
-                                            <%= usuario.RoleText %>
-                                        </td>
-                                        <td>
-                                            <%= usuario.Estado %>
-                                        </td>
-                                        <td class="col-md-4">
-
-
-                                            <div class="btn-group" role="group">
-
-                                                <button class="btn btn-primary btn-sm" id="btnPermisos">
-                                                    <i class="me-2" data-feather="edit"></i>Ver permisos
-                                                </button>
-                                                <% if( usuario.estadoNum ) { %>
-                                                    <button class="btn btn-red btn-sm changeEstado" data-estado="0"
-                                                        data-idusuario="<%=usuario.Username%>">
-                                                        <i class="me-2" data-feather="x"></i>Deshabilitar
-                                                    </button>
-                                                    <%}else{ %>
-                                                        <button class="btn btn-success btn-sm changeEstado"
-                                                            data-estado="1" data-idusuario="<%=usuario.Username%>">
-                                                            <i class="me-2" data-feather="check"></i>Habilitar
-                                                        </button>
-                                                        <% } %>
-                                                            <button class="btn btn-warning btn-sm btnPassword"
-                                                                data-id="<%= usuario.Username %>">
-                                                                <i class="me-2" data-feather="key"></i>Cambiar
-                                                                contraseña
-                                                            </button>
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                    <%} )%>
-                            </tbody> -->
                             <tbody></tbody>
                         </table>
                     </div>
@@ -138,7 +92,8 @@
             </div>
         </div>
 
-
+        <input type="hidden" id="permisosUpdate" value="<%= permisos.usuarios.update%>">
+        <input type="hidden" id="permisosStatus" value="<%= permisos.usuarios.status%>">
 
 
         <%- include('../partials/footer.ejs'); %>

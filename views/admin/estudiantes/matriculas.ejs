@@ -34,7 +34,9 @@
                                 <tr>
                                     <th>Matricula Año</th>
                                     <th>Ver información</th>
+                                    <% if(permisos.estudiantes.delete){ %>
                                     <th>Eliminar</th>
+                                    <%  } %>
                                 </tr>
                             </thead>
                             <tbody> 
@@ -42,7 +44,9 @@
                                     <tr>
                                         <td><%= matricula.idYear%></td>
                                         <td> <a class="btn btn-success" href="/admin/estudiantes/vermatricula/<%= matricula.id%>"> Ver información</a> </td>
+                                        <% if(permisos.estudiantes.delete){ %>
                                         <td> <button class="btn btn-danger btnDeleteMatricula"  data-id="<%= matricula.id %>"> <i class="me-2" data-feather="trash-2"></i>Eliminar</button></td>
+                                        <% } %>
                                     </tr>
                                 <%})%>
                             </tbody>

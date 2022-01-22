@@ -34,12 +34,17 @@ const loadTable = () => {
             { data: "Email" },
             {
                 "render": function (data, type, row) {
-                    const html = `
+                    let html = `
                     <div class="btn-group" role="group">
-                        <button type="button" data-id="${row.id}" class="btn btn-danger btnDelete">Eliminar</button>
-                        <button type="button" class="btn btn-info btnEdit">Editar</button>
-                    </div>
                     `;
+                    if ($("#permisoDelete").val() == 'true') {
+                        html += `<button type="button" data-id="${row.id}" class="btn btn-danger btnDelete">Eliminar</button>`;
+                    }
+                    if ($("#permisoUpdate").val() == 'true') {
+                        html += ` <button type="button" class="btn btn-info btnEdit">Editar</button>`;
+                    }
+                    html += `</div>`;
+
                     return html;
                 }
             },

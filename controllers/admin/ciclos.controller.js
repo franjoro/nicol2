@@ -1,10 +1,14 @@
 const ciclos = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 ciclos.main = async (req , res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+        
         const ciclos = await pool.query("SELECT id, Nombre , IF(isParvularia = 1 , 'Cualitativas' , 'Cuantitativas') AS evaluacion FROM ciclos");
-        res.render('./admin/catalogos/ciclos/ciclos', {ciclos});  
+        res.render('./admin/catalogos/ciclos/ciclos', {ciclos, permisos});  
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error }); 

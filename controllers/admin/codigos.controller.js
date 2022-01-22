@@ -1,10 +1,13 @@
 const codigos = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 codigos.main = async (req , res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
         const codigos = await pool.query("SELECT * FROM codigos");
-        res.render('./admin/catalogos/codigos/codigos' , {codigos});
+        res.render('./admin/catalogos/codigos/codigos' , {codigos , permisos});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error }); 

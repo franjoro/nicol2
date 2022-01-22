@@ -1,8 +1,13 @@
 const conducta = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 conducta.main = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+
+        
         let roleBimestre = req.params;
         if (roleBimestre.roleBimestre == undefined || roleBimestre.roleBimestre === null) {
             roleBimestre = await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE Estado = 1 ");
@@ -14,7 +19,7 @@ conducta.main = async (req, res) => {
 
         const codigos = await pool.query(`SELECT codigo_alumno.id AS idCodigoAlumno, idCodigo, Carnet, Codigo, valor, Observacion, DATE_FORMAT(DATE, '%d/%m/%Y') AS Date, grados.nombre AS nombreGrado , CONCAT( maestros.Nombres, ' ', maestros.Apellidos ) AS NombreMaestro, CONCAT( alumnos.Nombre, ' ', alumnos.Apellido ) AS NombreAlumno, grados.nombre FROM codigo_alumno INNER JOIN grado_alumno ON grado_alumno.idAlumno = codigo_alumno.idAlumno INNER JOIN grados ON grados.id = grado_alumno.idGrado INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id INNER JOIN maestros ON maestros.id = codigo_alumno.idMaestro INNER JOIN alumnos ON alumnos.Carnet = codigo_alumno.idAlumno WHERE idBimestre = ? ORDER BY valor ASC`, [idBimestre]);
 
-        res.render('./admin/conducta/conducta', { codigos, roleBimestre });
+        res.render('./admin/conducta/conducta', { codigos, roleBimestre , permisos});
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });

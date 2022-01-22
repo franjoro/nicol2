@@ -27,7 +27,9 @@
         <div class="card card-header-actions mb-4">
           <div class="card-header p-5">
             Información general
+            <% if(permisos.grados.update){ %>
             <button class="btn btn-md btn-warning" type="button" id="editGrado">Editar nombre del grado</button>
+            <% } %>
           </div>
           <div class="card-body px-0">
             <div class="d-flex align-items-center justify-content-between px-4">
@@ -80,13 +82,12 @@
             <div class="card-header p-5">
               Alumnos
               <div>
-                <!-- <button class="btn btn-md btn-primary" type="button"> <i class="me-2" data-feather="download-cloud"></i>
-                  Importar alumnos
-                </button> -->
+                <% if(permisos.grados.update){ %>
                 <button class="btn btn-md btn-secondary" type="button" data-toggle="modal"
                   data-target="#modalAddEstudiante"> <i class="me-2" data-feather="plus-circle"></i>
                   Asignar alumnos
                 </button>
+                <% } %>
               </div>
             </div>
             <div class="card-body table-responsive">
@@ -96,7 +97,9 @@
                     <th>Carnet</th>
                     <th>Apellido</th>
                     <th>Nombre</th>
-                    <th>Acciones</th>
+                    <% if(permisos.grados.update){ %>
+                    <th>Eliminar</th>
+                    <% } %>
                   </tr>
                 </thead>
                 <tbody>
@@ -111,14 +114,15 @@
                       <td>
                         <%= estudiante.Nombre %>
                       </td>
+                      <% if(permisos.grados.update){ %>
                       <td>
                         <button class="btn btn-danger btnDeleteAlumno" data-id="<%= estudiante.idGradoAlumno %>">
                           <i data-feather="trash-2"></i>
                         </button>
                       </td>
+                      <% } %>
                     </tr>
                     <% } )%>
-
                 </tbody>
               </table>
             </div>
@@ -129,7 +133,7 @@
           <div class="card card-header-actions mb-3">
             <div class="card-header p-5">
               Opciones de materias
-
+              <% if(permisos.grados.update){ %>
               <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -147,11 +151,13 @@
                   <a class="dropdown-item changeStatus" data-role="3" data-statoch="0" href="#">Examen 40% </a>
                 </div>
               </div>
-
+              <% } %>
               <div>
+                <% if(permisos.grados.update){ %>
                 <button class="btn btn-md btn-primary" type="button" data-toggle="modal"
                   data-target="#modalAddMateria"><i class="me-2" data-feather="plus-circle"></i> Asignar
                   materia</button>
+                  <% } %>
               </div>
             </div>
           </div>
@@ -161,9 +167,12 @@
             <div class="row">
               <div class="col-xl-4">
                 <!-- Profile picture card-->
-                <div class="card mb-4 mb-xl-0">
-                  <div class="card-header">
-                    <%= materia.NombreMateria %>
+                <div class="card card-header-actions mb-4 mb-xl-0">
+                  <div class="card-header  p-5">
+                 <%= materia.NombreMateria %>  
+                 <% if(permisos.grados.update){ %>
+                  <button data-id="<%= materia.idMateria %>" class="btnDeleteGrado btn btn-danger btn-sm"><i data-feather="trash-2"></i></button>
+
                   </div>
                   <div class="card-body">
                     <span>Permisos de edición: </span>
@@ -195,8 +204,9 @@
                         </tr>
                       </tbody>
                     </table>                   
-
+                    <% } %>
                   </div>
+                  
                 </div>
               </div>
 
@@ -205,19 +215,20 @@
                 <div class="card mb-4">
                   <div class="card-header d-flex justify-content-between">
                     Maestros que imparten la materia:
+                    <% if(permisos.grados.update){ %>
                     <button class="btn btn-md btn-success btnAsignarMaestro" type="button"
                       data-union=<%=materia.idMateria %> data-materia=<%= materia.NombreMateria %> >
                         <i class="me-2" data-feather="plus-circle"></i>Asignar maestro</button>
-                        <!-- <button class="btn btn-danger" type="button">
-                          Quitar materia
-                        </button> -->
+                        <% } %>
                   </div>
                   <div class="card-body table-responsive">
                     <table class="table table-striped">
                       <thead>
                         <tr>
                           <th>Nombre</th>
+                          <% if(permisos.grados.update){ %>
                           <th>Eliminar</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -226,10 +237,12 @@
                             <td>
                               <%= maestro.NombreMaestro %>
                             </td>
+                            <% if(permisos.grados.update){ %>
                             <td class="col-md-2">
                               <button class="btn btn-danger btnDelete" data-id="<%=maestro.idMaestroMateria%>">
                                 <i data-feather="trash-2"></i></button>
                             </td>
+                            <% } %>
                           </tr>
                           <% } )%>
                       </tbody>
@@ -238,6 +251,7 @@
                 </div>
               </div>
             </div>
+            <hr>
             <% } )%>
               <hr />
         </section>

@@ -5,9 +5,14 @@ const fs = require("fs");
 const {
   getConsolidadoBimestralExcel,
 } = require("../../utils/reports/reportesNotas");
+const { getUserDataByToken } = require("../../middlewares/auth");
 
 notas.main = async (req, res) => {
+
   try {
+    const { Permisos } = getUserDataByToken(req.cookies.token).data;
+    const permisos = JSON.parse(Permisos);
+    
     let roleBimestre = req.params;
     if (
       roleBimestre.roleBimestre == undefined ||
@@ -36,7 +41,7 @@ notas.main = async (req, res) => {
       [1]: grados,
     } = await Promise.all(queryPromesas);
 
-    res.render("./admin/notas/notas", { roleBimestre, idBimestre, grados });
+    res.render("./admin/notas/notas", { roleBimestre, idBimestre, grados , permisos});
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, error });

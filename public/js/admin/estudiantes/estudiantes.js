@@ -34,14 +34,19 @@ const loadTable = () => {
             { data: "Email" },
             {
                 "render": function (data, type, row) {
-                    const html = `
+                    let html = `
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <a href="/admin/estudiantes/perfilac/${row.Carnet}" class="btn btn-success btn-sm">Conducta</a> 
                         <a href="/admin/estudiantes/matriculas/${row.Carnet}" class="btn btn-primary btn-sm">Matriculas</a> 
-                        <button type="button" data-id="${row.Carnet}" class="btn btn-danger btnDelete">Eliminar</button>
-                        <button type="button" class="btn btn-info btnEdit">Editar</button>
-                    </div>
                     `;
+                    if ($("#permisoDelete").val() == 'true') {
+                        html += `<button type="button" data-id="${row.Carnet}" class="btn btn-danger btnDelete">Eliminar</button>`;
+                    }
+                    if ($("#permisoUpdate").val() == 'true') {
+                        html += ` <button type="button" class="btn btn-info btnEdit">Editar</button>`;
+                    }
+
+                    html += `</div>`;
                     return html;
                 }
             },
@@ -59,14 +64,14 @@ $('#datatable tbody').on('click', '.btnEdit', function () {
     $("#ApellidoEdit").val(data.Apellido);
     $("#FechaNacEdit").val(data.FechaNac);
     $("#EmailEdit").val(data.Email);
-    data.Genero =="Hombre" ?  $("#GeneroEdit").val(0) :  $("#GeneroEdit").val(1) ;
+    data.Genero == "Hombre" ? $("#GeneroEdit").val(0) : $("#GeneroEdit").val(1);
     $("#editAlumno").modal();
 
 });
 $('#datatable tbody').on('click', '.btnDelete', function () {
-        const { id } = $(this).data();
-        alertas.deleteAlertAjxAlumnnos("Eliminar estudiante", "¿Desea eliminar el estudiante seleccionado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "alumnos", "Carnet", `'${id}'`);
-        
+    const { id } = $(this).data();
+    alertas.deleteAlertAjxAlumnnos("Eliminar estudiante", "¿Desea eliminar el estudiante seleccionado y todo lo relacionado a esta información? ALERTA, ESTA ACCIÓN NO SE PUEDE DESHACER Y ELIMINARA DATOS IMPORTANTES", "alumnos", "Carnet", `'${id}'`);
+
 });
 
 $("#btnGuardarEdit").click(() => {

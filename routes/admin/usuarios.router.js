@@ -23,4 +23,11 @@ router.put('/estado',  usuarios.updateEstado);
 /* GET alumnos para rellenar tabla */
 router.get('/table',  usuarios.loadTable);
 
+/* GET Pantalla de creación de usuarios */
+router.get('/administrator',  usuarios.createAdminPage);
+
+/* GET Pantalla de edición de permisos de administrador */
+router.get('/administrator/:username',  usuarios.editAdminPage);
+
+
 module.exports = router;

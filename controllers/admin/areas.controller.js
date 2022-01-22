@@ -1,10 +1,14 @@
 const areas = {};
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 areas.main = async (req , res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
+        
         const areas = await pool.query("SELECT * FROM areas");
-        res.render('./admin/catalogos/areas/areas', {areas});  
+        res.render('./admin/catalogos/areas/areas', {areas , permisos});  
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error }); 

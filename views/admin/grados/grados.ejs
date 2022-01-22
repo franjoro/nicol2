@@ -39,6 +39,7 @@
                 <div class="card card-header-actions mb-4">
                     <div class="card-header p-5">
                         Grados
+                        <% if(permisos.grados.update){ %>
                         <div class="dropdown">
                             <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,8 +63,10 @@
                                 </a>
                             </div>
                         </div>
+                        <% } if(permisos.grados.create){ %>
                         <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
                             data-target="#modalGrados">Agregar Grado</button>
+                        <% } %>
                     </div>
                     <div class="card-body">
                         <table id="datatable">
@@ -89,8 +92,10 @@
                                                 <a href="/admin/grados/detalle/<%= grado.id %>"
                                                     class="btn btn-primary"><i class="me-2"
                                                         data-feather="settings"></i>Configuración</a>
+                                                        <% if(permisos.grados.delete){ %>
                                                 <button class="btn btn-danger btnDelete" data-id="<%= grado.id %>"><i
                                                         class="me-2" data-feather="trash-2"></i>Eliminar</button>
+                                                        <% } %>
                                             </div>
                                         </td>
                                     </tr>

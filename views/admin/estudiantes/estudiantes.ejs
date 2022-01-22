@@ -24,13 +24,12 @@
                     <div class="card-header p-5">
                         Directorio de alumnos
                         <div>
+                            <% if(permisos.estudiantes.create){ %>
                             <button class="btn btn-md btn-warning" type="button" data-toggle="modal"
                                 data-target="#agregarAlumno">
                                 Agregar alumno
                             </button>
-                            <!-- <button class="btn btn-md btn-success" type="button">
-                                Descargar reporte
-                            </button> -->
+                            <% } %>
                         </div>
                     </div>
                     <div class="card-body table-responsive">
@@ -175,6 +174,8 @@
             </div>
         </div>
 
+        <input type="hidden" id="permisoDelete" value="<%= permisos.estudiantes.delete %>">
+        <input type="hidden" id="permisoUpdate" value="<%= permisos.estudiantes.update %>">
 
 
 

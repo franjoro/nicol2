@@ -1,18 +1,19 @@
 const admin = {};
 
+const { getUserDataByToken } = require("../../middlewares/auth");
 const pool = require("../../models/db");
 
 admin.main = async (req, res) => {
     try {
+        const { Permisos } = getUserDataByToken(req.cookies.token).data;
+        const permisos = JSON.parse(Permisos);
 
         const { [0]: { [0]: { alumnos } }, [1]: { [0]: { maestros } } } = await Promise.all([
             pool.query("SELECT COUNT(*) AS alumnos FROM alumnos"),
             pool.query("SELECT COUNT(*) AS maestros FROM maestros"),
         ]);
 
-        console.log(alumnos);
-
-        res.render('./admin/main', { alumnos, maestros });
+        res.render('./admin/main', { alumnos, maestros, permisos });
     } catch (error) {
         console.error(error);
         res.status(400).json({ status: false, error });

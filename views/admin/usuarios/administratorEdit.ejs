@@ -1,0 +1,639 @@
+<%- include('../partials/header.ejs'); %>
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-primary pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon"><i data-feather="user"></i></div>
+                                    Editar permisos del perfil administrativo - <%= username %>
+                                </h1>
+                                <div class="page-header-subtitle">
+                                    Administrar permisos de acceso para usuarios administrativos
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header p-5">
+                        <a href="/admin/usuarios" class="btn btn-sm btn-primary">Volver Atrás</a>
+                        Perfiles administrativos
+                    </div>
+                    <div class="card-body ">
+                        <form id="formAdministratorEdit">
+                            <div class="card">
+                                <div class="card-header">
+                                    Permisos de acceso
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de estudiantes</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Crear</th>
+                                                        <th>Editar</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <% let opt1, opt2 ; 
+                                                            if(estudiantes.read){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }
+                                                            %>
+                                                            <select name="estudiantes_read" id="estudiantes_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(estudiantes.create){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+                                                            <select name="estudiantes_create" id="estudiantes_create"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(estudiantes.update){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+                                                            <select name="estudiantes_update" id="estudiantes_update"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(estudiantes.delete){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+                                                            <select name="estudiantes_delete" id="estudiantes_delete"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de maestros</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Crear</th>
+                                                        <th>Editar</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <%  opt = maestros.read ? 'selected' : ' ' 
+                                                            if(maestros.read){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+
+                                                            <select name="maestros_read" id="maestros_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  opt = maestros.create ? 'selected' : ' '
+                                                            if(maestros.create){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+
+                                                            <select name="maestros_create" id="maestros_create"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(maestros.update ){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }%>
+
+                                                            <select name="maestros_update" id="maestros_update"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%
+                                                            if(maestros.delete){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="maestros_delete" id="maestros_delete"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de grados</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Crear</th>
+                                                        <th>Editar</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <%  
+                                                            if(grados.read){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="grados_read" id="grados_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(grados.create){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="grados_create" id="grados_create"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(grados.update){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="grados_update" id="grados_update"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(grados.delete){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="grados_delete" id="grados_delete"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de notas</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Editar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <%  
+                                                            if(notas.read){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+
+                                                            <select name="notas_read" id="notas_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(notas.update){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="notas_update" id="notas_update"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de conducta</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <%  
+                                                            if(conducta.read){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="conducta_read" id="conducta_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(conducta.delete ){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+
+                                                            <select name="conducta_delete" id="conducta_delete"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de usuarios</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Crear</th>
+                                                        <th>Editar</th>
+                                                        <th>Eliminar</th>
+                                                        <th>Activar / Deshabilitar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <%
+                                                            if(usuarios.read){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+
+                                                            <select name="usuarios_read" id="usuarios_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(usuarios.create){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            }  %>
+
+                                                            <select name="usuarios_create" id="usuarios_create"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(usuarios.update){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="usuarios_update" id="usuarios_update"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(usuarios.delete){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="usuarios_delete" id="usuarios_delete"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(usuarios.status){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="usuarios_status" id="usuarios_status"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>Sección de catálogos</h4>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Visualizar</th>
+                                                        <th>Crear</th>
+                                                        <th>Editar</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <% 
+                                                            if(catalogos.read ){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="catalogos_read" id="catalogos_read"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(catalogos.create){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="catalogos_create" id="catalogos_create"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <%  
+                                                            if(catalogos.update ){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="catalogos_update" id="catalogos_update"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <% 
+                                                            if(catalogos.delete ){
+                                                                opt1 = '';
+                                                                opt2 = 'selected';
+                                                            }else{
+                                                                opt1 = 'selected';
+                                                                opt2 = ' ';
+                                                            } %>
+
+                                                            <select name="catalogos_delete" id="catalogos_delete"
+                                                                class="form-control">
+                                                                <option value="false" <%= opt1 %> class="text-danger">Inactivo
+                                                                </option>
+                                                                <option value="true"  <%= opt2 %>  class="text-success">Activo
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <input type="hidden" name="Username" value="<%= username %>">
+                        </form>
+                        <% if(permisos.usuarios.update){ %>
+                        <button class="btn btn-secondary" id="btnEditar" >Modificar usuario</button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+        <%- include('../partials/footer.ejs'); %>
+            <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/admin/usuarios/administrator.js"></script>
