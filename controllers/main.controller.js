@@ -150,8 +150,7 @@ main.ChangePasswordwithReminder = async (req, res) => {
     const data = await pool.query(`SELECT email FROM ${table} WHERE ${campo} = ? LIMIT 1 `, [username]);
     const { email } = data[0];
 
-    // const enlace = `http://18.216.11.101/password?code=${code}`;
-    const enlace = `http://localhost:3000/`;
+    const enlace = `https://plataforma.cssjb.edu.ni/password?code=${code}`;
 
 
     const html = `<h1>Cambio de contraseña usuario realizado</h1> <p>Se ha actualizado la contraseña del usuario  , puede ingresar a la plataforma en el siguiente enlace : <a href="${enlace}">${enlace}</a> </p> <br> <p>Si usted no ha hecho este cambio por favor comuniquese respondiendo este correo. O con soporte técnico </p>`;
