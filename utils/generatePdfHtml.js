@@ -71,19 +71,15 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
 
 const GenerarBoletaFinal = (data) => { 
     let html = `<!DOCTYPE html>
-    <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-        <title>Document</title>
     </head>
-    
     <body>`;
     data.forEach(estudiante => {
     html += `
-        <div class="container-fluid pt-3" style="padding-bottom: 425px; border-color: gray; border-width: 1px; border-style: dotted;">
+        <div class="container-fluid" style="height:1590px;">
             <div class="row">
                 <div class="col-md-3">
                  <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;"> 
@@ -100,8 +96,6 @@ const GenerarBoletaFinal = (data) => {
                    </table>
                 </div>
             </div>
-    
-    
             <table class="table table-bordered table-striped">
                 <thead>
                   <tr class="bg-blue text-black">
@@ -118,9 +112,6 @@ const GenerarBoletaFinal = (data) => {
                   </tr>
                 </thead>
                 <tbody> `;
-    
-    
-  
             estudiante.notas.forEach(notasOne => {
                 html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
                 notasOne.notas.forEach(nota => {
@@ -128,23 +119,17 @@ const GenerarBoletaFinal = (data) => {
                 });
                 html += `<td>${notasOne.notaGlobal}</td></tr>`;
             });
-     
         html += `</tbody></table>
-       
-                </tbody>
-            </table>
                 <hr>
-                <h4 class="pt-1">Observaciones: </h4>
-                
+                <h4>Observaciones: </h4>
                 <textarea class="form-control disabled"  cols="30" rows="2"></textarea>
-                
                 <div class="d-flex justify-content-between">
                    <div class="col-md-6 text-center">
-                       <h4 class="pt-1">_____________</h4>                        
+                       <h4 >_____________</h4>                        
                         <h4>Profesor Guía</h4>
                    </div>
                    <div class="col-md-6 text-center">
-                       <h4 class="pt-1">_____________</h4>                        
+                       <h4>_____________</h4>                        
                        <h4>Director</h4>
                    </div>
                 </div>
