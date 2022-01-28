@@ -18,8 +18,8 @@ alertas.errorLogin = () => {
 
 alertas.loaderAlert = () => {
   Swal.fire({
-    title: "Por favor, Espere",
-    html: "Cargando Data",
+    title: "Por favor, espere",
+    html: "Cargando información necesaria...",
     allowOutsideClick: !1,
     showConfirmButton: false,
     willOpen: () => {

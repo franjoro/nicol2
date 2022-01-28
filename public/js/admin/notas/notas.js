@@ -382,7 +382,7 @@ const alertaChangeNota = async (id, nota) => {
 
 $("#btnReporteFinal").click(() => {
     const html = `
-            <h3>Boleta final de notas </h3>
+            <h3>Boleta de calificaciones </h3>
             <table class="table">
             <tbody>
                 <tr>

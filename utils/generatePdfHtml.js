@@ -83,14 +83,14 @@ const GenerarBoletaFinal = (data) => {
     <body>`;
     data.forEach(estudiante => {
     html += `
-        <div class="container-fluid" style="padding-bottom: 600px;">
+        <div class="container-fluid pt-3" style="padding-bottom: 425px; border-color: gray; border-width: 1px; border-style: dotted;">
             <div class="row">
                 <div class="col-md-3">
-                    <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt="">
+                 <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;"> 
                 </div>
                 <div class="col-md-8">
-                    <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
-                    <h4>Boleta final de notas</h4>
+                    <h1>Colegio Salesiano San Juan Bosco</h1>
+                    <h4>Boleta de calificaciones</h4>
                    <table class="table">
                         <tr>
                             <td>Carnet: ${estudiante.idAlumno}</td>
@@ -102,7 +102,7 @@ const GenerarBoletaFinal = (data) => {
             </div>
     
     
-            <table class="table table-bordered table-sm table-striped">
+            <table class="table table-bordered table-striped">
                 <thead>
                   <tr class="bg-blue text-black">
                     <th>Materia</th>
@@ -122,7 +122,7 @@ const GenerarBoletaFinal = (data) => {
     
   
             estudiante.notas.forEach(notasOne => {
-                html += `<tr><td>${notasOne.Nombre}</td> `;
+                html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
                 notasOne.notas.forEach(nota => {
                     html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
                 });
@@ -133,23 +133,19 @@ const GenerarBoletaFinal = (data) => {
        
                 </tbody>
             </table>
-    
                 <hr>
                 <h4 class="pt-1">Observaciones: </h4>
-                <textarea class="form-control disabled"  cols="30" rows="4"></textarea>
-                <hr>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <div class="row">
+                
+                <textarea class="form-control disabled"  cols="30" rows="2"></textarea>
+                
+                <div class="d-flex justify-content-between">
                    <div class="col-md-6 text-center">
-                       <h4 class="pt-1">Profesor Guía </h4>
+                       <h4 class="pt-1">_____________</h4>                        
+                        <h4>Profesor Guía</h4>
                    </div>
                    <div class="col-md-6 text-center">
-                       <h4 class="pt-1">Director </h4>
+                       <h4 class="pt-1">_____________</h4>                        
+                       <h4>Director</h4>
                    </div>
                 </div>
         </div>

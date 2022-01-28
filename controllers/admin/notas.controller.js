@@ -364,7 +364,6 @@ notas.getBoletaFinalByGrado = async (req, res) => {
       obj.notaPromedio = notaPromedio / materias.length;
       dataOrdenada.push(obj);
     });
-    
     const pdf = await GenerarBoletaFinal(dataOrdenada);
     res.json({status: true, pdf});
     console.log(pdf);
