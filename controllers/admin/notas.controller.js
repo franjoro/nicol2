@@ -285,7 +285,7 @@ notas.getBoletaFinalByAlumno = async (req, res) => {
 
 notas.getBoletaFinalByGrado = async (req, res) => {
   try {
-    const { idGrado } = req.params;
+    const { idGrado, nombreGrado, roleBimestre } = req.params;
 
 
 
@@ -364,9 +364,9 @@ notas.getBoletaFinalByGrado = async (req, res) => {
       obj.notaPromedio = notaPromedio / materias.length;
       dataOrdenada.push(obj);
     });
-    const pdf = await GenerarBoletaFinal(dataOrdenada);
-    res.json({status: true, pdf});
-    console.log(pdf);
+
+    await GenerarBoletaFinal(dataOrdenada , nombreGrado, roleBimestre);
+    res.json({status: true});
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {

@@ -41,7 +41,7 @@ router.put('/', authCheckAdmin  , notas.updateNota);
 
 
 /* GET obtener Boleta Final  Por grado */
-router.get('/boletaFinal/:idGrado',  notas.getBoletaFinalByGrado);
+router.get('/boletaFinal/:idGrado/:nombreGrado/:roleBimestre',  notas.getBoletaFinalByGrado);
 
 
 /* GET Reporte generado por HTML en notas */

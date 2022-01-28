@@ -69,7 +69,7 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
 
 
 
-const GenerarBoletaFinal = (data) => { 
+const GenerarBoletaFinal = (data, nombreGrado, roleBimestre) => { 
     let html = `<!DOCTYPE html>
     <head>
         <meta charset="UTF-8">
@@ -91,7 +91,8 @@ const GenerarBoletaFinal = (data) => {
                         <tr>
                             <td>Carnet: ${estudiante.idAlumno}</td>
                             <td>Nombre: ${estudiante.nombreAlumno}</td>
-                            <td>Grado:  Septimo A</td>
+                            <td>Grado:  ${nombreGrado}</td>
+                            <td>Bimensual #${roleBimestre}</td>
                         </tr>
                    </table>
                 </div>
@@ -113,11 +114,15 @@ const GenerarBoletaFinal = (data) => {
                 </thead>
                 <tbody> `;
             estudiante.notas.forEach(notasOne => {
-                html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
-                notasOne.notas.forEach(nota => {
-                    html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
-                });
-                html += `<td>${notasOne.notaGlobal}</td></tr>`;
+                    html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
+                    notasOne.notas.forEach((nota, index) => {
+                        if(index +1  <= roleBimestre){
+                            html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
+                        }else{
+                            html += `<td></td><td></td>`;
+                        }
+                    });
+                    html += `<td>${notasOne.notaGlobal}</td></tr>`;
             });
         html += `</tbody></table>
                 <hr>

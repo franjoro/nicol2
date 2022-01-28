@@ -466,8 +466,10 @@ $("#btnReporteConsolidadoBimestralExcel").click(async () => {
 $("#btnReporteGenerado").click(async () => {
     try {
         const idGrado = $("#selectGradoReporte").val();
+        const nombreGrado = $( "#selectGradoReporte option:selected" ).text().trim();
+        const roleBimestre = $("#roleBimestre").val();
         alertas.loaderAlert();
-        const query = await $.ajax({ url: `/admin/notas/boletaFinal/${idGrado}` });
+        const query = await $.ajax({ url: `/admin/notas/boletaFinal/${idGrado}/${nombreGrado}/${roleBimestre}` });
         if (query.status) {
             swal.close();
             window.open(`/admin/notas/getReport `);
