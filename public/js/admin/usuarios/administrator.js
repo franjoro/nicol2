@@ -139,7 +139,6 @@ $("#formAdministratorEdit").submit(async function (e) {
         }
     };
     try {
-        console.log(permisos);
         permisos = JSON.stringify(permisos);
         alertas.loaderAlert();
         const query = await $.ajax({

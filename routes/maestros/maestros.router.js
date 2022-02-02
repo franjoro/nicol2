@@ -25,7 +25,7 @@ router.get('/conducta/:idGrado', maestros.conductaAlumnos);
 // POST Asignar código a alumno  
 router.post('/conducta', maestros.addCodigo);
 
-// POST Asignar código a alumno  
+// POST Asignar observación a alumno  
 router.post('/observacion', maestros.addObservacion);
 // =============================================== FIN DIARIO PEDAGOGICO
 

@@ -79,20 +79,20 @@ maestros.addCodigo = async (req, res) => {
         ]);
         const columna = `Conducta${Role}`;
         let { [0]: { puntaje } } = await pool.query(`SELECT ${columna} AS puntaje FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? `, [idGrado, idAlumno]);
-
-        puntaje = Number(puntaje) + Number(valor);
-        if (puntaje >= 100) puntaje = 100;
+        let newPuntaje = parseInt(puntaje, 10) + parseInt(valor,10);
+        console.log(newPuntaje);
+        if (newPuntaje >= 100) newPuntaje = 100;
         const promesas = [
             pool.query("INSERT INTO codigo_alumno(idCodigo, idAlumno , idMaestro , idBimestre , Observacion) VALUES(?,?,?,?,?)", [
                 idCodigo, idAlumno, identificador, id, descripcion
             ]),
             pool.query(`UPDATE grado_alumno SET  ${columna} = ? WHERE idGrado = ? AND idAlumno = ? `, [
-                puntaje, idGrado, idAlumno
+                newPuntaje, idGrado, idAlumno
             ]),
         ];
         await Promise.all(promesas);
         res.json({ status: true });
-        sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p><br><h6><b>ESTE MENSAJE SE GENERA AUTOMATICAMENTE. FAVOR NO RESPONDER</b></h6>`);
+         sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p><br><h6><b>ESTE MENSAJE SE GENERA AUTOMATICAMENTE. FAVOR NO RESPONDER</b></h6>`);
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });

@@ -18,8 +18,8 @@ const rutaIndicadores= require('./indicadores.router');
 const { authCheckAdmin  } = require('../../middlewares/auth');
 
 
-router.use('/notas', rutaNotas); // checkx
-router.use('/indicadores', rutaIndicadores); // check
+router.use('/notas', rutaNotas); 
+router.use('/indicadores', rutaIndicadores); 
 
 router.get('/correccion' , admin.matriculas);
 
@@ -27,15 +27,15 @@ router.get('/correccion' , admin.matriculas);
 router.use(authCheckAdmin);
 router.get('/', admin.main);
 router.delete('/', admin.delete);
-router.use('/years', rutaYears); // check
-router.use('/grados', rutaGrados); // check
-router.use('/materias', rutaMaterias); // check
-router.use('/areas', rutaAreas); // check
-router.use('/estudiantes', rutaEstudiantes); // Check
-router.use('/usuarios', rutaUsuarios); // check
+router.use('/years', rutaYears); 
+router.use('/grados', rutaGrados); 
+router.use('/materias', rutaMaterias); 
+router.use('/areas', rutaAreas); 
+router.use('/estudiantes', rutaEstudiantes); 
+router.use('/usuarios', rutaUsuarios); 
 router.use('/maestros', rutaMaestros); //  check
-router.use('/ciclos', rutaciclos); // check
-router.use('/codigos', rutaCodigos); // Check
-router.use('/conducta', rutaConducta); // Check
+router.use('/ciclos', rutaciclos); 
+router.use('/codigos', rutaCodigos); 
+router.use('/conducta', rutaConducta); 
 
 module.exports = router;

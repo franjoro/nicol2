@@ -121,8 +121,10 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre) => {
                         }else{
                             html += `<td></td><td></td>`;
                         }
+                        // if(index +1 == 4 ){
+                        //     html += `<td>${notasOne.notaGlobal}</td></tr>`;
+                        // }
                     });
-                    html += `<td>${notasOne.notaGlobal}</td></tr>`;
             });
         html += `</tbody></table>
                 <hr>

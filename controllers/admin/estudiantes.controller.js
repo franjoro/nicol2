@@ -10,7 +10,6 @@ estudiantes.main = async (req, res) => {
     try {
         const { Permisos } = getUserDataByToken(req.cookies.token).data;
         const permisos = JSON.parse(Permisos);
-        console.log(permisos);
         res.render("./admin/estudiantes/estudiantes" , {permisos});
     } catch (error) {
         console.log(error);
