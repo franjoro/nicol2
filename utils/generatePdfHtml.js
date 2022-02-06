@@ -69,7 +69,7 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
 
 
 
-const GenerarBoletaFinal = (data, nombreGrado, roleBimestre) => { 
+const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => { 
     let html = `<!DOCTYPE html>
     <head>
         <meta charset="UTF-8">
@@ -86,7 +86,7 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre) => {
                 </div>
                 <div class="col-md-8">
                     <h1>Colegio Salesiano San Juan Bosco</h1>
-                    <h4>Boleta de calificaciones</h4>
+                    <h4>Boleta de calificaciones - ${year.idYear}</h4>
                    <table class="table">
                         <tr>
                             <td>Carnet: ${estudiante.idAlumno}</td>
@@ -121,15 +121,45 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre) => {
                         }else{
                             html += `<td></td><td></td>`;
                         }
-                        // if(index +1 == 4 ){
-                        //     html += `<td>${notasOne.notaGlobal}</td></tr>`;
-                        // }
                     });
-            });
+                    if(roleBimestre == 4 ){
+                        html += `<td>${notasOne.notaGlobal}</td></tr>`;
+                    }
+                });
+                html += `<tr style="font-size: 20px;">
+                        <td>Conducta</td>
+                        <td>${estudiante.Conducta1.puntaje}</td>
+                        <td>${estudiante.Conducta1.prom}</td>`;
+
+                        if(roleBimestre  >= 2){
+                            html += `  
+                            <td>${estudiante.Conducta2.puntaje}</td>
+                            <td>${estudiante.Conducta2.prom}</td>`;
+                        }else{
+                            html += `<td></td><td></td>`;
+                        }
+
+                        if(roleBimestre  >= 3){
+                            html += `
+                            <td>${estudiante.Conducta3.puntaje}</td>
+                            <td>${estudiante.Conducta3.prom}</td>`;
+                        }else{
+                            html += `<td></td><td></td>`;
+                        }
+                        if(roleBimestre  >= 4){
+                            html += `
+                            <td>${estudiante.Conducta4.puntaje}</td>
+                            <td>${estudiante.Conducta4.prom}</td>`;
+                        }else{
+                            html += `<td></td><td></td>`;
+                        }
+                        html += ` </tr>`;
         html += `</tbody></table>
                 <hr>
                 <h4>Observaciones: </h4>
-                <textarea class="form-control disabled"  cols="30" rows="2"></textarea>
+                <div class="pb-5">
+                <textarea class="form-control disabled"  cols="30" rows="3"></textarea>
+                </div>
                 <div class="d-flex justify-content-between">
                    <div class="col-md-6 text-center">
                        <h4 >_____________</h4>                        
