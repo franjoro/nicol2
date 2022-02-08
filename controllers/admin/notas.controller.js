@@ -116,7 +116,7 @@ notas.getConsolidadoAnual = async (req, res) => {
 
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, actividades.Bimestre AS Bimestre ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ?  ORDER BY actividades.Role",
+        "SELECT actividades.Role AS RoleActivida, bimestres.Role AS Bimestre, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado INNER JOIN bimestres ON bimestres.id = actividades.Bimestre WHERE materia_grado.idGrado = ? ORDER BY actividades.Role;",
         [idGrado]
       ),
       /* MATERIAS */ pool.query(
@@ -162,7 +162,8 @@ notas.getConsolidadoAnual = async (req, res) => {
             nota.idAlumno == estudiante.idAlumno
           ) {
             if (nota.Bimestre === 1)
-              roleOneNota = Number(nota.nota) + Number(roleOneNota);
+            roleOneNota = Number(nota.nota) + Number(roleOneNota);
+            console.log(nota.nota);
             if (nota.Bimestre === 2)
               roleTwo = Number(nota.nota) + Number(roleTwo);
             if (nota.Bimestre === 3)
@@ -178,9 +179,11 @@ notas.getConsolidadoAnual = async (req, res) => {
         materiasArr.push(objInsede);
       });
       obj.notas = materiasArr;
-      obj.notaPromedio = notaPromedio / materias.length;
+      obj.notaPromedio = (notaPromedio / materias.length).toFixed(2);
       dataOrdenada.push(obj);
     });
+
+    
     res.json(dataOrdenada);
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
