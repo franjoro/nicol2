@@ -29,9 +29,9 @@ $("#btnGuardar").click(async () => {
                 url: "/maestros/notasAdd/",
                 data: { data: dataarr },
             });
-
+            alertas.Success("Notas actualizadas correctamente");
+            location.reload();
         }
-        alertas.Success("Notas actualizadas correctamente");
     } catch (error) {
         console.log(error);
         alertas.newErrorMessage();

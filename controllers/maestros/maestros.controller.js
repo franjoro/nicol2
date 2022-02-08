@@ -510,6 +510,7 @@ maestros.notasAlumnos = async (req, res) => {
             }
             dataOrdenada.push(notaObtenida);
         });
+        console.log(dataOrdenada);
         res.render('./maestros/notasAlumnos', { Role, idUnion, dataGradoMateria, Titulo, cantidad, dataOrdenada, acumulados, permisosSend, usuario });
     } catch (error) {
         console.log(error);
