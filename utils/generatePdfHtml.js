@@ -76,10 +76,10 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     </head>
-    <body>`;
+    <body style="font-family: Arial;">`;
     data.forEach(estudiante => {
     html += `
-        <div class="container-fluid" style="height:1590px;">
+        <div class="container-fluid pt-5" style="height:1590px;">
             <div class="row">
                 <div class="col-md-3">
                  <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;"> 

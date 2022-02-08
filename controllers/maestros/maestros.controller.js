@@ -442,18 +442,24 @@ maestros.notasAlumnos = async (req, res) => {
     try {
         const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
         const permisosSend = JSON.parse(Permisos);
+        const { idUnion, Role } = req.params;
 
         const { [0]: { id } } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
-        const { idUnion, Role } = req.params;
+        
         const { [0]: dataGradoMateria } = await pool.query("SELECT idGrado, (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion]);
+
         const arrPromesas = [
             pool.query("SELECT actividades.id AS idActividad, Titulo, COUNT(acumulados.id) AS cantidad FROM actividades INNER JOIN acumulados ON acumulados.idActividad = actividades.id  WHERE unionMateriaGrado = ? AND Role = ? AND Bimestre = ?", [idUnion, Role, id]), // Obtiene información de la actividad
-            pool.query("SELECT Carnet, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet WHERE idGrado = ? GROUP BY Carnet ", [dataGradoMateria.idGrado]), // Obtiene alumnos del grado
+            pool.query("SELECT Carnet, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet WHERE idGrado = ? GROUP BY Carnet ORDER BY Apellido", [dataGradoMateria.idGrado]), // Obtiene alumnos del grado
         ];
-        const { [0]: { [0]: { Titulo, cantidad, idActividad } }, [1]: alumnos } = await Promise.all(arrPromesas);
+
+         const { [0]: { [0]: { Titulo, cantidad, idActividad } }, [1]: alumnos } = await Promise.all(arrPromesas);
+
         const acumulados = await pool.query("SELECT id, Porcentaje FROM acumulados WHERE idActividad = ? ", [idActividad]);
+
         const notasAcumulados = await pool.query("SELECT notas.id AS idNota , Nota, idAlumno, acumulados.id AS idAcumulado, Porcentaje FROM notas INNER JOIN acumulados ON acumulados.id = notas.idAcumulado WHERE acumulados.idActividad = ? ", [idActividad]);
         const dataOrdenada = [];
+
         alumnos.forEach(alumno => {
 
             const arrExist = [];
@@ -510,7 +516,6 @@ maestros.notasAlumnos = async (req, res) => {
             }
             dataOrdenada.push(notaObtenida);
         });
-        console.log(dataOrdenada);
         res.render('./maestros/notasAlumnos', { Role, idUnion, dataGradoMateria, Titulo, cantidad, dataOrdenada, acumulados, permisosSend, usuario });
     } catch (error) {
         console.log(error);

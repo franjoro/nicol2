@@ -33,8 +33,8 @@
                                     <thead>
                                         <tr>
                                             <th>Carnet</th>
-                                            <th>Nombres</th>
                                             <th>Apellidos</th>
+                                            <th>Nombres</th>
                                             <% acumulados.forEach( acu => { %>
                                                 <th class="acumulado" data-valor="<%= acu.Porcentaje %>">Nota <%= acu.Porcentaje %></th>
                                             <%  })%>  
@@ -47,10 +47,10 @@
                                                     <%= alumno.Carnet %>
                                                 </td>
                                                 <td>
-                                                    <%= alumno.Nombre %>
+                                                    <%= alumno.Apellido %>
                                                 </td>
                                                 <td>
-                                                    <%= alumno.Apellido %>
+                                                    <%= alumno.Nombre %>
                                                 </td>
                                                 <% alumno.Nota.forEach( (nota, i) => { %>
                                                 <td>

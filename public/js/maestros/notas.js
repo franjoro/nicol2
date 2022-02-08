@@ -19,7 +19,6 @@ $("#btnGuardar").click(async () => {
             const nota = $(this).val();
             const data = { exist, idnota, idacumulado, alumno, nota };
             dataarr.push(data);
-            console.log(data);
         });
         const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador, los docentes y alumnos.");
         if (isConfirmed) {
@@ -47,7 +46,6 @@ $("#btnGuardarParvularia").click(async () => {
             const nota = $(this).val();
             const data = { exist, idnota, idunion, alumno, nota };
             dataarr.push(data);
-            console.log(data);
         });
         const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador, los docentes y alumnos.");
         if (isConfirmed) {
