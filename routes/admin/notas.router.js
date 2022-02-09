@@ -51,7 +51,7 @@ router.get('/getReport',  notas.openReporte);
 // REPORTES EXCEL
 
 
-router.get('/getNotasGradoExcel/:idGrado/:idBimestre',  notas.getConsolidadoBimestralExcel);
+router.get('/getNotasGradoExcel/:idGrado/:idBimestre/:nombreGrado',  notas.getConsolidadoBimestralExcel);
 
 
 router.get('/download/:nameFile',  notas.download);
@@ -59,8 +59,8 @@ router.get('/download/:nameFile',  notas.download);
 
 
 
-
-
+/* GET Obtiene el grado de un alumno por carnet */
+router.get('/getGrado/:idAlumno',  notas.getNombreGradoPorIdAlumno);
 
 
 /* GET Pantalla principal de notas */

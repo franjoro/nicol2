@@ -24,7 +24,6 @@ $(".selectEstudiantes").select2({
             };
         },
         results(response) {
-            console.log(response);
             $.map(response, (item) => ({
                 id: item.id,
                 text: item.text,
@@ -49,7 +48,6 @@ const fillNotasByAlumno = async (idAlumno) => {
             if (nota.RoleActivida == 2) arr2.push(nota);
             if (nota.RoleActivida == 3) arr3.push(nota);
         });
-        console.log(arr1);
         html += `
         <div class="card card-header-actions my-4">
         <div class="card-header bg-primary">
@@ -288,7 +286,6 @@ const fillBoletaBimestral = async (idAlumno) => {
         const idBimestre = $("#idBimestre").val();
         const query = await $.ajax({ url: `/admin/notas/getBoletaBimestral/${idAlumno}/${idBimestre}` });
         let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
-        console.log(query);
 
         if (query.length) {
             html = `<table class="table table-bordered table-sm table-striped" >
@@ -394,14 +391,17 @@ $("#btnReporteFinal").click(() => {
     if (global_json_boletaFinal !== null) sendDataToPdf(global_json_boletaFinal, html, false , $("#textAreaBoletaFinal").val() );
 });
 
-$("#btnReporteBimestral").click(() => {
+$("#btnReporteBimestral").click(async() => {
+    const selector = $("#selectBoletaAcumulados option:selected").text().split("-");
+    const {nombreGrado} = await $.ajax({ url: `/admin/notas/getGrado/${selector[0]}-${selector[1]}` });
     const html = `
             <h3>Boleta bimestral de notas </h3>
             <table class="table">
             <tbody>
                 <tr>
                     <td>Carnet: <span class="font-weight-bold">${$("#selectBoletaAcumulados").val()}</span></td>
-                    <td>Nombre: <span class="font-weight-bold">${$("#selectBoletaAcumulados").text().split("-")[2].trim()}</span></td>
+                    <td>Nombre: <span class="font-weight-bold">${selector[2].trim()}</span></td>
+                    <td>Grado: <span class="font-weight-bold">${nombreGrado}</span></td>
                     <td>Bimestre: <span class="font-weight-bold">${$("#roleBimestre").val()}</span></td>
                 </tr>
             </tbody>
@@ -455,12 +455,12 @@ const sendDataToPdf = async (data, header, landscape = false , observaciones =""
 
 $("#btnReporteConsolidadoBimestralExcel").click(async () => {
     const idBimestre = $("#idBimestre").val();
-    const query = await $.ajax({ url: `/admin/notas/getNotasGradoExcel/${global_idGrado}/${idBimestre}` });
+    const nombreGrado = $( "#selectNotaGrado option:selected" ).text().trim();
+    const query = await $.ajax({ url: `/admin/notas/getNotasGradoExcel/${global_idGrado}/${idBimestre}/${nombreGrado}` });
     if (query.status) {
         swal.close();
         window.open(`/admin/notas/download/${query.path} `);
     }
-    console.log(query);
 });
 
 $("#btnReporteGenerado").click(async () => {
@@ -474,7 +474,6 @@ $("#btnReporteGenerado").click(async () => {
             swal.close();
             window.open(`/admin/notas/getReport `);
         }
-        console.log(query);
     } catch (error) {
         console.log(error);
         alertas.newErrorMessage("Error al generar documento");
