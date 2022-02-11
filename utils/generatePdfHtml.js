@@ -20,7 +20,7 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
                      <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt="">
                  </div>
                  <div class="col-md-8">
-                     <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
+                     <h3 class="pt-3">Colegio Salesiano San Juan Bosco</h3>
                     ${header}
                  </div>
              </div>

@@ -38,15 +38,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-
                                 <%dataOrdenada.forEach(element => {   %>
                                     <tr>
                                         <td><%= element.idAlumno %></td>
                                         <td><%= element.nombreAlumno %></td>
-                                        <td><%= element.nota1 %></td>
-                                        <td><%= element.nota2 %></td>
-                                        <td><%= element.nota3 %></td>
-                                        <td><%= element.promedio %></td>
+                                        <td><%= element.notas[0].notas[0].nota %></td>
+                                        <td><%= element.notas[0].notas[1].nota %></td>
+                                        <td><%= element.notas[0].notas[2].nota %></td>
+                                        <td><%= element.notas[0].notaTotal %></td>
                                     </tr>
                                 <%})%>
                             </tbody>

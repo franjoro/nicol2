@@ -12,7 +12,7 @@ notas.main = async (req, res) => {
   try {
     const { Permisos } = getUserDataByToken(req.cookies.token).data;
     const permisos = JSON.parse(Permisos);
-    
+
     let roleBimestre = req.params;
     if (
       roleBimestre.roleBimestre == undefined ||
@@ -41,7 +41,7 @@ notas.main = async (req, res) => {
       [1]: grados,
     } = await Promise.all(queryPromesas);
 
-    res.render("./admin/notas/notas", { roleBimestre, idBimestre, grados , permisos});
+    res.render("./admin/notas/notas", { roleBimestre, idBimestre, grados, permisos });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, error });
@@ -116,18 +116,18 @@ notas.getConsolidadoAnual = async (req, res) => {
 
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, bimestres.Role AS Bimestre, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado INNER JOIN bimestres ON bimestres.id = actividades.Bimestre WHERE materia_grado.idGrado = ? ORDER BY actividades.Role;",
-        [idGrado]
-      ),
+      "SELECT actividades.Role AS RoleActivida, bimestres.Role AS Bimestre, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado INNER JOIN bimestres ON bimestres.id = actividades.Bimestre WHERE materia_grado.idGrado = ? ORDER BY actividades.Role;",
+      [idGrado]
+    ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+      "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+      [idGrado]
+    ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) AS Nombre FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? ORDER BY Nombre",
-        [idGrado]
-      ),
+      "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) AS Nombre FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, Conducta1, Conducta2, Conducta3, Conducta4 FROM grado_alumno WHERE idGrado = ? ORDER BY Nombre",
+      [idGrado]
+    ),
     ];
 
     const {
@@ -136,7 +136,6 @@ notas.getConsolidadoAnual = async (req, res) => {
       [2]: estudiantes /* Select todas las materias de ese grado */,
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
-
     estudiantes.forEach((estudiante) => {
       const materiasArr = [];
       let notaPromedio = 0;
@@ -144,6 +143,11 @@ notas.getConsolidadoAnual = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
+        conducta : (
+          estudiante.Conducta1 * 0.20 + 
+          estudiante.Conducta2 * 0.30 + 
+          estudiante.Conducta3 * 0.20 + 
+          estudiante.Conducta4 * 0.30).toFixed(2)
       };
 
       materias.forEach((materia) => {
@@ -162,7 +166,7 @@ notas.getConsolidadoAnual = async (req, res) => {
             nota.idAlumno == estudiante.idAlumno
           ) {
             if (nota.Bimestre === 1)
-            roleOneNota = Number(nota.nota) + Number(roleOneNota);
+              roleOneNota = Number(nota.nota) + Number(roleOneNota);
             if (nota.Bimestre === 2)
               roleTwo = Number(nota.nota) + Number(roleTwo);
             if (nota.Bimestre === 3)
@@ -182,7 +186,7 @@ notas.getConsolidadoAnual = async (req, res) => {
       dataOrdenada.push(obj);
     });
 
-    
+
     res.json(dataOrdenada);
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
@@ -203,18 +207,18 @@ notas.getBoletaFinalByAlumno = async (req, res) => {
     );
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, actividades.Bimestre AS Bimestre ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ?  ORDER BY actividades.Role",
-        [idGrado]
-      ),
+      "SELECT actividades.Role AS RoleActivida, actividades.Bimestre AS Bimestre ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ?  ORDER BY actividades.Role",
+      [idGrado]
+    ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+      "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+      [idGrado]
+    ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? AND  idAlumno  = ? ",
-        [idGrado, idAlumno]
-      ),
+      "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? AND  idAlumno  = ? ",
+      [idGrado, idAlumno]
+    ),
     ];
 
     const {
@@ -291,29 +295,29 @@ notas.getBoletaFinalByGrado = async (req, res) => {
 
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, bimestres.Role AS Bimestre, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado INNER JOIN bimestres ON bimestres.id = actividades.Bimestre WHERE materia_grado.idGrado = ? ORDER BY actividades.Role;",
-        [idGrado]
-      ),
+      "SELECT actividades.Role AS RoleActivida, bimestres.Role AS Bimestre, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado INNER JOIN bimestres ON bimestres.id = actividades.Bimestre WHERE materia_grado.idGrado = ? ORDER BY actividades.Role;",
+      [idGrado]
+    ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+      "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+      [idGrado]
+    ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno, ( SELECT CONCAT(Nombre, ' ', Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, Conducta1, Conducta2, Conducta3, Conducta4 FROM grado_alumno WHERE idGrado = ?",
-        [idGrado]
-      ),
+      "SELECT idAlumno, ( SELECT CONCAT(Nombre, ' ', Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, Conducta1, Conducta2, Conducta3, Conducta4 FROM grado_alumno WHERE idGrado = ?",
+      [idGrado]
+    ),
 
       /* AÑO */ pool.query(
-        "SELECT idYear FROM grados WHERE id = ?",
-        [idGrado]
-      ),
+      "SELECT idYear FROM grados WHERE id = ?",
+      [idGrado]
+    ),
     ];
     const {
       [0]: notas,
       [1]: materias,
-      [2]: estudiantes ,
-      [3]: year ,
+      [2]: estudiantes,
+      [3]: year,
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
 
@@ -323,10 +327,10 @@ notas.getBoletaFinalByGrado = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
-        Conducta1:{puntaje: estudiante.Conducta1, prom : (estudiante.Conducta1 * 0.20).toFixed(2)},
-        Conducta2:{puntaje: estudiante.Conducta2, prom : (estudiante.Conducta2 * 0.30).toFixed(2)},
-        Conducta3:{puntaje: estudiante.Conducta3, prom : (estudiante.Conducta3 * 0.20).toFixed(2)},
-        Conducta4:{puntaje: estudiante.Conducta4, prom : (estudiante.Conducta4 * 0.30).toFixed(2)},
+        Conducta1: { puntaje: estudiante.Conducta1, prom: (estudiante.Conducta1 * 0.20).toFixed(2) },
+        Conducta2: { puntaje: estudiante.Conducta2, prom: (estudiante.Conducta2 * 0.30).toFixed(2) },
+        Conducta3: { puntaje: estudiante.Conducta3, prom: (estudiante.Conducta3 * 0.20).toFixed(2) },
+        Conducta4: { puntaje: estudiante.Conducta4, prom: (estudiante.Conducta4 * 0.30).toFixed(2) },
       };
       materias.forEach((materia) => {
         /* MUESTRA LAS NOTAS SUMADAS POR ROLE */
@@ -347,7 +351,7 @@ notas.getBoletaFinalByGrado = async (req, res) => {
             if (nota.Bimestre === 1)
               roleOneNota = parseInt(roleOneNota) + parseInt(nota.nota);
             if (nota.Bimestre === 2)
-              roleTwo =  parseInt(roleTwo) + parseInt(nota.nota) ;
+              roleTwo = parseInt(roleTwo) + parseInt(nota.nota);
             if (nota.Bimestre === 3)
               RoleTree = parseInt(RoleTree) + parseInt(nota.nota);
             if (nota.Bimestre === 4)
@@ -355,7 +359,7 @@ notas.getBoletaFinalByGrado = async (req, res) => {
           }
         });
         const notaGlobal =
-         ( roleOneNota * 0.2 + roleTwo * 0.3 + RoleTree * 0.2 + RoleFour * 0.3).toFixed(2);
+          (roleOneNota * 0.2 + roleTwo * 0.3 + RoleTree * 0.2 + RoleFour * 0.3).toFixed(2);
         arrNota.push({
           Bimestre: 1,
           nota: roleOneNota,
@@ -373,8 +377,8 @@ notas.getBoletaFinalByGrado = async (req, res) => {
       obj.notaPromedio = (notaPromedio / materias.length).toFixed(2);
       dataOrdenada.push(obj);
     });
-    await GenerarBoletaFinal(dataOrdenada , nombreGrado, roleBimestre, year[0]);
-    res.json({status: true});
+    await GenerarBoletaFinal(dataOrdenada, nombreGrado, roleBimestre, year[0]);
+    res.json({ status: true });
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {
@@ -386,23 +390,27 @@ notas.getBoletaFinalByGrado = async (req, res) => {
 notas.getBoletaBimestral = async (req, res) => {
   try {
     const { idAlumno, idBimestre } = req.params;
-    
-    const {[0]: { idGrado }} = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno",[idAlumno]);
+
+    const { [0]: { idGrado } } = await pool.query("SELECT grados.id AS idGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]);
+
+    const { [0]: { roleBimestre } } = await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]);
+
+    const columm = `Conducta${roleBimestre}`;
 
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, actividades.Role AS Role ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND actividades.Bimestre = ?  ORDER BY actividades.Role",
-        [idGrado, idBimestre]
-      ),
+      "SELECT actividades.Role AS RoleActivida, actividades.Role AS Role ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND actividades.Bimestre = ?  ORDER BY actividades.Role",
+      [idGrado, idBimestre]
+    ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+      "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+      [idGrado]
+    ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? AND  idAlumno  = ? ",
-        [idGrado, idAlumno]
-      ),
+        `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ? AND idAlumno  = ?  ORDER BY Nombre`,
+      [idGrado, idAlumno]
+    ),
     ];
     const {
       [0]: notas,
@@ -415,6 +423,7 @@ notas.getBoletaBimestral = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
+        conducta: estudiante.conducta,
       };
       materias.forEach((materia) => {
         /* MUESTRA LAS NOTAS SUMADAS POR ROLE */
@@ -461,28 +470,28 @@ notas.getConsolidadoBimestral = async (req, res) => {
     const { idGrado, idBimestre } = req.params;
 
     // RoleBimestre 
-    const  { [0]:  {roleBimestre}  }  =  await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]) ; 
+    const { [0]: { roleBimestre } } = await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]);
 
 
     const columna = `Conducta${roleBimestre}`;
 
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
-        [idGrado, idBimestre]
-      ),
+      "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
+      [idGrado, idBimestre]
+    ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+      "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+      [idGrado]
+    ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre ",
-        [idGrado]
-      ),
+      "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre ",
+      [idGrado]
+    ),
 
       /* CONDUCTA */
-      pool.query(`SELECT ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE idGrado = ?` , [idGrado])  
+      pool.query(`SELECT ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE idGrado = ?`, [idGrado])
     ];
 
 
@@ -496,7 +505,7 @@ notas.getConsolidadoBimestral = async (req, res) => {
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
 
-  
+
 
     estudiantes.forEach((estudiante, index) => {
       const materiasArr = [];
@@ -505,7 +514,7 @@ notas.getConsolidadoBimestral = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
-        puntaje : puntajeConducta[index].puntaje
+        puntaje: puntajeConducta[index].puntaje
       };
 
       materias.forEach((materia) => {
@@ -524,11 +533,11 @@ notas.getConsolidadoBimestral = async (req, res) => {
         });
 
         objInsede.nota = sumaNota;
-        notaPromedio = notaPromedio +sumaNota;
+        notaPromedio = notaPromedio + sumaNota;
         materiasArr.push(objInsede);
       });
       obj.notas = materiasArr;
-      obj.promedio = (notaPromedio/materias.length ).toFixed(2);
+      obj.promedio = (notaPromedio / materias.length).toFixed(2);
       dataOrdenada.push(obj);
     });
     res.json(dataOrdenada);
@@ -545,28 +554,28 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
     const { idGrado, idBimestre, nombreGrado } = req.params;
 
     // RoleBimestre 
-    const  { [0]:  {roleBimestre}  }  =  await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]) ; 
+    const { [0]: { roleBimestre } } = await pool.query("SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]);
 
 
     const columna = `Conducta${roleBimestre}`;
 
     const queryPromesas = [
       /* NOTAS */ pool.query(
-        "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
-        [idGrado, idBimestre]
-      ),
+      "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
+      [idGrado, idBimestre]
+    ),
       /* MATERIAS */ pool.query(
-        "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+      "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+      [idGrado]
+    ),
 
       /* ESTUDIANTES */ pool.query(
-        "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre ",
-        [idGrado]
-      ),
+      "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre ",
+      [idGrado]
+    ),
 
       /* CONDUCTA */
-      pool.query(`SELECT ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE idGrado = ?` , [idGrado])  
+      pool.query(`SELECT ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE idGrado = ?`, [idGrado])
     ];
 
     const {
@@ -577,7 +586,7 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
 
-  
+
     estudiantes.forEach((estudiante, index) => {
       const materiasArr = [];
       let notaPromedio = 0;
@@ -585,7 +594,7 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
-        puntaje : puntajeConducta[index].puntaje
+        puntaje: puntajeConducta[index].puntaje
       };
 
       materias.forEach((materia) => {
@@ -604,17 +613,17 @@ notas.getConsolidadoBimestralExcel = async (req, res) => {
         });
 
         objInsede.nota = sumaNota;
-        notaPromedio = notaPromedio +sumaNota;
+        notaPromedio = notaPromedio + sumaNota;
         materiasArr.push(objInsede);
       });
       obj.notas = materiasArr;
-      obj.promedio = (notaPromedio/materias.length ).toFixed(2);
+      obj.promedio = (notaPromedio / materias.length).toFixed(2);
       dataOrdenada.push(obj);
     });
 
 
     const excelStatus = await getConsolidadoBimestralExcel(dataOrdenada, roleBimestre, nombreGrado);
-    res.json({status:true, path: excelStatus});
+    res.json({ status: true, path: excelStatus });
     // const util = require('util');
     // console.log(util.inspect(dataOrdenada, false, null, true));
   } catch (error) {
@@ -651,11 +660,11 @@ notas.getNombreGradoPorIdAlumno = async (req, res) => {
   try {
     // MARCAR
     const { idAlumno } = req.params;
-    const {[0]: {nombreGrado}} = await pool.query("SELECT grados.nombre AS nombreGrado FROM grado_alumno INNER JOIN grados ON grado_alumno.idGrado = grados.id WHERE grado_alumno.idAlumno = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1); ", [idAlumno]);
+    const { [0]: { nombreGrado } } = await pool.query("SELECT grados.nombre AS nombreGrado FROM grado_alumno INNER JOIN grados ON grado_alumno.idGrado = grados.id WHERE grado_alumno.idAlumno = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1); ", [idAlumno]);
     console.log(nombreGrado);
     res.json({ nombreGrado });
 
-    
+
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, error });

@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#selectBimestre").val(roleBimestre);
 
 });
-let global_json_boletaFinal = null, global_json_bimestral = null, global_json_conAnual = null, global_json_conBimestral = null , global_idGrado = null;
+let global_json_boletaFinal = null, global_json_bimestral = null, global_json_conAnual = null, global_json_conBimestral = null , global_idGrado = null , global_boletaBimestral_conducta = null;
 
 
 $("#selectBimestre").change(function () {
@@ -300,6 +300,7 @@ const fillBoletaBimestral = async (idAlumno) => {
          </thead>
          <tbody>` ;
             query.forEach(estudiante => {
+                global_boletaBimestral_conducta = estudiante.conducta;
                 estudiante.notas.forEach(notasOne => {
                     html += `<tr><td>${notasOne.Nombre}</td> `;
                     notasOne.notas.forEach(nota => {
@@ -326,7 +327,8 @@ const fillConsolidadoAnual = async (idGrado) => {
             query[0].notas.forEach(not => {
                 html += `<th>${not.Nombre}</th>`;
             });
-            html += `<td>Promedio</td> </tr></thead><tbody>`;
+            html += `<td>Promedio</td><td>Conducta</td></tr>
+            </thead><tbody>`;
             query.forEach(estudiante => {
                 html += `<tr><td>${estudiante.nombreAlumno}</td> `;
                 estudiante.notas.forEach(nota => {
@@ -336,7 +338,7 @@ const fillConsolidadoAnual = async (idGrado) => {
                     html += `<td style="color:${color}">${nota.notaGlobal}</td>`;
 
                 });
-                html += `<td>${estudiante.notaPromedio}</td></tr>`;
+                html += `<td>${estudiante.notaPromedio}</td><td>${estudiante.conducta}</td></tr>`;
             });
             html += `</tbody></table>`;
         }
@@ -395,7 +397,7 @@ $("#btnReporteBimestral").click(async() => {
     const selector = $("#selectBoletaAcumulados option:selected").text().split("-");
     const {nombreGrado} = await $.ajax({ url: `/admin/notas/getGrado/${selector[0]}-${selector[1]}` });
     const html = `
-            <h3>Boleta bimestral de notas </h3>
+            <h2>Boleta bimestral de notas </h2>
             <table class="table">
             <tbody>
                 <tr>
@@ -403,6 +405,7 @@ $("#btnReporteBimestral").click(async() => {
                     <td>Nombre: <span class="font-weight-bold">${selector[2].trim()}</span></td>
                     <td>Grado: <span class="font-weight-bold">${nombreGrado}</span></td>
                     <td>Bimestre: <span class="font-weight-bold">${$("#roleBimestre").val()}</span></td>
+                    <td>Conducta: <span class="font-weight-bold">${global_boletaBimestral_conducta}</span></td>
                 </tr>
             </tbody>
         </table>`;
