@@ -397,7 +397,7 @@ $("#btnReporteBimestral").click(async() => {
     const selector = $("#selectBoletaAcumulados option:selected").text().split("-");
     const {nombreGrado} = await $.ajax({ url: `/admin/notas/getGrado/${selector[0]}-${selector[1]}` });
     const html = `
-            <h2>Boleta bimestral de notas </h2>
+            <h3>Boleta bimestral de notas </h3>
             <table class="table">
             <tbody>
                 <tr>
