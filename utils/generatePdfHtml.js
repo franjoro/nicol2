@@ -26,12 +26,9 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
              </div>
                 ${data}
 
-                 <hr>
                  <h4 class="pt-1">Observaciones: </h4>
                  <textarea class="form-control disabled"  cols="30" rows="2">${observaciones}</textarea>
                  <hr>
-                 <br>
-                 <br>
                  <div class="row">
                     <div class="col-md-6 text-center">
                         <h4 class="pt-1">Profesor Guía </h4>
