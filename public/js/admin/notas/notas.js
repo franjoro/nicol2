@@ -431,7 +431,7 @@ $("#btnReporteConsolidadoBimestral").click(() => {
             <table class="table">
             <tbody>
                 <tr>
-                    <td>Grado: <span class="font-weight-bold">${$("#selectConsolidado option:selected").text().trim()}</span></td>
+                    <td>Grado: <span class="font-weight-bold">${$("#selectNotaGrado option:selected").text().trim()}</span></td>
                     <td>Bimestre: <span class="font-weight-bold">${$("#roleBimestre").val()}</span></td>
                 </tr>
             </tbody>

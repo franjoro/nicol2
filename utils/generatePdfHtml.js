@@ -85,7 +85,7 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
                  <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;"> 
                 </div>
                 <div class="col-md-8">
-                    <h3>Colegio Salesiano San Juan Bosco</h3>
+                    <h2>Colegio Salesiano San Juan Bosco</h2>
                     <h4>Boleta de calificaciones - ${year.idYear}</h4>
                    <table class="table">
                         <tr>
