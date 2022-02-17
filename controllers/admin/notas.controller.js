@@ -486,12 +486,12 @@ notas.getConsolidadoBimestral = async (req, res) => {
     ),
 
       /* ESTUDIANTES */ pool.query(
-      "SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre ",
+      `SELECT idAlumno, 
+      ( SELECT CONCAT(Apellido, ' ', Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre,
+       ${columna} AS puntaje
+        FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno ORDER BY Nombre;`,
       [idGrado]
-    ),
-
-      /* CONDUCTA */
-      pool.query(`SELECT ${columna} As puntaje FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno  = alumnos.Carnet WHERE idGrado = ?`, [idGrado])
+    )
     ];
 
 
@@ -501,7 +501,6 @@ notas.getConsolidadoBimestral = async (req, res) => {
       [0]: notas,
       [1]: materias,
       [2]: estudiantes, /* Select todas las materias de ese grado */
-      [3]: puntajeConducta
     } = await Promise.all(queryPromesas);
     const dataOrdenada = [];
 
@@ -514,9 +513,9 @@ notas.getConsolidadoBimestral = async (req, res) => {
       let obj = {
         idAlumno: estudiante.idAlumno,
         nombreAlumno: estudiante.Nombre,
-        puntaje: puntajeConducta[index].puntaje
+        puntaje: estudiante.puntaje
       };
-
+      
       materias.forEach((materia) => {
         /* MUESTRA LAS NOTA SUMADA POR MATERIA */
         let objInsede = {};
