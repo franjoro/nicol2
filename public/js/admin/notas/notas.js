@@ -427,7 +427,7 @@ $("#btnReporteConsolidadoAnual").click(() => {
 
 $("#btnReporteConsolidadoBimestral").click(() => {
     const html = `
-            <h3>Consolidado Bimestral </h3>
+            <h3>Consolidado Bimestral - ${new Date().getFullYear()}</h3>
             <table class="table">
             <tbody>
                 <tr>

@@ -12,31 +12,21 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
          <title>Document</title>
      </head>
-     
+
      <body>
-         <div class="container-fluid">
+         <div class="container-fluid pt-5">
              <div class="row">
                  <div class="col-md-3">
                      <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt="">
                  </div>
                  <div class="col-md-8">
-                     <h3 class="pt-3">Colegio Salesiano San Juan Bosco</h3>
+                     <h2 class="pt-3">Colegio Salesiano San Juan Bosco</h2>
                     ${header}
                  </div>
              </div>
                 ${data}
-
                  <h4 class="pt-1">Observaciones: </h4>
                  <textarea class="form-control disabled"  cols="30" rows="2">${observaciones}</textarea>
-                 <hr>
-                 <div class="row">
-                    <div class="col-md-6 text-center">
-                        <h4 class="pt-1">Profesor Guía </h4>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <h4 class="pt-1">Director </h4>
-                    </div>
-                 </div>
          </div>
      </body>
      </html>`;
@@ -92,7 +82,7 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
             </div>
             <table class="table table-bordered table-striped">
                 <thead>
-                  <tr class="bg-blue text-black">
+                  <tr class="bg-blue text-black" style="font-size: 20px;">
                     <th>Materia</th>
                     <th>I</th>
                     <th>20%</th>
@@ -102,7 +92,7 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
                     <th>20%</th>
                     <th>IV</th>
                     <th>30%</th>
-                    <th>Nota Final</th>
+                    <th>Final</th>
                   </tr>
                 </thead>
                 <tbody> `;
@@ -117,6 +107,8 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
                     });
                     if(roleBimestre == 4 ){
                         html += `<td>${notasOne.notaGlobal}</td></tr>`;
+                    }else{
+                        html += `<td></td>`;
                     }
                 });
                 html += `<tr style="font-size: 20px;">
