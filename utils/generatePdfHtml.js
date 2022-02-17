@@ -179,7 +179,7 @@ html += `</body></html> `;
     });
 };
 
-const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBimestre) => { 
+const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBimestre, nombreGrado) => { 
 
     let html = `<!DOCTYPE html>
     <html lang="en">
@@ -205,6 +205,7 @@ const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBime
                     <td>Nombre: ${datosAlumno.Nombre + ' ' + datosAlumno.Apellido} </td>
                     <td>Puntaje: ${datosAlumno.puntaje} </td>
                     <td>Bimestre: ${roleBimestre} </td>
+                    <td>Grado: ${nombreGrado} </td>
                 </tr>
            </table>
         </div>

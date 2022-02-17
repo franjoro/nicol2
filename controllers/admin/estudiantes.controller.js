@@ -318,7 +318,7 @@ estudiantes.perfilAcademicoReporte = async (req, res) => {
         roleBimestre = roleBimestre.roleBimestre;
     }
 
-    const { idAlumno } = req.params;
+    const { idAlumno, nombreGrado } = req.params;
     try {
         const { [0]: { [0]: { idBimestre } } } = await Promise.all([
             // TRAER ROLE DEL BIMESTRE
@@ -336,7 +336,7 @@ estudiantes.perfilAcademicoReporte = async (req, res) => {
             pool.query("SELECT descripcion, CONCAT(maestros.Nombres , ' ', maestros.Apellidos) AS NombreMaestro, DATE_FORMAT(Date, '%d/%m/%Y') AS Date  FROM observaciones INNER JOIN maestros ON maestros.id = observaciones.idMaestro WHERE idBimestre = ? AND observaciones.idAlumno = ?", [idBimestre, idAlumno])
         ]);
         datosAlumno.Carnet = idAlumno;
-        await GenerarReporteDeConducta(codigos, observaciones, datosAlumno, roleBimestre);
+        await GenerarReporteDeConducta(codigos, observaciones, datosAlumno, roleBimestre, nombreGrado);
         res.json({ status: true });
     } catch (error) {
         console.log(error);

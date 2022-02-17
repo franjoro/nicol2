@@ -49,7 +49,7 @@ router.get('/perfilac/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademico);
 
 
 /* GET Generar perfil Académico Reporte  */
-router.get('/perfilacreporte/:idAlumno/:roleBimestre?',  estudiantes.perfilAcademicoReporte);
+router.get('/perfilacreporte/:idAlumno/:roleBimestre/:nombreGrado',  estudiantes.perfilAcademicoReporte);
 
 
 /* GET Reporte generado de conducta*/

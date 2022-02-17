@@ -12,9 +12,10 @@ $("#generateReporte").click( async() => {
     try {
         const roleBimestre =  $("#roleBimestre").val();
         const idAlumno =  $("#idAlumno").val();
+        const nombreGrado =  $("#nombreGrado").val();
 
         alertas.loaderAlert();
-        const query = await $.ajax({ url: `/admin/estudiantes/perfilacreporte/${idAlumno}/${roleBimestre}` });
+        const query = await $.ajax({ url: `/admin/estudiantes/perfilacreporte/${idAlumno}/${roleBimestre}/${nombreGrado}` });
         if (query.status) {
             swal.close();
             window.open(`/admin/estudiantes/getReport `);
