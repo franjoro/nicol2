@@ -278,7 +278,21 @@ const fillBoletaFinal = async(idAlumno) => {
                     html += `<td>${notasOne.notaGlobal}</td></tr>`;
                 });
             });
-            html += `</tbody></table>`;
+            const alumno = query[0];
+            html += `
+            <tr>
+                <td>Conducta</td>
+                <td>${alumno.Conducta1.puntaje}</td>
+                <td>${alumno.Conducta1.prom}</td>
+                <td>${alumno.Conducta2.puntaje}</td>
+                <td>${alumno.Conducta2.prom}</td>
+                <td>${alumno.Conducta3.puntaje}</td>
+                <td>${alumno.Conducta3.prom}</td>
+                <td>${alumno.Conducta4.puntaje}</td>
+                <td>${alumno.Conducta4.prom}</td>
+                <td>${Number(alumno.Conducta1.prom) + Number(alumno.Conducta2.prom) + Number(alumno.Conducta3.prom) + Number(alumno.Conducta4.prom)}</td>
+            </tr>
+            </tbody></table>`;
         }
         global_json_boletaFinal = html;
         $("#HtmlBoletaFinal").html(html);

@@ -132,7 +132,6 @@ notas.getConsolidadoAnual = async(req, res) => {
         estudiantes.forEach((estudiante) => {
             const materiasArr = [];
             let notaPromedio = 0;
-            // Marca
             let obj = {
                 idAlumno: estudiante.idAlumno,
                 nombreAlumno: estudiante.Nombre,
@@ -200,7 +199,7 @@ notas.getBoletaFinalByAlumno = async(req, res) => {
         const queryPromesas = [
             /* NOTAS */
             pool.query(
-                "SELECT actividades.Role AS RoleActivida, actividades.Bimestre AS Bimestre ,materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ?  ORDER BY actividades.Role", [idGrado]
+                "SELECT actividades.Role AS RoleActivida, bimestres.Role AS Bimestre, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado INNER JOIN bimestres ON bimestres.id = actividades.Bimestre WHERE materia_grado.idGrado = ? AND idAlumno = ?  ORDER BY actividades.Role;", [idGrado, idAlumno]
             ),
             /* MATERIAS */
             pool.query(
@@ -209,10 +208,9 @@ notas.getBoletaFinalByAlumno = async(req, res) => {
 
             /* ESTUDIANTES */
             pool.query(
-                "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre FROM grado_alumno WHERE idGrado = ? AND  idAlumno  = ? ", [idGrado, idAlumno]
+                "SELECT idAlumno , (SELECT CONCAT(Nombre,' ',Apellido) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, Conducta1, Conducta2, Conducta3, Conducta4 FROM grado_alumno WHERE idGrado = ? AND  idAlumno  = ? ", [idGrado, idAlumno]
             ),
         ];
-
         const {
             [0]: notas, [1]: materias, [2]: estudiantes /* Select todas las materias de ese grado */ ,
         } = await Promise.all(queryPromesas);
@@ -224,8 +222,11 @@ notas.getBoletaFinalByAlumno = async(req, res) => {
             let obj = {
                 idAlumno: estudiante.idAlumno,
                 nombreAlumno: estudiante.Nombre,
+                Conducta1: { puntaje: estudiante.Conducta1, prom: (estudiante.Conducta1 * 0.20).toFixed(2) },
+                Conducta2: { puntaje: estudiante.Conducta2, prom: (estudiante.Conducta2 * 0.30).toFixed(2) },
+                Conducta3: { puntaje: estudiante.Conducta3, prom: (estudiante.Conducta3 * 0.20).toFixed(2) },
+                Conducta4: { puntaje: estudiante.Conducta4, prom: (estudiante.Conducta4 * 0.30).toFixed(2) },
             };
-
             materias.forEach((materia) => {
                 /* MUESTRA LAS NOTAS SUMADAS POR ROLE */
                 let roleOneNota = 0,
@@ -241,33 +242,34 @@ notas.getBoletaFinalByAlumno = async(req, res) => {
                         nota.idUnion == materia.idUnion &&
                         nota.idAlumno == estudiante.idAlumno
                     ) {
+
                         if (nota.Bimestre === 1)
-                            roleOneNota = Number(nota.nota) + Number(roleOneNota);
+                            roleOneNota = parseInt(roleOneNota) + parseInt(nota.nota);
                         if (nota.Bimestre === 2)
-                            roleTwo = Number(nota.nota) + Number(roleTwo);
+                            roleTwo = parseInt(roleTwo) + parseInt(nota.nota);
                         if (nota.Bimestre === 3)
-                            RoleTree = Number(nota.nota) + Number(RoleTree);
+                            RoleTree = parseInt(RoleTree) + parseInt(nota.nota);
                         if (nota.Bimestre === 4)
-                            RoleFour = Number(nota.nota) + Number(RoleFour);
+                            RoleFour = parseInt(RoleFour) + parseInt(nota.nota);
                     }
                 });
                 const notaGlobal =
-                    roleOneNota * 0.2 + roleTwo * 0.3 + RoleTree * 0.2 + RoleFour * 0.3;
+                    (roleOneNota * 0.2 + roleTwo * 0.3 + RoleTree * 0.2 + RoleFour * 0.3).toFixed(2);
                 arrNota.push({
                     Bimestre: 1,
                     nota: roleOneNota,
-                    prom: roleOneNota * 0.2,
+                    prom: (roleOneNota * 0.2).toFixed(2),
                 });
-                arrNota.push({ Bimestre: 2, nota: roleTwo, prom: roleTwo * 0.3 });
-                arrNota.push({ Bimestre: 3, nota: RoleTree, prom: RoleTree * 0.2 });
-                arrNota.push({ Bimestre: 4, nota: RoleFour, prom: RoleFour * 0.3 });
+                arrNota.push({ Bimestre: 2, nota: roleTwo, prom: (roleTwo * 0.3).toFixed(2) });
+                arrNota.push({ Bimestre: 3, nota: RoleTree, prom: (RoleTree * 0.2).toFixed(2) });
+                arrNota.push({ Bimestre: 4, nota: RoleFour, prom: (RoleFour * 0.3).toFixed(2) });
                 objInsede.notaGlobal = notaGlobal;
                 objInsede.notas = arrNota;
                 notaPromedio = notaPromedio + notaGlobal;
                 materiasArr.push(objInsede);
             });
             obj.notas = materiasArr;
-            obj.notaPromedio = notaPromedio / materias.length;
+            obj.notaPromedio = (notaPromedio / materias.length).toFixed(2);
             dataOrdenada.push(obj);
         });
         res.json(dataOrdenada);
@@ -413,7 +415,6 @@ notas.getBoletaBimestral = async(req, res) => {
                 idAlumno: estudiante.idAlumno,
                 nombreAlumno: estudiante.Nombre,
                 conducta: estudiante.conducta,
-                // MARCA
             };
             materias.forEach((materia) => {
                 /* MUESTRA LAS NOTAS SUMADAS POR ROLE */
@@ -496,7 +497,7 @@ notas.getConsolidadoBimestral = async(req, res) => {
 
 
 
-        estudiantes.forEach((estudiante, index) => {
+        estudiantes.forEach((estudiante) => {
             const materiasArr = [];
             let notaPromedio = 0;
 
@@ -571,7 +572,7 @@ notas.getConsolidadoBimestralExcel = async(req, res) => {
         const dataOrdenada = [];
 
 
-        estudiantes.forEach((estudiante, index) => {
+        estudiantes.forEach((estudiante) => {
             const materiasArr = [];
             let notaPromedio = 0;
 
