@@ -12,7 +12,6 @@ notas.main = async(req, res) => {
     try {
         const { Permisos } = getUserDataByToken(req.cookies.token).data;
         const permisos = JSON.parse(Permisos);
-
         let roleBimestre = req.params;
         if (
             roleBimestre.roleBimestre == undefined ||
