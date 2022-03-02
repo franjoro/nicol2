@@ -294,3 +294,21 @@ $(".changeStatus").on("click", async function () {
     return alertas.newErrorMessage();
   }
 });
+
+$("#btnReporteMatriculas").click(async () => {
+  try {
+    const id = $("#idGrado").val();
+    alertas.loaderAlertLong();
+    const query = await $.ajax({
+      url: `/admin/grados/getReporteMatricula/${id}`,
+    });
+    if (query.status) {
+      swal.close();
+      window.open(`/admin/grados/getReportMatricula `);
+    }
+    console.log(query);
+  } catch (error) {
+    console.log(error);
+    alertas.newErrorMessage("Error al generar documento");
+  }
+});

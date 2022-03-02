@@ -37,8 +37,7 @@ s3Functions.upload = (file, key) =>
 //     });
 //   });
 
-
-s3Functions.getImgMatricula = (Key) =>
+s3Functions.getImgMatricula = (Key, idAlumno = null) =>
   new Promise(async (resolve) => {
     const uploadParams = {
       Bucket: process.env.BUCKET,
@@ -53,7 +52,7 @@ s3Functions.getImgMatricula = (Key) =>
         const path = `files/tmp/MatriculaView${idFile}.${keyarr[1]}`;
         fs.writeFile(`./public/${path}`, data.Body, "Binary", (err) => {
           if (err) throw err;
-          resolve({path, idFile});
+          resolve({ path, idFile, idAlumno });
         });
       });
     } catch (error) {
@@ -61,6 +60,5 @@ s3Functions.getImgMatricula = (Key) =>
       resolve(error);
     }
   });
-
 
 module.exports = s3Functions;

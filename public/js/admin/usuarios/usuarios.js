@@ -10,23 +10,13 @@ const loadTable = () => {
             { data: "Estado" },
             {
                 "render": function (data, type, row) {
-                    let html = `
-                    <div class="btn-group" role="group">`;
+                    let html = `<div class="btn-group" role="group">`;
 
 
                     if ($("#permisosUpdate").val() == 'true') {
-                        html += `<button class="btn btn-primary btn-sm btnPermisos">Ver permisos</button>`;
+                        html += `<button class="btn btn-primary btn-sm btnPermisos">Administrar permisos</button>`;
                     }
 
-                    if ($("#permisosStatus").val() == 'true') {
-                        if (row.estadoNum) {
-                            html += `  <button class="btn btn-red btn-sm changeEstado" data-estado="0" data-idusuario="${row.Username}">Deshabilitar
-                        </button>`;
-                        } else {
-                            html += `<button class="btn btn-success btn-sm changeEstado" data-estado="1" data-idusuario="${row.Username}">Habilitar
-                            </button>`;
-                        }
-                    }
 
 
                     if ($("#permisosUpdate").val() == 'true') {
@@ -37,12 +27,26 @@ const loadTable = () => {
                         </button>`;
                     }
 
+                     html += `</div>`;
 
-
-                    html += `</div>`;
                     return html;
                 }
-            },
+                
+            },{
+                "render": function (data, type, row) {
+                    let html = "";
+                    if ($("#permisosStatus").val() == 'true') {
+                        if (row.estadoNum) {
+                            html += ` <div class="divAcceso"> <button class="btn btn-red btn-block  btn-sm changeEstado" data-estado="0" data-idusuario="${row.Username}">Deshabilitar <br> acceso
+                        </button> </div>`;
+                        } else {
+                            html += `<div class="divAcceso"><button class="btn btn-success btn-block btn-sm changeEstado" data-estado="1" data-idusuario="${row.Username}">Habilitar <br> acceso
+                            </button> </div>`;
+                        }
+                    }
+                    return html;
+                }
+            }
         ]
     });
 };
@@ -111,7 +115,18 @@ $('#datatable tbody').on('click', '.changeEstado', async function () {
                 url: "/admin/usuarios/estado",
                 data: { estado, idUsuario: idusuario },
             });
-            location.reload();
+
+            let html = "";
+            if (estado) {
+                html += ` <div class="divAcceso"> <button class="btn btn-red btn-block  btn-sm changeEstado" data-estado="0" data-idusuario="${idusuario}">Deshabilitar <br> acceso
+            </button> </div>`;
+            } else {
+                html += `<div class="divAcceso"><button class="btn btn-success btn-block btn-sm changeEstado" data-estado="1" data-idusuario="${idusuario}">Habilitar <br> acceso
+                </button> </div>`;
+            }
+
+            $(this).parent(".divAcceso").html(html);
+
         }
     } catch (error) {
         console.log(error);

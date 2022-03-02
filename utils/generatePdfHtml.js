@@ -1,9 +1,8 @@
 const html_to_pdf = require("html-pdf-node");
 
-
-const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
-    if(landscape) landscape = true;
-     const html = `<!DOCTYPE html>
+const GenerarPdf = (data, header, landscape = false, observaciones = "") => {
+  if (landscape) landscape = true;
+  const html = `<!DOCTYPE html>
      <html lang="en">
      <head>
          <meta charset="UTF-8">
@@ -30,37 +29,34 @@ const GenerarPdf = (data, header ,landscape = false, observaciones = "" ) => {
          </div>
      </body>
      </html>`;
-    return new Promise((resolver) => {
-        tmpName = "ficha.pdf";
-        const options = {
-            format: "Letter",
-            path: `./public/files/${tmpName}`,
-            margin: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-            }
-        };
-        const file = {content: html};
-        html_to_pdf.generatePdf(file, options).then((output) => {
-            resolver(output);
-        });
+  return new Promise((resolver) => {
+    tmpName = "ficha.pdf";
+    const options = {
+      format: "Letter",
+      path: `./public/files/${tmpName}`,
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+    };
+    const file = { content: html };
+    html_to_pdf.generatePdf(file, options).then((output) => {
+      resolver(output);
     });
+  });
 };
 
-
-
-
-const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => { 
-    let html = `<!DOCTYPE html>
+const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
+  let html = `<!DOCTYPE html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     </head>
     <body style="font-family: Arial;">`;
-    data.forEach(estudiante => {
+  data.forEach((estudiante) => {
     html += `
         <div class="container-fluid pt-5" style="height:1590px;">
             <div class="row">
@@ -96,50 +92,50 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
                   </tr>
                 </thead>
                 <tbody> `;
-            estudiante.notas.forEach(notasOne => {
-                    html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
-                    notasOne.notas.forEach((nota, index) => {
-                        if(index +1  <= roleBimestre){
-                            html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
-                        }else{
-                            html += `<td></td><td></td>`;
-                        }
-                    });
-                    if(roleBimestre == 4 ){
-                        html += `<td>${notasOne.notaGlobal}</td></tr>`;
-                    }else{
-                        html += `<td></td>`;
-                    }
-                });
-                html += `<tr style="font-size: 20px;">
+    estudiante.notas.forEach((notasOne) => {
+      html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
+      notasOne.notas.forEach((nota, index) => {
+        if (index + 1 <= roleBimestre) {
+          html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
+        } else {
+          html += `<td></td><td></td>`;
+        }
+      });
+      if (roleBimestre == 4) {
+        html += `<td>${notasOne.notaGlobal}</td></tr>`;
+      } else {
+        html += `<td></td>`;
+      }
+    });
+    html += `<tr style="font-size: 20px;">
                         <td>Conducta</td>
                         <td>${estudiante.Conducta1.puntaje}</td>
                         <td>${estudiante.Conducta1.prom}</td>`;
 
-                        if(roleBimestre  >= 2){
-                            html += `  
+    if (roleBimestre >= 2) {
+      html += `  
                             <td>${estudiante.Conducta2.puntaje}</td>
                             <td>${estudiante.Conducta2.prom}</td>`;
-                        }else{
-                            html += `<td></td><td></td>`;
-                        }
+    } else {
+      html += `<td></td><td></td>`;
+    }
 
-                        if(roleBimestre  >= 3){
-                            html += `
+    if (roleBimestre >= 3) {
+      html += `
                             <td>${estudiante.Conducta3.puntaje}</td>
                             <td>${estudiante.Conducta3.prom}</td>`;
-                        }else{
-                            html += `<td></td><td></td>`;
-                        }
-                        if(roleBimestre  >= 4){
-                            html += `
+    } else {
+      html += `<td></td><td></td>`;
+    }
+    if (roleBimestre >= 4) {
+      html += `
                             <td>${estudiante.Conducta4.puntaje}</td>
                             <td>${estudiante.Conducta4.prom}</td>`;
-                        }else{
-                            html += `<td></td><td></td>`;
-                        }
-                        html += ` </tr>`;
-        html += `</tbody></table>
+    } else {
+      html += `<td></td><td></td>`;
+    }
+    html += ` </tr>`;
+    html += `</tbody></table>
                 <hr>
                 <h4>Observaciones: </h4>
                 <div class="pb-5">
@@ -157,31 +153,36 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre , year) => {
                 </div>
         </div>
 `;
-});
-html += `</body></html> `;
+  });
+  html += `</body></html> `;
 
-    return new Promise((resolver) => {
-        tmpName = "boletaFinal.pdf";
-        const options = {
-            format: "Letter",
-            path: `./public/files/${tmpName}`,
-            margin: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-            }
-        };
-        const file = {content: html};
-        html_to_pdf.generatePdf(file, options).then((output) => {
-            resolver(output);
-        });
+  return new Promise((resolver) => {
+    tmpName = "boletaFinal.pdf";
+    const options = {
+      format: "Letter",
+      path: `./public/files/${tmpName}`,
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+    };
+    const file = { content: html };
+    html_to_pdf.generatePdf(file, options).then((output) => {
+      resolver(output);
     });
+  });
 };
 
-const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBimestre, nombreGrado) => { 
-
-    let html = `<!DOCTYPE html>
+const GenerarReporteDeConducta = (
+  codigos,
+  observaciones,
+  datosAlumno,
+  roleBimestre,
+  nombreGrado
+) => {
+  let html = `<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -202,7 +203,9 @@ const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBime
            <table class="table">
                 <tr>
                     <td>Carnet: ${datosAlumno.Carnet} </td>
-                    <td>Nombre: ${datosAlumno.Nombre + ' ' + datosAlumno.Apellido} </td>
+                    <td>Nombre: ${
+                      datosAlumno.Nombre + " " + datosAlumno.Apellido
+                    } </td>
                     <td>Puntaje: ${datosAlumno.puntaje} </td>
                     <td>Bimestre: ${roleBimestre} </td>
                     <td>Grado: ${nombreGrado} </td>
@@ -230,27 +233,27 @@ const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBime
                             </tr>
                         </thead>
                         <tbody>`;
-                             codigos.forEach( codigo=> { 
-                                 html += `
+  codigos.forEach((codigo) => {
+    html += `
                                 <tr>
                                     <td>
-                                        ${ codigo.Codigo }
+                                        ${codigo.Codigo}
                                     </td>
                                     <td>
-                                        ${ codigo.valor }
+                                        ${codigo.valor}
                                     </td>
                                     <td>
-                                        ${ codigo.NombreMaestro }
+                                        ${codigo.NombreMaestro}
                                     </td>
                                     <td>
-                                       ${ codigo.Observacion }
+                                       ${codigo.Observacion}
                                     </td>
                                     <td>
-                                       ${ codigo.Date }
+                                       ${codigo.Date}
                                     </td>
                                 </tr>`;
-                            });
-                     html +=  `</tbody>
+  });
+  html += `</tbody>
                     </table>
                 </div>
             </div>
@@ -272,21 +275,21 @@ const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBime
                             </tr>
                         </thead>
                         <tbody>`;
-                           observaciones.forEach( observacion=> {
-                            html += `
+  observaciones.forEach((observacion) => {
+    html += `
                                 <tr>
                                     <td>
-                                        ${ observacion.descripcion }
+                                        ${observacion.descripcion}
                                     </td>
                                     <td>
-                                        ${ observacion.NombreMaestro }
+                                        ${observacion.NombreMaestro}
                                     </td>
                                     <td>
-                                        ${ observacion.Date }
+                                        ${observacion.Date}
                                     </td>
                                 </tr>`;
-                            });
-                       html +=` </tbody>
+  });
+  html += ` </tbody>
                     </table>
                 </div>
             </div>
@@ -297,29 +300,27 @@ const GenerarReporteDeConducta = (codigos, observaciones , datosAlumno, roleBime
 </body>
 </html>     `;
 
-    return new Promise((resolver) => {
-        tmpName = "boletaDeConducta.pdf";
-        const options = {
-            format: "Letter",
-            path: `./public/files/${tmpName}`,
-            margin: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-            }
-        };
-        const file = {content: html};
-        html_to_pdf.generatePdf(file, options).then((output) => {
-            resolver(output);
-        });
+  return new Promise((resolver) => {
+    tmpName = "boletaDeConducta.pdf";
+    const options = {
+      format: "Letter",
+      path: `./public/files/${tmpName}`,
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+    };
+    const file = { content: html };
+    html_to_pdf.generatePdf(file, options).then((output) => {
+      resolver(output);
     });
+  });
 };
 
-
-
-const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
-     let html = `
+const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
+  let html = `
      <!DOCTYPE html>
      <html lang="en">
      <head>
@@ -340,8 +341,8 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
              <h4>Información de matricula</h4>
             <table class="table">
                  <tr>
-                     <td>Carnet: ${ datos.carnet } </td>
-                     <td>Nombre: ${datos.Nombres + ' ' + datos.Apellidos} </td>
+                     <td>Carnet: ${datos.carnet} </td>
+                     <td>Nombre: ${datos.Nombres + " " + datos.Apellidos} </td>
                      <td>Año: ${datos.idYear} </td>
                  </tr>
             </table>
@@ -350,50 +351,54 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
        <div class="container-xl px-4 mt-n10">
        <div class="card mb-4">
            <div class="card-body ">
-               <img src="/static/${ img }" class="mx-auto d-block imgMatricula" >
+               <img src="/static/${img}" class="mx-auto d-block imgMatricula" >
                <hr>
                    <div class="row">
                        <div class="form-group col-md-3">
                            <label>Carnet o código identificador</label>
                            <input type="text" class="form-control" id="carnet" name="carnet"
-                               autocomplete="off" disabled value="${ datos.carnet }">
+                               autocomplete="off" disabled value="${
+                                 datos.carnet
+                               }">
                        </div>
                        <div class="form-group col-md-3">
                            <label>Nombres</label>
                            <input type="text" class="form-control" id="Nombres" name="Nombres"
-                               autocomplete="off"  value="${ datos.Nombres }">
+                               autocomplete="off"  value="${datos.Nombres}">
                        </div>
                        <div class="form-group col-md-3">
                            <label>Apellidos</label>
                            <input type="text" class="form-control" id="Apellidos" name="Apellidos"
-                               autocomplete="off"  value="${ datos.Apellidos }">
+                               autocomplete="off"  value="${datos.Apellidos}">
                        </div>
                        <div class="form-group col-md-3">
                            <label>Correo electrónico</label>
                            <input type="email" class="form-control" id="EmailMain" name="EmailMain"
-                               autocomplete="off"  value="${ datos.EmailMain }">
+                               autocomplete="off"  value="${datos.EmailMain}">
                        </div>
                    </div>
                    <div class="row">
                        <div class="form-group col-md-5">
                            <label>Dirección</label>
                            <input type="text" class="form-control" id="Direccion" name="Direccion"
-                               autocomplete="off"  value="${ datos.Direccion }">
+                               autocomplete="off"  value="${datos.Direccion}">
                        </div>
                        <div class="form-group col-md-2">
                            <label>Télefono</label>
                            <input type="text" class="form-control" id="Tel" name="Tel"
-                               autocomplete="off"  value="${ datos.Tel }">
+                               autocomplete="off"  value="${datos.Tel}">
                        </div>
                        <div class="form-group col-md-3">
                            <label>Fecha de nacimiento</label>
                            <input type="date" class="form-control" id="FechaNac" name="FechaNac"
-                               autocomplete="off"  value="${ datos.FechaNac }">
+                               autocomplete="off"  value="${datos.FechaNac}">
                        </div>
                        <div class="form-group col-md-2">
                            <label>Código contable</label>
                            <input type="text" class="form-control" id="codigoContable" name="codigoContable"
-                               autocomplete="off"  value="${ datos.codigoContable }">
+                               autocomplete="off"  value="${
+                                 datos.codigoContable
+                               }">
                        </div>
                    </div>
                    <hr>
@@ -408,17 +413,23 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                        <div class="col-md-12">
                                            <label>Nombre</label>
                                            <input type="text" class="form-control" id="NombreMadre" name="NombreMadre"
-                                               autocomplete="off"  value="${ datos.NombreMadre }">
+                                               autocomplete="off"  value="${
+                                                 datos.NombreMadre
+                                               }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Cédula</label>
                                            <input type="text" class="form-control" id="CedulaMadre" name="CedulaMadre"
-                                               autocomplete="off"  value="${ datos.CedulaMadre }">
+                                               autocomplete="off"  value="${
+                                                 datos.CedulaMadre
+                                               }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Teléfono</label>
                                            <input type="tel" class="form-control" id="TelMadre" name="TelMadre"
-                                               autocomplete="off"  value="${ datos.TelMadre }">
+                                               autocomplete="off"  value="${
+                                                 datos.TelMadre
+                                               }">
                                        </div>
                                    </div>
                                </div>
@@ -434,17 +445,23 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                        <div class="col-md-12">
                                            <label>Nombre</label>
                                            <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
-                                               autocomplete="off"  value="${ datos.NombrePadre }">
+                                               autocomplete="off"  value="${
+                                                 datos.NombrePadre
+                                               }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Cédula</label>
                                            <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
-                                               autocomplete="off"  value="${ datos.CedulaPadre }">
+                                               autocomplete="off"  value="${
+                                                 datos.CedulaPadre
+                                               }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Teléfono</label>
                                            <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
-                                               autocomplete="off"  value="${ datos.TelPadre }">
+                                               autocomplete="off"  value="${
+                                                 datos.TelPadre
+                                               }">
                                        </div>
                                    </div>
                                </div>
@@ -460,17 +477,23 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                        <div class="col-md-12">
                                            <label>Nombre</label>
                                            <input type="text" class="form-control" id="NombreTutor" name="NombreTutor"
-                                               autocomplete="off"  value="${ datos.NombreTutor }">
+                                               autocomplete="off"  value="${
+                                                 datos.NombreTutor
+                                               }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Cédula</label>
                                            <input type="text" class="form-control" id="CedulaTutor" name="CedulaTutor"
-                                               autocomplete="off"  value="${ datos.CedulaTutor }">
+                                               autocomplete="off"  value="${
+                                                 datos.CedulaTutor
+                                               }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Teléfono</label>
                                            <input type="tel" class="form-control" id="TelTutor" name="TelTutor"
-                                               autocomplete="off"  value="${ datos.TelTutor }">
+                                               autocomplete="off"  value="${
+                                                 datos.TelTutor
+                                               }">
                                        </div>
                                    </div>
                                </div>
@@ -487,7 +510,9 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>El alumno vive con : </label>
                                    <select name="ViveCon" id="ViveCon"  class="form-control">
-                                       <option selected  value="${ datos.ViveCon }">${ datos.ViveCon }</option>
+                                       <option selected  value="${
+                                         datos.ViveCon
+                                       }">${datos.ViveCon}</option>
                                        <option value="Ambos padres">Ambos padres</option>
                                        <option value="Solo con papá">Solo con papá</option>
                                        <option value="Solo con mamá">Solo con mamá</option>
@@ -497,7 +522,9 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>Situación de los padres </label>
                                    <select name="SiticionPadres"  id="SiticionPadres" class="form-control">
-                                       <option selected value="${ datos.SiticionPadres }">${ datos.SiticionPadres }</option>
+                                       <option selected value="${
+                                         datos.SiticionPadres
+                                       }">${datos.SiticionPadres}</option>
                                        <option value="Padres Divorciados">Padres Divorciados</option>
                                        <option value="Padres en unión sentimental">Padres en unión sentimental</option>
                                        <option value="Padres en unión civil">Padres en unión civil</option>
@@ -509,7 +536,9 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>Resposabilidad económica</label>
                                    <select name="ResEcono"  id="ResEcono" class="form-control">
-                                       <option selected value="${ datos.ResEcono }">${ datos.ResEcono }</option>
+                                       <option selected value="${
+                                         datos.ResEcono
+                                       }">${datos.ResEcono}</option>
                                        <option value="Ambos padres">Ambos padres</option>
                                        <option value="Solo de papá">Solo de papá</option>
                                        <option value="Solo de mamá">Solo de mamá</option>
@@ -519,23 +548,23 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>Condición de salud diagnosticada</label>
                                    <input type="text" class="form-control"  id="condicionMedica" name="condicionMedica"
-                                   autocomplete="off" value="${ datos.condicionMedica }">
+                                   autocomplete="off" value="${
+                                     datos.condicionMedica
+                                   }">
                                </div>
                                <hr> `;
 
-                                if(existFamiliares) { 
-
-                                html += `   <div class="col-md-12">
+  if (existFamiliares) {
+    html += `   <div class="col-md-12">
                                    <label>Alumnos familiares inscritos</label>
                                    <ol> `;
-                                       arrFamiliares.forEach( familiar =>{                                
-                                        html += `   <li>${familiar[0].Nombre +' '+ familiar[0].Apellido  }</li> `;
-                                    });
-                                 html += `    </ol>
+    arrFamiliares.forEach((familiar) => {
+      html += `   <li>${familiar[0].Nombre + " " + familiar[0].Apellido}</li> `;
+    });
+    html += `    </ol>
                                </div>`;
-
-                               }
-                            html += `       
+  }
+  html += `       
                            </div>
                        </div>
                    </div>
@@ -545,26 +574,249 @@ const GenerarMatricula = (datos, img , arrFamiliares, existFamiliares) => {
    </div>
  </body>
 </html>`;
-    return new Promise((resolver) => {
-        tmpName = "reporte_matricula.pdf";
-        const options = {
-            format: "Letter",
-            path: `./public/files/${tmpName}`,
-            margin: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-            }
-        };
-        const file = {content: html};
-        html_to_pdf.generatePdf(file, options).then((output) => {
-            resolver(output);
-        });
+  return new Promise((resolver) => {
+    tmpName = "reporte_matricula.pdf";
+    const options = {
+      format: "Letter",
+      path: `./public/files/${tmpName}`,
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+    };
+    const file = { content: html };
+    html_to_pdf.generatePdf(file, options).then((output) => {
+      resolver(output);
     });
+  });
 };
 
+const GenerarMatriculaPorGrado = (data) => {
+  let html = `<!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+      <title>Document</title>
+  </head>
+  <body style="font-size:15px">
+      <div class="container-fluid">`;
+  data.forEach((element) => {
+    const datos = JSON.parse(element.data);
+    html += ` <div class="card card-header-actions" style="padding-bottom: 5rem!important;">
+              <div class="card-body ">
+                  <div class="row">
+                      <div class="col-md-6">
+                        <img style="width:350px; height:auto;" src="https://plataforma.cssjb.edu.ni/static/${element.path}" class="mx-auto d-block" />
+                      </div>
+                      <div class="col-md-6">
+                          <div class="row">
+                              <div class="form-group col-md-3">
+                                  <label class="font-weight-bold">Carnet o código identificador
+                                  </label>
+                                  <p>
+                                     ${element.idAlumno}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-3">
+                                  <label class="font-weight-bold">Nombres</label>
+                                  <p>
+                                     ${datos.Nombres}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-3">
+                                  <label class="font-weight-bold">Apellidos</label>
+                                  <p>
+                                    ${datos.Apellidos}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-3">
+                                  <label class="font-weight-bold">Correo electrónico</label>
+                                  <p>
+                                  ${datos.EmailMain}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-5">
+                                  <label class="font-weight-bold">Dirección</label>
+                                  <p>
+                                     ${datos.Direccion}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-2">
+                                  <label class="font-weight-bold">Télefono</label>
+                                  <p>
+                                     ${datos.Tel}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-3">
+                                  <label class="font-weight-bold">Fecha de nacimiento</label>
+                                  <p>
+                                     ${datos.FechaNac}
+                                  </p>
+                              </div>
+                              <div class="form-group col-md-2">
+                                  <label class="font-weight-bold">Código contable</label>
+                                  <p>
+                                    ${datos.codigoContable}
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-4">
+                          <div class="card">
+                              <div class="card-header font-weight-bold">
+                                  Datos personales madre 
+                              </div>
+                              <div class="card-body">
+                                  <div class="row">
+                                      <div class="col-md-12">
+                                          <label class="font-weight-bold">Nombre</label>
+                                          <p>
+                                             ${datos.NombreMadre}
+                                          </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="font-weight-bold">Cédula</label>
+                                          <p>
+                                          ${datos.CedulaMadre}
+                                          </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="font-weight-bold">Teléfono</label>
+                                          <p>
+                                             ${datos.TelMadre}
+                                          </p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="card">
+                              <div class="card-header font-weight-bold"">Datos personales padre</div>
+                  <div class=" card-body">
+                                  <div class="row">
+                                      <div class="col-md-12">
+                                          <label class="font-weight-bold">Nombre</label>
+                                          <p>
+                                             ${datos.NombrePadre}
+                                          </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="font-weight-bold">Cédula</label>
+                                          <p>
+                                          ${datos.CedulaPadre}
+                                          </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="font-weight-bold">Teléfono</label>
+                                          <p>
+                                          ${datos.TelPadre}
+                                          </p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="card">
+                              <div class="card-header font-weight-bold"">Datos personales tutor</div>
+                  <div class=" card-body">
+                                  <div class="row">
+                                      <div class="col-md-12">
+                                          <label class="font-weight-bold">Nombre</label>
+                                          <p>
+                                          ${datos.NombreTutor}
+                                          </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="font-weight-bold">Cédula</label>
+                                          <p>
+                                          ${datos.CedulaTutor}
+                                          </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <label class="font-weight-bold">Teléfono</label>
+                                          <p>
+                                          ${datos.CelTutor}
+                                          </p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card">
+                      <div class="card-header font-weight-bold">Detalles familiares</div>
+                      <div class="card-body">
+                          <div class="row">
+                              <div class="col-md-3">
+                                  <label class="font-weight-bold" s>El alumno vive con :
+                                  </label>
+                                  <p>
+                                  ${datos.ViveCon}
+                                  </p>
+                              </div>
+                              <div class="col-md-3">
+                                  <label class="font-weight-bold">Situación de los padres
+                                  </label>
+                                  <p>
+                                  ${datos.SiticionPadres}
+                                  </p>
+                              </div>
+                              <div class="col-md-3">
+                                  <label class="font-weight-bold">Resposabilidad económica</label>
+                                  <p>
+                                  ${datos.ResEcono}
+                                  </p>
+                              </div>
+                              <div class="col-md-3">
+                                  <label class="font-weight-bold">Condición de salud diagnosticada</label>
+                                  <p>
+                                  ${datos.condicionMedica}
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div> `;
+  });
+  html += `
+      </div>
+  </body>
+  </html>`;
+  return new Promise((resolver) => {
+    tmpName = "reporte_matricula_grado.pdf";
+    const options = {
+      format: "Letter",
+      path: `./public/files/${tmpName}`,
+      margin: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      },
+      preferCSSPageSize: true,
+    };
+    const file = { content: html };
+    html_to_pdf.generatePdf(file, options).then((output) => {
+      resolver(output);
+    });
+  });
+};
 
 module.exports = {
-    GenerarPdf , GenerarBoletaFinal , GenerarReporteDeConducta, GenerarMatricula
+  GenerarPdf,
+  GenerarBoletaFinal,
+  GenerarReporteDeConducta,
+  GenerarMatricula,
+  GenerarMatriculaPorGrado,
 };

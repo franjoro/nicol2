@@ -28,6 +28,18 @@ alertas.loaderAlert = () => {
   });
 };
 
+alertas.loaderAlertLong = () => {
+  Swal.fire({
+    title: "Por favor, espere unos minutos",
+    html: "La petición puede llevar unos minutos debido a la cantidad de información solicitada",
+    allowOutsideClick: !1,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
+    },
+  });
+};
+
 alertas.deleteConfirmAlert = (title, text) => {
   return Swal.fire({
     title, text,
