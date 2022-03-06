@@ -762,6 +762,112 @@ maestros.viewNotasGrados = async (req, res) => {
 };
 
 
+maestros.guia = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
+    const dataOrdenada = [];
+
+    const {
+      [0]: { idGrado, cantidad },
+    } = await pool.query(
+      `SELECT id AS idGrado , COUNT(*) AS cantidad FROM grados WHERE idMaestro = ?  `,
+      [identificador]
+    );
+
+    if (cantidad) {
+      const {
+        [0]: { idBimestre },
+      } = await pool.query(
+        "SELECT id AS idBimestre FROM bimestres WHERE estado = 1"
+      );
+      // RoleBimestre
+      const {
+        [0]: { roleBimestre },
+      } = await pool.query(
+        "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?",
+        [idBimestre]
+      );
+
+      const columna = `Conducta${roleBimestre}`;
+
+      const queryPromesas = [
+        /* NOTAS */
+        pool.query(
+          "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
+          [idGrado, idBimestre]
+        ),
+        /* MATERIAS */
+        pool.query(
+          "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+          [idGrado]
+        ),
+
+        /* ESTUDIANTES */
+        pool.query(
+          `SELECT idAlumno, 
+              ( SELECT CONCAT(Apellido, ' ', Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre,
+               ${columna} AS puntaje
+                FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno ORDER BY Nombre;`,
+          [idGrado]
+        ),
+      ];
+
+      const {
+        [0]: notas,
+        [1]: materias,
+        [2]: estudiantes /* Select todas las materias de ese grado */,
+      } = await Promise.all(queryPromesas);
+
+      estudiantes.forEach((estudiante) => {
+        const materiasArr = [];
+        let notaPromedio = 0;
+
+        let obj = {
+          idAlumno: estudiante.idAlumno,
+          nombreAlumno: estudiante.Nombre,
+          puntaje: estudiante.puntaje,
+        };
+
+        materias.forEach((materia) => {
+          /* MUESTRA LAS NOTA SUMADA POR MATERIA */
+          let objInsede = {};
+          objInsede.idUnion = materia.idUnion;
+          objInsede.Nombre = materia.Siglas;
+          let sumaNota = 0;
+          notas.forEach((nota) => {
+            if (
+              nota.idUnion == materia.idUnion &&
+              nota.idAlumno == estudiante.idAlumno
+            ) {
+              sumaNota = Number(nota.nota) + Number(sumaNota);
+            }
+          });
+
+          objInsede.nota = sumaNota;
+          notaPromedio = notaPromedio + sumaNota;
+          materiasArr.push(objInsede);
+        });
+        obj.notas = materiasArr;
+        obj.promedio = (notaPromedio / materias.length).toFixed(2);
+        dataOrdenada.push(obj);
+      });
+    }
+    res.render("./maestros/guia", {
+      data: dataOrdenada,
+      permisosSend,
+      usuario,
+      cantidad,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+
 maestros.viewNotasViewer = async (req, res) => {
     try {
         const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;

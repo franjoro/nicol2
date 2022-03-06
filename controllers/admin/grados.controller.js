@@ -54,7 +54,7 @@ grados.detalleGrado = async (req, res) => {
     const { idGrado } = req.params;
     const promesas = [
       pool.query(
-        "SELECT nombre , (SELECT Nombre FROM ciclos WHERE id = grados.idCiclo) as ciclo , idYear FROM grados WHERE id = ? ",
+        "SELECT nombre , (SELECT Nombre FROM ciclos WHERE id = grados.idCiclo) as ciclo , idYear , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = grados.idMaestro) AS NombreMaestro FROM grados WHERE id = ? ",
         [idGrado]
       ), // Datos del grado
       pool.query("SELECT Role FROM bimestres WHERE Estado = 1"), // Bimestre activo
@@ -256,6 +256,19 @@ grados.edit = async (req, res) => {
     await pool.query("UPDATE grados SET nombre = ? WHERE id = ? ", [
       codigoInput,
       id,
+    ]);
+    res.json({ status: true });
+  } catch (error) {
+    res.status(400).json({ status: false, error });
+  }
+};
+
+grados.editGuia = async (req, res) => {
+  try {
+    const { idGrado, idMaestro } = req.body;
+    await pool.query("UPDATE grados SET idMaestro = ? WHERE id = ? ", [
+      idMaestro,
+      idGrado,
     ]);
     res.json({ status: true });
   } catch (error) {

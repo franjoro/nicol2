@@ -28,7 +28,11 @@
           <div class="card-header p-5">
             Información general
             <% if(permisos.grados.update){ %>
-            <button class="btn btn-md btn-warning" type="button" id="editGrado">Editar nombre del grado</button>
+            <div class="btn-group">
+              <button class="btn btn-md btn-primary" type="button" data-toggle="modal"
+              data-target="#modalGuia"> <i  class="me-2" data-feather="user" ></i> Editar maestro guía</button>
+              <button class="btn btn-md btn-warning" id="editGrado"> <i  class="me-2" data-feather="edit"></i>Editar nombre del grado</button>
+            </div>
             <% } %>
           </div>
           <div class="card-body px-0">
@@ -64,6 +68,18 @@
                   <div class="text-xs text-muted">Año en que se imparte</div>
                   <div class="small">
                     <%= datosGrado.idYear %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="d-flex align-items-center justify-content-between px-4">
+              <div class="d-flex align-items-center">
+                <i data-feather="user"></i>
+                <div class="ms-4">
+                  <div class="text-xs text-muted">Profesor guía</div>
+                  <div class="small">
+                    <%= datosGrado.NombreMaestro %>
                   </div>
                 </div>
               </div>
@@ -332,6 +348,46 @@
               Cancelar
             </button>
             <button type="button" class="btn btn-primary" id="btnGuardarMaestros">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- MODAL MAESTRO GUIA -->
+    <div class="modal fade" id="modalGuia" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Asignar maestro guía : <b> <span id="textoNombreMateria"></span> </b> para el
+              grado : <b>
+                <%= datosGrado.nombre %>
+              </b> </h5>
+            <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i data-feather="x"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formMaestroGuia">
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label>Seleccionar maestro </label>
+                  <select class="form-control" name="idMaestro" id="selectMaestroGuia">
+                    <option selected disabled>Seleccione materia</option>
+                  </select>
+                  <input type="hidden" name="idMateria" id="idMateriaInMaestro">
+                  <input type="hidden" name="idGrado" value="<%= idGrado %>">
+                </div>
+              </div>
+            </form>
+            <small><b>Nota:</b> Puede buscar escribiendo el nombre del maestro. </small>
+            <small>El maestro guía puede acceder a ver las notas de los alumnos pertenecientes al grado asignado</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnGuardarMaestrosGuia">
               Guardar
             </button>
           </div>

@@ -132,4 +132,15 @@ router.get('/viewer/:idUnion', maestros.viewNotasViewer);
 // =============================================== FIN Visualizar notas
 
 
+
+
+// =============================================== MAESTRO GUIA
+
+// GET Selector de grados para ver notas
+router.get('/guia', maestros.guia);
+
+
+// =============================================== FIN MAESTRO GUIA
+
+
 module.exports = router;

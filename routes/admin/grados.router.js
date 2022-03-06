@@ -42,4 +42,7 @@ router.get("/:year?", grados.main);
 /* POST Agregar nuevo grado  */
 router.post("/", grados.addNewGrado);
 
+/* PUT actualizar información de maestro guia */
+router.put("/guia", grados.editGuia);
+
 module.exports = router;

@@ -486,49 +486,47 @@ notas.getConsolidadoBimestral = async(req, res) => {
             )
         ];
 
-
-
-
         const {
-            [0]: notas, [1]: materias, [2]: estudiantes, /* Select todas las materias de ese grado */
+          [0]: notas,
+          [1]: materias,
+          [2]: estudiantes /* Select todas las materias de ese grado */,
         } = await Promise.all(queryPromesas);
         const dataOrdenada = [];
 
-
-
         estudiantes.forEach((estudiante) => {
-            const materiasArr = [];
-            let notaPromedio = 0;
+          const materiasArr = [];
+          let notaPromedio = 0;
 
-            let obj = {
-                idAlumno: estudiante.idAlumno,
-                nombreAlumno: estudiante.Nombre,
-                puntaje: estudiante.puntaje
-            };
+          let obj = {
+            idAlumno: estudiante.idAlumno,
+            nombreAlumno: estudiante.Nombre,
+            puntaje: estudiante.puntaje,
+          };
 
-            materias.forEach((materia) => {
-                /* MUESTRA LAS NOTA SUMADA POR MATERIA */
-                let objInsede = {};
-                objInsede.idUnion = materia.idUnion;
-                objInsede.Nombre = materia.Siglas;
-                let sumaNota = 0;
-                notas.forEach((nota) => {
-                    if (
-                        nota.idUnion == materia.idUnion &&
-                        nota.idAlumno == estudiante.idAlumno
-                    ) {
-                        sumaNota = Number(nota.nota) + Number(sumaNota);
-                    }
-                });
-
-                objInsede.nota = sumaNota;
-                notaPromedio = notaPromedio + sumaNota;
-                materiasArr.push(objInsede);
+          materias.forEach((materia) => {
+            /* MUESTRA LAS NOTA SUMADA POR MATERIA */
+            let objInsede = {};
+            objInsede.idUnion = materia.idUnion;
+            objInsede.Nombre = materia.Siglas;
+            let sumaNota = 0;
+            notas.forEach((nota) => {
+              if (
+                nota.idUnion == materia.idUnion &&
+                nota.idAlumno == estudiante.idAlumno
+              ) {
+                sumaNota = Number(nota.nota) + Number(sumaNota);
+              }
             });
-            obj.notas = materiasArr;
-            obj.promedio = (notaPromedio / materias.length).toFixed(2);
-            dataOrdenada.push(obj);
+
+            objInsede.nota = sumaNota;
+            notaPromedio = notaPromedio + sumaNota;
+            materiasArr.push(objInsede);
+          });
+          obj.notas = materiasArr;
+          obj.promedio = (notaPromedio / materias.length).toFixed(2);
+          dataOrdenada.push(obj);
         });
+
         res.json(dataOrdenada);
         // const util = require('util');
         // console.log(util.inspect(dataOrdenada, false, null, true));

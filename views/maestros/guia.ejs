@@ -1,0 +1,64 @@
+<%- include('header.maestros.ejs'); %>  
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <header class="page-header page-header-dark bg-dark pb-10">
+                        <div class="container-xl px-4">
+                            <div class="page-header-content pt-4">
+                                <div class="row align-items-center justify-content-between">
+                                    <div class="col-auto mt-4">
+                                        <h1 class="page-header-title">
+                                            <div class="page-header-icon"><i data-feather="users"></i></div>
+                                            Maestro guía
+                                        </h1>
+                                        <div class="page-header-subtitle">Notas de tu grado guía en el bimestre actúal</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- Main page content-->
+                    <div class="container-xl px-4 mt-n10">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header p-5">
+                               Ver notas
+                            </div>
+                            <div class="card-body table-responsive">
+                            <%if(cantidad){%>
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Estudiantes</th>
+                                            <% data[0].notas.forEach(not => {  %>
+                                                <th><%= not.Nombre %></th>
+                                            <%  }) %>
+                                            <th>Conducta</th>
+                                            <th>Promedio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% data.forEach(estudiante => {  %>
+                                            <tr> 
+                                                <td><%= estudiante.nombreAlumno %></td>
+                                                <% estudiante.notas.forEach(nota => {  %>
+                                                    <td><%=nota.nota%></td>
+                                                <%  }) %>
+                                                <td><%= estudiante.puntaje %></td>
+                                                <td><%= estudiante.promedio %></td>
+                                            </tr> 
+                                        <%  }) %>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                                <%}else{ %>
+                                    <div class="alert alert-danger" role="alert">
+                                        Atención: Usted no tiene grado guía asignado.
+                                      </div>
+                                <%} %>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+ <%- include('footer.maestros.ejs'); %>
+        

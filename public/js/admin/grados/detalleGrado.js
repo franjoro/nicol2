@@ -90,6 +90,30 @@ $("#selectMaestro").select2({
     cache: true,
   },
 });
+// ================================ MAESTRO GUIA
+// Selector de modelo de maestros
+$("#selectMaestroGuia").select2({
+  width: "100%",
+  ajax: {
+    url: "/admin/maestros/getMaestros",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data(params) {
+      return {
+        searchTerm: params.term, // search term
+      };
+    },
+    results(response) {
+      console.log(response);
+      $.map(response, (item) => ({
+        id: item.id,
+        text: item.text,
+      }));
+    },
+    cache: true,
+  },
+});
 
 // Agregar maestro
 $("#formMaestro").submit(async function (e) {
@@ -118,6 +142,34 @@ $("#btnGuardarMaestros").click(() => {
   if (!$("#selectMaestro").val())
     return alertas.newErrorMessage("No se permiten espacios vacíos");
   $("#formMaestro").submit();
+});
+
+// Maestro guia
+$("#formMaestroGuia").submit(async function (e) {
+  e.preventDefault();
+  const data = {
+    idGrado : $("#idGrado").val(), 
+    idMaestro: $("#selectMaestroGuia").val() 
+  };
+  try {
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      type: "PUT",
+      url: "/admin/grados/guia",
+      data: data,
+    });
+    swal.close();
+    if (query.status) return location.reload();
+  } catch (error) {
+    console.log(error);
+    return alertas.newErrorMessage();
+  }
+});
+// Boton de formulario maestro
+$("#btnGuardarMaestrosGuia").click(() => {
+  if (!$("#selectMaestroGuia").val())
+    return alertas.newErrorMessage("No se permiten espacios vacíos");
+  $("#formMaestroGuia").submit();
 });
 
 // Boton de asignar maestro
