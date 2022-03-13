@@ -596,7 +596,6 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
 const GenerarMatriculaPorGrado = (data) => {
   let html = `<!DOCTYPE html>
   <html lang="en">
-  
   <head>
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -813,10 +812,79 @@ const GenerarMatriculaPorGrado = (data) => {
   });
 };
 
+const GenerarBoletaBimestralPreescolar = (data, nombreGrado) => {
+  let html = `<!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+      <title>Document</title>
+  </head>
+  
+  <body style="font-size:15px">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-3">
+                   <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt=""> 
+              </div>
+              <div class="col-md-8">
+                  <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
+                  <h4>Boleta bimestral preescolar  ${nombreGrado} - ${new Date().getFullYear()} </h4>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm table-striped table-bordered">
+                      <tbody>`;
+  data.forEach((alumno) => {
+    html += `<tr><th colspan="2" class="text-center"> Alumno : ${alumno.nombreAlumno} - ${alumno.idAlumno}  Conducta: ${alumno.conducta} </th></tr>`;
+    alumno.notas.forEach((notaspacket) => {
+      html += `<tr><th colspan="2" class="text-center"> Área: ${notaspacket.Nombre}</th></tr><tr><th>Indicadores de logro</th><th>Nota</th></tr>`;
+      notaspacket.notas.forEach((indicador) => {
+        html += `         <tr>
+                              <td>${indicador.indicador}</td>
+                              <td>${indicador.nota}</td>
+                          </tr>`;
+      });
+    });
+  });
+
+  html += `</tbody>
+                    </table>
+                </div>
+            </div>
+      </div>
+  </body>
+  </html>
+  `;
+  return new Promise((resolver) => {
+    tmpName = "boletaBimestralPreescolar.pdf";
+    const options = {
+      format: "Letter",
+      path: `./public/files/${tmpName}`,
+      margin: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+      },
+      preferCSSPageSize: true,
+    };
+    const file = { content: html };
+    html_to_pdf.generatePdf(file, options).then((output) => {
+      resolver(output);
+    });
+  });
+};
+
 module.exports = {
   GenerarPdf,
   GenerarBoletaFinal,
   GenerarReporteDeConducta,
   GenerarMatricula,
   GenerarMatriculaPorGrado,
+  GenerarBoletaBimestralPreescolar,
 };

@@ -307,14 +307,16 @@ const fillBoletaFinal = async(idAlumno) => {
 };
 
 
-const fillBoletaBimestral = async(idAlumno) => {
-    try {
-        const idBimestre = $("#idBimestre").val();
-        const query = await $.ajax({ url: `/admin/notas/getBoletaBimestral/${idAlumno}/${idBimestre}` });
-        let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
+const fillBoletaBimestral = async (idAlumno) => {
+  try {
+    const idBimestre = $("#idBimestre").val();
+    const query = await $.ajax({
+      url: `/admin/notas/getBoletaBimestral/${idAlumno}/${idBimestre}`,
+    });
+    let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
 
-        if (query.length) {
-            html = `<table class="table table-bordered table-sm table-striped" >
+    if (query.length) {
+      html = `<table class="table table-bordered table-sm table-striped" >
          <thead>
            <tr class="bg-blue text-black">
              <th>Materia</th>
@@ -325,191 +327,273 @@ const fillBoletaBimestral = async(idAlumno) => {
            </tr>
          </thead>
          <tbody>`;
-            query.forEach(estudiante => {
-                global_boletaBimestral_conducta = estudiante.conducta;
-                estudiante.notas.forEach(notasOne => {
-                    html += `<tr><td>${notasOne.Nombre}</td> `;
-                    notasOne.notas.forEach(nota => {
-                        html += `<td>${nota.nota}</td></td>`;
-                    });
-                    html += `<td>${notasOne.notaTotal}</td></tr>`;
-                });
-            });
-            html += `
+      query.forEach((estudiante) => {
+        global_boletaBimestral_conducta = estudiante.conducta;
+        estudiante.notas.forEach((notasOne) => {
+          html += `<tr><td>${notasOne.Nombre}</td> `;
+          notasOne.notas.forEach((nota) => {
+            html += `<td>${nota.nota}</td></td>`;
+          });
+          html += `<td>${notasOne.notaTotal}</td></tr>`;
+        });
+      });
+      html += `
             <tr>
                 <td>Conducta</td>
-                <td colspan="4">${query[0].conducta}</td>
+                <td colspan="4"> <label style="float:right;"> ${query[0].conducta} </label></td>
             </tr>
             </tbody></table>`;
-        }
-        global_json_bimestral = html;
-        $("#HtmlBoletaAcumulados").html(html);
-    } catch (error) {
-        $("#HtmlBoletaAcumulados").html("");
     }
+    global_json_bimestral = html;
+    $("#HtmlBoletaAcumulados").html(html);
+  } catch (error) {
+    $("#HtmlBoletaAcumulados").html("");
+  }
 };
 
-const fillConsolidadoAnual = async(idGrado) => {
-    try {
-        const query = await $.ajax({ url: `/admin/notas/getConsolidadoAnual/${idGrado}` });
-        let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
-        if (query.length) {
-            html = `<table class="table table-bordered table-striped table-sm"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
-            query[0].notas.forEach(not => {
-                html += `<th>${not.Nombre}</th>`;
-            });
-            html += `<td>Promedio</td><td>Conducta</td></tr>
-            </thead><tbody>`;
-            query.forEach(estudiante => {
-                html += `<tr><td>${estudiante.nombreAlumno}</td> `;
-                estudiante.notas.forEach(nota => {
-                    let color = "black";
-                    if (nota.notaGlobal < 60) color = "red";
-                    if (nota.notaGlobal >= 60 && nota.notaGlobal <= 69) color = "blue";
-                    html += `<td style="color:${color}">${nota.notaGlobal}</td>`;
-
-                });
-                html += `<td>${estudiante.notaPromedio}</td><td>${estudiante.conducta}</td></tr>`;
-            });
-            html += `</tbody></table>`;
-        }
-        global_json_conAnual = html;
-        $("#htmlByConsolidado").html(html);
-    } catch (error) {
-        $("#htmlByConsolidado").html("");
-    }
-};
-
-
-const alertaChangeNota = async(id, nota) => {
-    const { value: notaResult } = await Swal.fire({
-        title: 'Editar nota seleccionada',
-        input: 'text',
-        inputLabel: 'Nota: ',
-        inputValue: nota.trim(),
-        showCancelButton: true,
-        inputValidator: (value) => {
-            if (!value) {
-                return 'No puede ingresar espacios vacíos';
-            }
-            if (!Number(value)) {
-                return 'Debe ingresar un número';
-            }
-        }
+const fillConsolidadoAnual = async (idGrado) => {
+  try {
+    const query = await $.ajax({
+      url: `/admin/notas/getConsolidadoAnual/${idGrado}`,
     });
-    if (notaResult) {
-        const query = await $.ajax({ url: `/admin/notas/`, method: "PUT", data: { nota: notaResult, id } });
-        if (query.status) {
-            const value = $("#selectEstudiantes").val();
-            fillNotasByAlumno(value);
-            return alertas.Success("Nota actualizada correctamente");
-        }
+    let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
+    if (query.length) {
+      html = `<table class="table table-bordered table-striped table-sm"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
+      query[0].notas.forEach((not) => {
+        html += `<th>${not.Nombre}</th>`;
+      });
+      html += `<td>Promedio</td><td>Conducta</td></tr>
+            </thead><tbody>`;
+      query.forEach((estudiante) => {
+        html += `<tr><td>${estudiante.nombreAlumno}</td> `;
+        estudiante.notas.forEach((nota) => {
+          let color = "black";
+          if (nota.notaGlobal < 60) color = "red";
+          if (nota.notaGlobal >= 60 && nota.notaGlobal <= 69) color = "blue";
+          html += `<td style="color:${color}">${nota.notaGlobal}</td>`;
+        });
+        html += `<td>${estudiante.notaPromedio}</td><td>${estudiante.conducta}</td></tr>`;
+      });
+      html += `</tbody></table>`;
     }
+    global_json_conAnual = html;
+    $("#htmlByConsolidado").html(html);
+  } catch (error) {
+    $("#htmlByConsolidado").html("");
+  }
 };
 
-
-
+const alertaChangeNota = async (id, nota) => {
+  const { value: notaResult } = await Swal.fire({
+    title: "Editar nota seleccionada",
+    input: "text",
+    inputLabel: "Nota: ",
+    inputValue: nota.trim(),
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value) {
+        return "No puede ingresar espacios vacíos";
+      }
+      if (!Number(value)) {
+        return "Debe ingresar un número";
+      }
+    },
+  });
+  if (notaResult) {
+    const query = await $.ajax({
+      url: `/admin/notas/`,
+      method: "PUT",
+      data: { nota: notaResult, id },
+    });
+    if (query.status) {
+      const value = $("#selectEstudiantes").val();
+      fillNotasByAlumno(value);
+      return alertas.Success("Nota actualizada correctamente");
+    }
+  }
+};
 
 $("#btnReporteFinal").click(() => {
-    const html = `
+  const html = `
             <h3>Boleta de calificaciones </h3>
             <table class="table">
             <tbody>
                 <tr>
-                    <td>Carnet: <span class="font-weight-bold">${$("#selectEstudiantesBoleta").val()}</span></td>
-                    <td>Nombre: <span class="font-weight-bold">${$("#selectEstudiantesBoleta").text().split("-")[2].trim()}</span></td>
+                    <td>Carnet: <span class="font-weight-bold">${$(
+                      "#selectEstudiantesBoleta"
+                    ).val()}</span></td>
+                    <td>Nombre: <span class="font-weight-bold">${$(
+                      "#selectEstudiantesBoleta"
+                    )
+                      .text()
+                      .split("-")[2]
+                      .trim()}</span></td>
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_boletaFinal !== null) sendDataToPdf(global_json_boletaFinal, html, false, $("#textAreaBoletaFinal").val());
+  if (global_json_boletaFinal !== null)
+    sendDataToPdf(
+      global_json_boletaFinal,
+      html,
+      false,
+      $("#textAreaBoletaFinal").val()
+    );
 });
 
-$("#btnReporteBimestral").click(async() => {
-    const selector = $("#selectBoletaAcumulados option:selected").text().split("-");
-    const { nombreGrado } = await $.ajax({ url: `/admin/notas/getGrado/${selector[0]}-${selector[1]}` });
-    const html = `
+$("#btnReporteBimestral").click(async () => {
+  const selector = $("#selectBoletaAcumulados option:selected")
+    .text()
+    .split("-");
+  const { nombreGrado } = await $.ajax({
+    url: `/admin/notas/getGrado/${selector[0]}-${selector[1]}`,
+  });
+  const html = `
             <h3>Boleta bimestral de notas </h3>
             <table class="table">
             <tbody>
                 <tr>
-                    <td>Carnet: <span class="font-weight-bold">${$("#selectBoletaAcumulados").val()}</span></td>
+                    <td>Carnet: <span class="font-weight-bold">${$(
+                      "#selectBoletaAcumulados"
+                    ).val()}</span></td>
                     <td>Nombre: <span class="font-weight-bold">${selector[2].trim()}</span></td>
                     <td>Grado: <span class="font-weight-bold">${nombreGrado}</span></td>
-                    <td>Bimestre: <span class="font-weight-bold">${$("#roleBimestre").val()}</span></td>
+                    <td>Bimestre: <span class="font-weight-bold">${$(
+                      "#roleBimestre"
+                    ).val()}</span></td>
                     <td>Conducta: <span class="font-weight-bold">${global_boletaBimestral_conducta}</span></td>
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_bimestral !== null) sendDataToPdf(global_json_bimestral, html, false, $("#textAreaBoletaBimestral").val());
+  if (global_json_bimestral !== null)
+    sendDataToPdf(
+      global_json_bimestral,
+      html,
+      false,
+      $("#textAreaBoletaBimestral").val()
+    );
 });
 
 $("#btnReporteConsolidadoAnual").click(() => {
-    const html = `
+  const html = `
             <h3>Consolidado Anual </h3>
             <table class="table">
             <tbody>
                 <tr>
-                    <td>Grado: <span class="font-weight-bold">${$("#selectConsolidado option:selected").text().trim()}</span></td>
+                    <td>Grado: <span class="font-weight-bold">${$(
+                      "#selectConsolidado option:selected"
+                    )
+                      .text()
+                      .trim()}</span></td>
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_conAnual !== null) sendDataToPdf(global_json_conAnual, html, false, $("#textAreaConsolidadoAnual").val());
+  if (global_json_conAnual !== null)
+    sendDataToPdf(
+      global_json_conAnual,
+      html,
+      false,
+      $("#textAreaConsolidadoAnual").val()
+    );
 });
 
 $("#btnReporteConsolidadoBimestral").click(() => {
-    const html = `
+  const html = `
             <h3>Consolidado Bimestral - ${new Date().getFullYear()}</h3>
             <table class="table">
             <tbody>
                 <tr>
-                    <td>Grado: <span class="font-weight-bold">${$("#selectNotaGrado option:selected").text().trim()}</span></td>
-                    <td>Bimestre: <span class="font-weight-bold">${$("#roleBimestre").val()}</span></td>
+                    <td>Grado: <span class="font-weight-bold">${$(
+                      "#selectNotaGrado option:selected"
+                    )
+                      .text()
+                      .trim()}</span></td>
+                    <td>Bimestre: <span class="font-weight-bold">${$(
+                      "#roleBimestre"
+                    ).val()}</span></td>
                 </tr>
             </tbody>
         </table>`;
-    if (global_json_conBimestral !== null) sendDataToPdf(global_json_conBimestral, html, true, $("#textAreaConsolidadoBimestral").val());
+  if (global_json_conBimestral !== null)
+    sendDataToPdf(
+      global_json_conBimestral,
+      html,
+      true,
+      $("#textAreaConsolidadoBimestral").val()
+    );
 });
 
-
-const sendDataToPdf = async(data, header, landscape = false, observaciones = "") => {
-    const plainText = data.trim();
-    const plainHeader = header.trim();
-    try {
-        alertas.loaderAlert();
-        const query = await $.ajax({ url: `/admin/notas/generatePdfHtml`, type: "POST", data: { html: plainText, header: plainHeader, landscape, observaciones } });
-        if (query.status) {
-            swal.close();
-            window.open(`/admin/notas/getFile `);
-        }
-    } catch (error) {
-        console.log(error);
-        alertas.newErrorMessage("Error al generar documento");
+const sendDataToPdf = async (
+  data,
+  header,
+  landscape = false,
+  observaciones = ""
+) => {
+  const plainText = data.trim();
+  const plainHeader = header.trim();
+  try {
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      url: `/admin/notas/generatePdfHtml`,
+      type: "POST",
+      data: { html: plainText, header: plainHeader, landscape, observaciones },
+    });
+    if (query.status) {
+      swal.close();
+      window.open(`/admin/notas/getFile `);
     }
+  } catch (error) {
+    console.log(error);
+    alertas.newErrorMessage("Error al generar documento");
+  }
 };
 
-$("#btnReporteConsolidadoBimestralExcel").click(async() => {
-    const idBimestre = $("#idBimestre").val();
-    const nombreGrado = $("#selectNotaGrado option:selected").text().trim();
-    const query = await $.ajax({ url: `/admin/notas/getNotasGradoExcel/${global_idGrado}/${idBimestre}/${nombreGrado}` });
-    if (query.status) {
-        swal.close();
-        window.open(`/admin/notas/download/${query.path} `);
-    }
+$("#btnReporteConsolidadoBimestralExcel").click(async () => {
+  const idBimestre = $("#idBimestre").val();
+  const nombreGrado = $("#selectNotaGrado option:selected").text().trim();
+  const query = await $.ajax({
+    url: `/admin/notas/getNotasGradoExcel/${global_idGrado}/${idBimestre}/${nombreGrado}`,
+  });
+  if (query.status) {
+    swal.close();
+    window.open(`/admin/notas/download/${query.path} `);
+  }
 });
 
-$("#btnReporteGenerado").click(async() => {
-    try {
-        const idGrado = $("#selectGradoReporte").val();
-        const nombreGrado = $("#selectGradoReporte option:selected").text().trim();
-        const roleBimestre = $("#roleBimestre").val();
-        alertas.loaderAlert();
-        const query = await $.ajax({ url: `/admin/notas/boletaFinal/${idGrado}/${nombreGrado}/${roleBimestre}` });
-        if (query.status) {
-            swal.close();
-            window.open(`/admin/notas/getReport `);
-        }
-    } catch (error) {
-        console.log(error);
-        alertas.newErrorMessage("Error al generar documento");
+$("#btnReporteGenerado").click(async () => {
+  try {
+    const idGrado = $("#selectGradoReporte").val();
+    const nombreGrado = $("#selectGradoReporte option:selected").text().trim();
+    const roleBimestre = $("#roleBimestre").val();
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      url: `/admin/notas/boletaFinal/${idGrado}/${nombreGrado}/${roleBimestre}`,
+    });
+    if (query.status) {
+      swal.close();
+      window.open(`/admin/notas/getReport `);
     }
+  } catch (error) {
+    console.log(error);
+    alertas.newErrorMessage("Error al generar documento");
+  }
+});
+
+$("#btnBoletaBimestralPreescolar").click(async () => {
+  try {
+    const idGrado = $("#selectGradoReportePreescolar").val();
+    const nombreGrado = $("#selectGradoReporte option:selected").text().trim();
+    const idBimestre = $("#idBimestre").val();
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      url: `/admin/notas/getBoletaBimestralPreescolar/${idGrado}/${idBimestre}/${nombreGrado}`,
+    });
+
+    if (query.status) {
+      swal.close();
+      window.open(`/admin/notas/getReportPreescolar`);
+    }
+  } catch (error) {
+    console.log(error);
+    alertas.newErrorMessage("Error al generar documento");
+  }
 });
