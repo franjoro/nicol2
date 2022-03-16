@@ -31,6 +31,9 @@ router.get('/getBoletaBimestral/:idAlumno/:idBimestre',  notas.getBoletaBimestra
 /* GET obtener boleta preescolar   */
 router.get('/getBoletaBimestralPreescolar/:idGrado/:idBimestre/:nombreGrado',  notas.getBoletaBimestralPreescolar);
 
+/* GET obtener boleta preescolar   */
+router.get('/getBoletaBimestralPreescolarPorAlumno/:idAlumno/:idBimestre',  notas.getBoletaBimestralPreescolarPorAlumno);
+
 
 /* GET generarArchivoPorHtml  */
 router.post('/generatePdfHtml',  notas.generateFichaByHtml);

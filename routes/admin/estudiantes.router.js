@@ -31,6 +31,9 @@ router.post('/getEstudiantes/:idGrado',  estudiantes.getEstudiantes);
 /* POST retorna JSON para select de alumnos  */
 router.post('/getEstudiantesAll',  estudiantes.getEstudiantesAll);
 
+/* POST retorna JSON para select de alumnos  */
+router.post('/getEstudiantesAllPreescolar',  estudiantes.getEstudiantesAllPreescolar);
+
 
 /* GET Pantalla de matriculas  */
 router.get('/matriculas/:idAlumno',  estudiantes.getMatriculas);

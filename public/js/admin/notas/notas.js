@@ -39,23 +39,45 @@ $(".selectEstudiantes").select2({
 });
 
 
+$(".selectEstudiantesPreescolar").select2({
+  width: "100%",
+  ajax: {
+    url: "/admin/estudiantes/getEstudiantesAllPreescolar",
+    type: "post",
+    dataType: "json",
+    delay: 250,
+    data(params) {
+      return {
+        searchTerm: params.term, // search term
+      };
+    },
+    results(response) {
+      $.map(response, (item) => ({
+        id: item.id,
+        text: item.text,
+      }));
+    },
+    cache: true,
+  },
+});
 
+const fillNotasByAlumno = async (idAlumno) => {
+  const idBimestre = $("#idBimestre").val();
+  const query = await $.ajax({
+    url: `/admin/notas/getNotasEstudiantes/${idAlumno}/${idBimestre}`,
+  });
 
-const fillNotasByAlumno = async(idAlumno) => {
-    const idBimestre = $("#idBimestre").val();
-    const query = await $.ajax({ url: `/admin/notas/getNotasEstudiantes/${idAlumno}/${idBimestre}`, });
-
-    let html = ``;
-    query.forEach(element => {
-        const arr1 = [],
-            arr2 = [],
-            arr3 = [];
-        element.notas.forEach(nota => {
-            if (nota.RoleActivida == 1) arr1.push(nota);
-            if (nota.RoleActivida == 2) arr2.push(nota);
-            if (nota.RoleActivida == 3) arr3.push(nota);
-        });
-        html += `
+  let html = ``;
+  query.forEach((element) => {
+    const arr1 = [],
+      arr2 = [],
+      arr3 = [];
+    element.notas.forEach((nota) => {
+      if (nota.RoleActivida == 1) arr1.push(nota);
+      if (nota.RoleActivida == 2) arr2.push(nota);
+      if (nota.RoleActivida == 3) arr3.push(nota);
+    });
+    html += `
         <div class="card card-header-actions my-4">
         <div class="card-header bg-primary">
             <h4 class="text-light my-0">${element.Nombre}</h4>
@@ -77,21 +99,21 @@ const fillNotasByAlumno = async(idAlumno) => {
                                  Primer consolidado 30%
                             </td>   
                         </tr>`;
-        let notaSuma1 = 0;
-        arr1.forEach((nota1) => {
-            notaSuma1 = Number(notaSuma1) + Number(nota1.nota);
-            html += `
+    let notaSuma1 = 0;
+    arr1.forEach((nota1) => {
+      notaSuma1 = Number(notaSuma1) + Number(nota1.nota);
+      html += `
                                 <tr>        
                                     <td>${nota1.tituloAcumulado}</td>
                                     <td>${nota1.acumuladoPorcentaje}</td>
                                     `;
-                                    if ($("#permisoUpdate").val() === 'true') {  
-                                        html += ` <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button> </td></tr>`;
-                                    }else{
-                                        html += ` <td>${nota1.nota}</td> </tr>`;
-                                    }
-            });
-        html += `
+      if ($("#permisoUpdate").val() === "true") {
+        html += ` <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button> </td></tr>`;
+      } else {
+        html += ` <td>${nota1.nota}</td> </tr>`;
+      }
+    });
+    html += `
                         <tr class="table-primary">
                            <td>
                                <b> Nota 30% </b>
@@ -108,20 +130,20 @@ const fillNotasByAlumno = async(idAlumno) => {
                               Segundo consolidado 30%
                             </td>   
                         </tr>`;
-        let notaSuma2 = 0;
-        arr2.forEach((nota1) => {
-            notaSuma2 = Number(notaSuma2) + Number(nota1.nota);
-            html += `
+    let notaSuma2 = 0;
+    arr2.forEach((nota1) => {
+      notaSuma2 = Number(notaSuma2) + Number(nota1.nota);
+      html += `
                              <tr>        
                                  <td>${nota1.tituloAcumulado}</td>
                                  <td>${nota1.acumuladoPorcentaje}</td>`;
-                                 if ($("#permisoUpdate").val() === 'true') {  
-                                     html += ` <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button> </td></tr>`;
-                                 }else{
-                                     html += ` <td>${nota1.nota}</td> </tr>`;
-                                 }
-        });
-        html += `
+      if ($("#permisoUpdate").val() === "true") {
+        html += ` <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button> </td></tr>`;
+      } else {
+        html += ` <td>${nota1.nota}</td> </tr>`;
+      }
+    });
+    html += `
                         <tr class="table-primary">
                            <td>
                                <b> Nota 30% </b>
@@ -138,21 +160,20 @@ const fillNotasByAlumno = async(idAlumno) => {
                               Examen 40%
                             </td>   
                         </tr>`;
-        let notaSuma3 = 0;
-        arr3.forEach((nota1) => {
-            notaSuma3 = Number(notaSuma3) + Number(nota1.nota);
-            html += `
+    let notaSuma3 = 0;
+    arr3.forEach((nota1) => {
+      notaSuma3 = Number(notaSuma3) + Number(nota1.nota);
+      html += `
                              <tr>        
                                  <td>${nota1.tituloAcumulado}</td>
                                  <td>${nota1.acumuladoPorcentaje}</td>`;
-                                 if ($("#permisoUpdate").val() === 'true') {  
-                                     html += ` <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button> </td></tr>`;
-                                 }else{
-                                     html += ` <td>${nota1.nota}</td> </tr>`;
-                                 }
-
-        });
-        html += `
+      if ($("#permisoUpdate").val() === "true") {
+        html += ` <td>${nota1.nota} <button class="btn btn-primary float-end btn-sm btnEdit" data-nota="${nota1.nota} " data-id="${nota1.idNota}">Editar</button> </td></tr>`;
+      } else {
+        html += ` <td>${nota1.nota}</td> </tr>`;
+      }
+    });
+    html += `
                         <tr class="table-primary">
                            <td>
                                <b> Nota 40% </b>
@@ -181,84 +202,82 @@ const fillNotasByAlumno = async(idAlumno) => {
         </div>
     </div>
         `;
-    });
-    $("#notasAlumno").html(html);
+  });
+  $("#notasAlumno").html(html);
 
-    $(".btnEdit").on("click", function() {
-        const { id, nota } = $(this).data();
-        alertaChangeNota(id, nota);
-    });
-
+  $(".btnEdit").on("click", function () {
+    const { id, nota } = $(this).data();
+    alertaChangeNota(id, nota);
+  });
 };
 
-$("#selectEstudiantes").change(async function() {
-    const value = $(this).val();
-    fillNotasByAlumno(value);
+$("#selectEstudiantes").change(async function () {
+  const value = $(this).val();
+  fillNotasByAlumno(value);
 });
 
-
-$("#selectEstudiantesBoleta").change(async function() {
-    const value = $(this).val();
-    fillBoletaFinal(value);
+$("#selectEstudiantesBoleta").change(async function () {
+  const value = $(this).val();
+  fillBoletaFinal(value);
 });
 
-$("#selectBoletaAcumulados").change(async function() {
-    const value = $(this).val();
-    fillBoletaBimestral(value);
+$("#selectBoletaAcumulados").change(async function () {
+  const value = $(this).val();
+  fillBoletaBimestral(value);
 });
 
-$("#selectNotaGrado").change(async function() {
-    const value = $(this).val();
-    global_idGrado = value;
-    fillNotasByGrado(value);
+$("#selectNotaGrado").change(async function () {
+  const value = $(this).val();
+  global_idGrado = value;
+  fillNotasByGrado(value);
 });
 
-
-$("#selectConsolidado").change(async function() {
-    const value = $(this).val();
-    fillConsolidadoAnual(value);
+$("#selectConsolidado").change(async function () {
+  const value = $(this).val();
+  fillConsolidadoAnual(value);
 });
 
+const fillNotasByGrado = async (idGrado) => {
+  try {
+    const idBimestre = $("#idBimestre").val();
+    const query = await $.ajax({
+      url: `/admin/notas/getNotasGrado/${idGrado}/${idBimestre}`,
+    });
+    let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
+    if (query.length) {
+      html = `<table class="table table-bordered table-striped table-sm"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
+      query[0].notas.forEach((not) => {
+        html += `<th>${not.Nombre}</th>`;
+      });
+      html += `<td>Conducta</td> <td>Prom.</td> </tr></thead><tbody>`;
 
-const fillNotasByGrado = async(idGrado) => {
-    try {
-        const idBimestre = $("#idBimestre").val();
-        const query = await $.ajax({ url: `/admin/notas/getNotasGrado/${idGrado}/${idBimestre}` });
-        let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
-        if (query.length) {
-            html = `<table class="table table-bordered table-striped table-sm"> <thead> <tr class="bg-blue text-black">  <th>Estudiante</th>`;
-            query[0].notas.forEach(not => {
-                html += `<th>${not.Nombre}</th>`;
-            });
-            html += `<td>Conducta</td> <td>Prom.</td> </tr></thead><tbody>`;
-
-            query.forEach(estudiante => {
-                html += `<tr><td>${estudiante.nombreAlumno}</td> `;
-                estudiante.notas.forEach(nota => {
-                    let color = "black";
-                    if (nota.nota < 60) color = "red";
-                    if (nota.nota >= 60 && nota.nota <= 69) color = "blue";
-                    html += `<td style="color:${color}">${nota.nota}</td>`;
-                });
-                html += `<td>${estudiante.puntaje}</td><td>${estudiante.promedio}</td></tr>`;
-
-            });
-            html += `</tbody></table>`;
-        }
-        global_json_conBimestral = html;
-        $("#htmlByGrado").html(html);
-    } catch (error) {
-        $("#htmlByGrado").html("");
+      query.forEach((estudiante) => {
+        html += `<tr><td>${estudiante.nombreAlumno}</td> `;
+        estudiante.notas.forEach((nota) => {
+          let color = "black";
+          if (nota.nota < 60) color = "red";
+          if (nota.nota >= 60 && nota.nota <= 69) color = "blue";
+          html += `<td style="color:${color}">${nota.nota}</td>`;
+        });
+        html += `<td>${estudiante.puntaje}</td><td>${estudiante.promedio}</td></tr>`;
+      });
+      html += `</tbody></table>`;
     }
+    global_json_conBimestral = html;
+    $("#htmlByGrado").html(html);
+  } catch (error) {
+    $("#htmlByGrado").html("");
+  }
 };
 
-
-const fillBoletaFinal = async(idAlumno) => {
-    try {
-        const query = await $.ajax({ url: `/admin/notas/getBoletaFinal/${idAlumno}` });
-        let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
-        if (query.length) {
-            html = `<table class="table table-bordered table-sm table-striped">
+const fillBoletaFinal = async (idAlumno) => {
+  try {
+    const query = await $.ajax({
+      url: `/admin/notas/getBoletaFinal/${idAlumno}`,
+    });
+    let html = `<div class="alert alert-danger" role="alert">Ningun alumno asignado al grado seleccionado</div>`;
+    if (query.length) {
+      html = `<table class="table table-bordered table-sm table-striped">
          <thead>
            <tr class="bg-blue text-black">
              <th>Materia</th>
@@ -274,17 +293,17 @@ const fillBoletaFinal = async(idAlumno) => {
            </tr>
          </thead>
          <tbody>`;
-            query.forEach(estudiante => {
-                estudiante.notas.forEach(notasOne => {
-                    html += `<tr><td>${notasOne.Nombre}</td> `;
-                    notasOne.notas.forEach(nota => {
-                        html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
-                    });
-                    html += `<td>${notasOne.notaGlobal}</td></tr>`;
-                });
-            });
-            const alumno = query[0];
-            html += `
+      query.forEach((estudiante) => {
+        estudiante.notas.forEach((notasOne) => {
+          html += `<tr><td>${notasOne.Nombre}</td> `;
+          notasOne.notas.forEach((nota) => {
+            html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
+          });
+          html += `<td>${notasOne.notaGlobal}</td></tr>`;
+        });
+      });
+      const alumno = query[0];
+      html += `
             <tr>
                 <td>Conducta</td>
                 <td>${alumno.Conducta1.puntaje}</td>
@@ -295,17 +314,21 @@ const fillBoletaFinal = async(idAlumno) => {
                 <td>${alumno.Conducta3.prom}</td>
                 <td>${alumno.Conducta4.puntaje}</td>
                 <td>${alumno.Conducta4.prom}</td>
-                <td>${Number(alumno.Conducta1.prom) + Number(alumno.Conducta2.prom) + Number(alumno.Conducta3.prom) + Number(alumno.Conducta4.prom)}</td>
+                <td>${
+                  Number(alumno.Conducta1.prom) +
+                  Number(alumno.Conducta2.prom) +
+                  Number(alumno.Conducta3.prom) +
+                  Number(alumno.Conducta4.prom)
+                }</td>
             </tr>
             </tbody></table>`;
-        }
-        global_json_boletaFinal = html;
-        $("#HtmlBoletaFinal").html(html);
-    } catch (error) {
-        $("#HtmlBoletaFinal").html("");
     }
+    global_json_boletaFinal = html;
+    $("#HtmlBoletaFinal").html(html);
+  } catch (error) {
+    $("#HtmlBoletaFinal").html("");
+  }
 };
-
 
 const fillBoletaBimestral = async (idAlumno) => {
   try {
@@ -586,6 +609,25 @@ $("#btnBoletaBimestralPreescolar").click(async () => {
     alertas.loaderAlert();
     const query = await $.ajax({
       url: `/admin/notas/getBoletaBimestralPreescolar/${idGrado}/${idBimestre}/${nombreGrado}`,
+    });
+
+    if (query.status) {
+      swal.close();
+      window.open(`/admin/notas/getReportPreescolar`);
+    }
+  } catch (error) {
+    console.log(error);
+    alertas.newErrorMessage("Error al generar documento");
+  }
+});
+
+$("#btnBoletaBimestralPreescolarPorAlumno").click(async () => {
+  try {
+    const idAlumno = $("#selectEstudiantesPreescolar").val();
+    const idBimestre = $("#idBimestre").val();
+    alertas.loaderAlert();
+    const query = await $.ajax({
+      url: `/admin/notas/getBoletaBimestralPreescolarPorAlumno/${idAlumno}/${idBimestre}`,
     });
 
     if (query.status) {
