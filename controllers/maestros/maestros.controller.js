@@ -74,8 +74,6 @@ maestros.addCodigo = async(req, res) => {
     try {
         const { identificador } = getUserDataByToken(req.cookies.token).data;
         const { idCodigo, idAlumno, descripcion, idGrado } = req.body;
-
-
         const {
             [0]: {
                 [0]: { id, Role }
@@ -135,7 +133,6 @@ maestros.addObservacion = async(req, res) => {
             [0]: { Email }
         } = await pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno);
         sendEmail(Email, `Observación del maestro aplicada  #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de observación aplicada</h5><p>Por favor acceda a su usuario en la plataforma de registro acádemico para visualizar la observación <p>Carnet Alumno : ${idAlumno}</p>`);
-
     } catch (error) {
         console.log(error);
         res.status(400).json({ status: false, error });
