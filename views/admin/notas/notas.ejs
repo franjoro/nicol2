@@ -1,95 +1,88 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <%- include('../partials/header.ejs'); %>
-  <!-- End Nav-->
-  <div id="layoutSidenav_content">
-    <main>
-      <header class="page-header page-header-dark bg-primary pb-10">
-        <div class="container-xl px-4">
-          <div class="page-header-content pt-4">
-            <div class="row align-items-center justify-content-between">
-              <div class="col-auto mt-4">
-                <h1 class="page-header-title">
-                  <div class="page-header-icon">
-                    <i data-feather="check-circle"></i>
-                  </div>
-                  Administración de notas
-                </h1>
-                <div class="page-header-subtitle">
-                  Visualiza los códigos de conducta aplicados
-                </div>
-                <!-- Selector de año-->
-                <div class="pt-4">
-                  <label for="exampleFormControlSelect1">Selecciona el bimestre que deseas visualizar</label>
-                  <div class="input-group input-group-joined">
-                    <span class="input-group-text">
+    <!-- End Nav-->
+    <div id="layoutSidenav_content">
+        <main>
+            <header class="page-header page-header-dark bg-primary pb-10">
+                <div class="container-xl px-4">
+                    <div class="page-header-content pt-4">
+                        <div class="row align-items-center justify-content-between">
+                            <div class="col-auto mt-4">
+                                <h1 class="page-header-title">
+                                    <div class="page-header-icon">
+                                        <i data-feather="check-circle"></i>
+                                    </div>
+                                    Administración de notas
+                                </h1>
+                                <div class="page-header-subtitle">
+                                    Visualiza los códigos de conducta aplicados
+                                </div>
+                                <!-- Selector de año-->
+                                <div class="pt-4">
+                                    <label for="exampleFormControlSelect1">Selecciona el bimestre que deseas visualizar</label>
+                                    <div class="input-group input-group-joined">
+                                        <span class="input-group-text">
                       <i data-feather="calendar"></i>
                     </span>
-                    <select class="form-control form-control-solid" id="selectBimestre">
+                                        <select class="form-control form-control-solid" id="selectBimestre">
                       <option value="1">Bimestre #1</option>
                       <option value="2">Bimestre #2</option>
                       <option value="3">Bimestre #3</option>
                       <option value="4">Bimestre #4</option>
                     </select>
-                  </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      <!-- Main page content-->
-      <div class="container-xl px-4 mt-n10">
-        <div class="card">
-          <div class="card-header">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                  aria-selected="true">Ver notas por alumno</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                  aria-controls="profile" aria-selected="false">Consolidado bimestral</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " id="consolidado-tab" data-toggle="tab" href="#con" role="tab"
-                  aria-controls="consolidado" aria-selected="false">Consolidado anual</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " id="boletaAcumulados-tab" data-toggle="tab" href="#boletaAcumulados" role="tab"
-                  aria-controls="boletaAcumulados" aria-selected="false">Boleta bimestral</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " id="boletaFinalPreescolar-tab" data-toggle="tab" href="#boletaFinalPreescolar" role="tab"
-                  aria-controls="boletaFinal" aria-selected="false">Boleta bimestral preescolar</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " id="boletaFinal-tab" data-toggle="tab" href="#boletaFinal" role="tab"
-                  aria-controls="boletaFinal" aria-selected="false">Boleta final</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " id="GenerarboletaFinal-tab" data-toggle="tab" href="#GenerarboletaFinal" role="tab"
-                  aria-controls="boletaFinal" aria-selected="false">Generar boleta final</a>
-              </li>
-            </ul>
-          </div>
-          <div class="card-body">
-            <div class="tab-content">
-              <div class="tab-pane fade show active" id="home" aria-labelledby="overview-pill">
-                <label>Seleccione alumno para ver notas</label>
-                <select name="" id="selectEstudiantes" class="form-control selectEstudiantes"></select>
-                <div id="notasAlumno"></div>
-                <hr>
-              </div>
+            </header>
+            <!-- Main page content-->
+            <div class="container-xl px-4 mt-n10">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Ver notas por alumno</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Consolidado bimestral</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="consolidado-tab" data-toggle="tab" href="#con" role="tab" aria-controls="consolidado" aria-selected="false">Consolidado anual</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="boletaAcumulados-tab" data-toggle="tab" href="#boletaAcumulados" role="tab" aria-controls="boletaAcumulados" aria-selected="false">Boleta bimestral</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="boletaFinalPreescolar-tab" data-toggle="tab" href="#boletaFinalPreescolar" role="tab" aria-controls="boletaFinal" aria-selected="false">Boleta bimestral preescolar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="boletaFinal-tab" data-toggle="tab" href="#boletaFinal" role="tab" aria-controls="boletaFinal" aria-selected="false">Boleta final</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " id="GenerarboletaFinal-tab" data-toggle="tab" href="#GenerarboletaFinal" role="tab" aria-controls="boletaFinal" aria-selected="false">Generar boleta final</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="home" aria-labelledby="overview-pill">
+                                <label>Seleccione alumno para ver notas</label>
+                                <select name="" id="selectEstudiantes" class="form-control selectEstudiantes"></select>
+                                <div id="notasAlumno"></div>
+                                <hr>
+                            </div>
 
-              <div class="tab-pane fade" id="profile" aria-labelledby="example-pill">
-                <div class="pt-1">
-                  <label>Selecciona el grado que desea visualizar</label>
-                  <div class="input-group input-group-joined">
-                    <span class="input-group-text">
+                            <div class="tab-pane fade" id="profile" aria-labelledby="example-pill">
+                                <div class="pt-1">
+                                    <label>Selecciona el grado que desea visualizar</label>
+                                    <div class="input-group input-group-joined">
+                                        <span class="input-group-text">
                       <i data-feather="users"></i>
                     </span>
-                    <select class="form-control form-control-solid" id="selectNotaGrado">
+                                        <select class="form-control form-control-solid" id="selectNotaGrado">
                       <option disabled selected>Seleccionar grado</option>
                       <% grados.forEach( grado=> { %>
                         <option value=" <%=grado.idGrado%> ">
@@ -97,27 +90,27 @@
                         </option>
                         <%})%>
                     </select>
-                  </div>
-                  <hr>
-                  <div class="row table-responsive" id="htmlByGrado"></div>
-                  <label>Agregar observaciones en reporte (Opcional)</label>
-                  <textarea class="form-control disabled" id="textAreaConsolidadoBimestral" cols="30" rows="3"></textarea>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoBimestralExcel">Generar reporte EXCEL </button></div>
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoBimestral">Generar reporte PDF </button></div>
-                  </div>
-                </div>
-              </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row table-responsive" id="htmlByGrado"></div>
+                                    <label>Agregar observaciones en reporte (Opcional)</label>
+                                    <textarea class="form-control disabled" id="textAreaConsolidadoBimestral" cols="30" rows="3"></textarea>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoBimestralExcel">Generar reporte EXCEL </button></div>
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoBimestral">Generar reporte PDF </button></div>
+                                    </div>
+                                </div>
+                            </div>
 
 
-              <div class="tab-pane fade" id="con" aria-labelledby="example-pill">
-                <div class="pt-1">
-                  <label>Selecciona el grado que desea visualizar</label>
-                  <div class="input-group input-group-joined">
-                    <span class="input-group-text">
+                            <div class="tab-pane fade" id="con" aria-labelledby="example-pill">
+                                <div class="pt-1">
+                                    <label>Selecciona el grado que desea visualizar</label>
+                                    <div class="input-group input-group-joined">
+                                        <span class="input-group-text">
                       <i data-feather="users"></i>
                     </span>
-                    <select class="form-control form-control-solid" id="selectConsolidado">
+                                        <select class="form-control form-control-solid" id="selectConsolidado">
                       <option disabled>Seleccionar grado</option>
                       <% grados.forEach( grado=> { %>
                         <option value=" <%=grado.idGrado%> ">
@@ -125,38 +118,38 @@
                         </option>
                         <%})%>
                     </select>
-                  </div>
-                  <hr>
-                  <div class="row table-responsive" id="htmlByConsolidado"></div>
-                  <label>Agregar observaciones en reporte (Opcional)</label>
-                  <textarea class="form-control disabled" id="textAreaConsolidadoAnual" cols="30" rows="3"></textarea>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoAnual">Generar reporte PDF </button></div>
-                  </div>
-                </div>
-              </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row table-responsive" id="htmlByConsolidado"></div>
+                                    <label>Agregar observaciones en reporte (Opcional)</label>
+                                    <textarea class="form-control disabled" id="textAreaConsolidadoAnual" cols="30" rows="3"></textarea>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteConsolidadoAnual">Generar reporte PDF </button></div>
+                                    </div>
+                                </div>
+                            </div>
 
-              <div class="tab-pane fade" id="boletaFinal" aria-labelledby="example-pill">
-                <div class="pt-1">
-                  <label>Selecciona alumno para verficar boleta final</label>
-                    <select name="" id="selectEstudiantesBoleta" class="form-control selectEstudiantes"></select>
-                  <hr>
-                  <div class="row table-responsive" id="HtmlBoletaFinal"></div>
-                  <label>Agregar observaciones en reporte (Opcional)</label>
-                  <textarea class="form-control disabled" id="textAreaBoletaFinal" cols="30" rows="3"></textarea>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteFinal">Generar reporte PDF </button></div>
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="boletaFinalPreescolar" aria-labelledby="example-pill">
-                <div class="pt-1">
-                  <label>Selecciona el grado preescolar que desea visualizar</label>
-                  <div class="input-group input-group-joined">
-                    <span class="input-group-text">
+                            <div class="tab-pane fade" id="boletaFinal" aria-labelledby="example-pill">
+                                <div class="pt-1">
+                                    <label>Selecciona alumno para verficar boleta final</label>
+                                    <select name="" id="selectEstudiantesBoleta" class="form-control selectEstudiantes"></select>
+                                    <hr>
+                                    <div class="row table-responsive" id="HtmlBoletaFinal"></div>
+                                    <label>Agregar observaciones en reporte (Opcional)</label>
+                                    <textarea class="form-control disabled" id="textAreaBoletaFinal" cols="30" rows="3"></textarea>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteFinal">Generar reporte PDF </button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="boletaFinalPreescolar" aria-labelledby="example-pill">
+                                <div class="pt-1">
+                                    <label>Selecciona el grado preescolar que desea visualizar</label>
+                                    <div class="input-group input-group-joined">
+                                        <span class="input-group-text">
                       <i data-feather="users"></i>
                     </span>
-                    <select class="form-control form-control-solid" id="selectGradoReportePreescolar">
+                                        <select class="form-control form-control-solid" id="selectGradoReportePreescolar">
                       <option disabled selected>Seleccionar grado</option>
                       <% grados.forEach( grado=> { 
                         if(grado.isParvularia){%>
@@ -165,33 +158,34 @@
                         </option>
                         <%}})%>
                     </select>
-                  </div>
-                  <hr>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnBoletaBimestralPreescolar">Generar reporte por grado</button></div>
-                  </div>
-                </div>
-                <hr>
-                <div class="pt-1">
-                  <label>Selecciona el alumno que desea visualizar</label>
-                    <select id="selectEstudiantesPreescolar" class="form-control selectEstudiantesPreescolar"></select>
-                    
-                  <hr>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnBoletaBimestralPreescolarPorAlumno">Generar reporte por alumno </button></div>
-                  </div>
-                </div>
-              </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnBoletaBimestralPreescolarWord">Generar reporte por grado WORD</button></div>
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnBoletaBimestralPreescolarPdf">Generar reporte por grado PDF</button></div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="pt-1">
+                                    <label>Selecciona el alumno que desea visualizar</label>
+                                    <select id="selectEstudiantesPreescolar" class="form-control selectEstudiantesPreescolar"></select>
+
+                                    <hr>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnBoletaBimestralPreescolarPorAlumno">Generar reporte por alumno PDF </button></div>
+                                    </div>
+                                </div>
+                            </div>
 
 
-              <div class="tab-pane fade" id="GenerarboletaFinal" aria-labelledby="example-pill">
-                <div class="pt-1">
-                  <label>Selecciona el grado que desea visualizar</label>
-                  <div class="input-group input-group-joined">
-                    <span class="input-group-text">
+                            <div class="tab-pane fade" id="GenerarboletaFinal" aria-labelledby="example-pill">
+                                <div class="pt-1">
+                                    <label>Selecciona el grado que desea visualizar</label>
+                                    <div class="input-group input-group-joined">
+                                        <span class="input-group-text">
                       <i data-feather="users"></i>
                     </span>
-                    <select class="form-control form-control-solid" id="selectGradoReporte">
+                                        <select class="form-control form-control-solid" id="selectGradoReporte">
                       <option disabled selected>Seleccionar grado</option>
                       <% grados.forEach( grado=> { %>
                         <option value="<%=grado.idGrado%>">
@@ -199,44 +193,44 @@
                         </option>
                         <%})%>
                     </select>
-                  </div>
-                  <hr>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteGenerado">Generar reporte </button></div>
-                  </div>
-                </div>
-              </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteGenerado">Generar reporte </button></div>
+                                    </div>
+                                </div>
+                            </div>
 
 
-              <div class="tab-pane fade" id="boletaAcumulados" aria-labelledby="example-pill">
-                <div class="pt-1">
-                  <label>Selecciona alumno para verficar boleta bimestral</label>
-                    <select id="selectBoletaAcumulados" class="form-control selectEstudiantes"></select>
-                  <hr>
-                  <div class="row table-responsive" id="HtmlBoletaAcumulados"></div>
-                  <label>Agregar observaciones en reporte (Opcional)</label>
-                  <textarea class="form-control disabled" id="textAreaBoletaBimestral" cols="30" rows="3"></textarea>
-                  <div class="d-flex flex-row-reverse">
-                    <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteBimestral">Generar reporte PDF </button></div>
-                  </div>
+                            <div class="tab-pane fade" id="boletaAcumulados" aria-labelledby="example-pill">
+                                <div class="pt-1">
+                                    <label>Selecciona alumno para verficar boleta bimestral</label>
+                                    <select id="selectBoletaAcumulados" class="form-control selectEstudiantes"></select>
+                                    <hr>
+                                    <div class="row table-responsive" id="HtmlBoletaAcumulados"></div>
+                                    <label>Agregar observaciones en reporte (Opcional)</label>
+                                    <textarea class="form-control disabled" id="textAreaBoletaBimestral" cols="30" rows="3"></textarea>
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2"><button class="btn btn-sm btn-success" id="btnReporteBimestral">Generar reporte PDF </button></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-              </div>
 
             </div>
-          </div>
-        </div>
-
-      </div>
-    </main>
+        </main>
 
 
-    <input type="hidden" id="roleBimestre" value="<%= roleBimestre %>">
-    <input type="hidden" id="idBimestre" value="<%= idBimestre %>">
-    <input type="hidden" id="permisoUpdate" value="<%= permisos.notas.update %>">
+        <input type="hidden" id="roleBimestre" value="<%= roleBimestre %>">
+        <input type="hidden" id="idBimestre" value="<%= idBimestre %>">
+        <input type="hidden" id="permisoUpdate" value="<%= permisos.notas.update %>">
 
 
-    <%- include('../partials/footer.ejs'); %>
-      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <%- include('../partials/footer.ejs'); %>
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-      <script src="/static/js/alertas.js"></script>
-      <script src="/static/js/admin/notas/notas.js"></script>
+            <script src="/static/js/alertas.js"></script>
+            <script src="/static/js/admin/notas/notas.js"></script>

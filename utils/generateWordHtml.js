@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 const fs = require("fs");
+const HTMLtoDOCX = require("html-to-docx");
 // FIXME: Incase you have the npm package
 // const HTMLtoDOCX = require('html-to-docx');
-const HTMLtoDOCX = require("html-to-docx");
 
 const filePath = "./example.docx";
 
@@ -62,18 +62,18 @@ const htmlString = `<!DOCTYPE html>
 </body>
 </html>`;
 
-(async () => {
-  const fileBuffer = await HTMLtoDOCX(htmlString, null, {
-    table: { row: { cantSplit: true } },
-    footer: true,
-    pageNumber: true,
-  });
+(async() => {
+    const fileBuffer = await HTMLtoDOCX(htmlString, null, {
+        table: { row: { cantSplit: true } },
+        footer: true,
+        pageNumber: true,
+    });
 
-  fs.writeFile(filePath, fileBuffer, (error) => {
-    if (error) {
-      console.log("Docx file creation failed");
-      return;
-    }
-    console.log("Docx file created successfully");
-  });
+    fs.writeFile(filePath, fileBuffer, (error) => {
+        if (error) {
+            console.log("Docx file creation failed");
+            return;
+        }
+        console.log("Docx file created successfully");
+    });
 })();

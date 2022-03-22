@@ -1,8 +1,11 @@
 const html_to_pdf = require("html-pdf-node");
+const fs = require("fs");
+const HTMLtoDOCX = require("html-to-docx");
+
 
 const GenerarPdf = (data, header, landscape = false, observaciones = "") => {
-  if (landscape) landscape = true;
-  const html = `<!DOCTYPE html>
+    if (landscape) landscape = true;
+    const html = `<!DOCTYPE html>
      <html lang="en">
      <head>
          <meta charset="UTF-8">
@@ -29,35 +32,35 @@ const GenerarPdf = (data, header, landscape = false, observaciones = "") => {
          </div>
      </body>
      </html>`;
-  return new Promise((resolver) => {
-    tmpName = "ficha.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
+    return new Promise((resolver) => {
+        tmpName = "ficha.pdf";
+        const options = {
+            format: "Letter",
+            path: `./public/files/${tmpName}`,
+            margin: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(output);
+        });
     });
-  });
 };
 
 const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
-  let html = `<!DOCTYPE html>
+    let html = `<!DOCTYPE html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     </head>
     <body style="font-family: Arial;">`;
-  data.forEach((estudiante) => {
-    html += `
+    data.forEach((estudiante) => {
+        html += `
         <div class="container-fluid pt-5" style="height:1590px;">
             <div class="row">
                 <div class="col-md-3">
@@ -92,50 +95,50 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
                   </tr>
                 </thead>
                 <tbody> `;
-    estudiante.notas.forEach((notasOne) => {
-      html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
-      notasOne.notas.forEach((nota, index) => {
-        if (index + 1 <= roleBimestre) {
-          html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
-        } else {
-          html += `<td></td><td></td>`;
-        }
-      });
-      if (roleBimestre == 4) {
-        html += `<td>${notasOne.notaGlobal}</td></tr>`;
-      } else {
-        html += `<td></td>`;
-      }
-    });
-    html += `<tr style="font-size: 20px;">
+        estudiante.notas.forEach((notasOne) => {
+            html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
+            notasOne.notas.forEach((nota, index) => {
+                if (index + 1 <= roleBimestre) {
+                    html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
+                } else {
+                    html += `<td></td><td></td>`;
+                }
+            });
+            if (roleBimestre == 4) {
+                html += `<td>${notasOne.notaGlobal}</td></tr>`;
+            } else {
+                html += `<td></td>`;
+            }
+        });
+        html += `<tr style="font-size: 20px;">
                         <td>Conducta</td>
                         <td>${estudiante.Conducta1.puntaje}</td>
                         <td>${estudiante.Conducta1.prom}</td>`;
 
-    if (roleBimestre >= 2) {
-      html += `  
+        if (roleBimestre >= 2) {
+            html += `  
                             <td>${estudiante.Conducta2.puntaje}</td>
                             <td>${estudiante.Conducta2.prom}</td>`;
-    } else {
-      html += `<td></td><td></td>`;
-    }
+        } else {
+            html += `<td></td><td></td>`;
+        }
 
-    if (roleBimestre >= 3) {
-      html += `
+        if (roleBimestre >= 3) {
+            html += `
                             <td>${estudiante.Conducta3.puntaje}</td>
                             <td>${estudiante.Conducta3.prom}</td>`;
-    } else {
-      html += `<td></td><td></td>`;
-    }
-    if (roleBimestre >= 4) {
-      html += `
+        } else {
+            html += `<td></td><td></td>`;
+        }
+        if (roleBimestre >= 4) {
+            html += `
                             <td>${estudiante.Conducta4.puntaje}</td>
                             <td>${estudiante.Conducta4.prom}</td>`;
-    } else {
-      html += `<td></td><td></td>`;
-    }
-    html += ` </tr>`;
-    html += `</tbody></table>
+        } else {
+            html += `<td></td><td></td>`;
+        }
+        html += ` </tr>`;
+        html += `</tbody></table>
                 <hr>
                 <h4>Observaciones: </h4>
                 <div class="pb-5">
@@ -153,36 +156,36 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
                 </div>
         </div>
 `;
-  });
-  html += `</body></html> `;
-
-  return new Promise((resolver) => {
-    tmpName = "boletaFinal.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
     });
-  });
+    html += `</body></html> `;
+
+    return new Promise((resolver) => {
+        tmpName = "boletaFinal.pdf";
+        const options = {
+            format: "Letter",
+            path: `./public/files/${tmpName}`,
+            margin: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(output);
+        });
+    });
 };
 
 const GenerarReporteDeConducta = (
-  codigos,
-  observaciones,
-  datosAlumno,
-  roleBimestre,
-  nombreGrado
+    codigos,
+    observaciones,
+    datosAlumno,
+    roleBimestre,
+    nombreGrado
 ) => {
-  let html = `<!DOCTYPE html>
+    let html = `<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -233,8 +236,8 @@ const GenerarReporteDeConducta = (
                             </tr>
                         </thead>
                         <tbody>`;
-  codigos.forEach((codigo) => {
-    html += `
+    codigos.forEach((codigo) => {
+        html += `
                                 <tr>
                                     <td>
                                         ${codigo.Codigo}
@@ -252,8 +255,8 @@ const GenerarReporteDeConducta = (
                                        ${codigo.Date}
                                     </td>
                                 </tr>`;
-  });
-  html += `</tbody>
+    });
+    html += `</tbody>
                     </table>
                 </div>
             </div>
@@ -275,8 +278,8 @@ const GenerarReporteDeConducta = (
                             </tr>
                         </thead>
                         <tbody>`;
-  observaciones.forEach((observacion) => {
-    html += `
+    observaciones.forEach((observacion) => {
+        html += `
                                 <tr>
                                     <td>
                                         ${observacion.descripcion}
@@ -288,8 +291,8 @@ const GenerarReporteDeConducta = (
                                         ${observacion.Date}
                                     </td>
                                 </tr>`;
-  });
-  html += ` </tbody>
+    });
+    html += ` </tbody>
                     </table>
                 </div>
             </div>
@@ -300,27 +303,27 @@ const GenerarReporteDeConducta = (
 </body>
 </html>     `;
 
-  return new Promise((resolver) => {
-    tmpName = "boletaDeConducta.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
+    return new Promise((resolver) => {
+        tmpName = "boletaDeConducta.pdf";
+        const options = {
+            format: "Letter",
+            path: `./public/files/${tmpName}`,
+            margin: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(output);
+        });
     });
-  });
 };
 
 const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
-  let html = `
+    let html = `
      <!DOCTYPE html>
      <html lang="en">
      <head>
@@ -554,17 +557,17 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                </div>
                                <hr> `;
 
-  if (existFamiliares) {
-    html += `   <div class="col-md-12">
+    if (existFamiliares) {
+        html += `   <div class="col-md-12">
                                    <label>Alumnos familiares inscritos</label>
                                    <ol> `;
-    arrFamiliares.forEach((familiar) => {
-      html += `   <li>${familiar[0].Nombre + " " + familiar[0].Apellido}</li> `;
-    });
-    html += `    </ol>
+        arrFamiliares.forEach((familiar) => {
+            html += `   <li>${familiar[0].Nombre + " " + familiar[0].Apellido}</li> `;
+        });
+        html += `    </ol>
                                </div>`;
-  }
-  html += `       
+    }
+    html += `       
                            </div>
                        </div>
                    </div>
@@ -574,27 +577,27 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
    </div>
  </body>
 </html>`;
-  return new Promise((resolver) => {
-    tmpName = "reporte_matricula.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
+    return new Promise((resolver) => {
+        tmpName = "reporte_matricula.pdf";
+        const options = {
+            format: "Letter",
+            path: `./public/files/${tmpName}`,
+            margin: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(output);
+        });
     });
-  });
 };
 
 const GenerarMatriculaPorGrado = (data) => {
-  let html = `<!DOCTYPE html>
+    let html = `<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta charset="UTF-8" />
@@ -605,9 +608,9 @@ const GenerarMatriculaPorGrado = (data) => {
   </head>
   <body style="font-size:15px">
       <div class="container-fluid">`;
-  data.forEach((element) => {
-    const datos = JSON.parse(element.data);
-    html += ` <div class="card card-header-actions" style="padding-bottom: 5rem!important;">
+    data.forEach((element) => {
+        const datos = JSON.parse(element.data);
+        html += ` <div class="card card-header-actions" style="padding-bottom: 5rem!important;">
               <div class="card-body ">
                   <div class="row">
                       <div class="col-md-6">
@@ -787,33 +790,33 @@ const GenerarMatriculaPorGrado = (data) => {
                   </div>
               </div>
           </div> `;
-  });
-  html += `
+    });
+    html += `
       </div>
   </body>
   </html>`;
-  return new Promise((resolver) => {
-    tmpName = "reporte_matricula_grado.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-      preferCSSPageSize: true,
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
+    return new Promise((resolver) => {
+        tmpName = "reporte_matricula_grado.pdf";
+        const options = {
+            format: "Letter",
+            path: `./public/files/${tmpName}`,
+            margin: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+            preferCSSPageSize: true,
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(output);
+        });
     });
-  });
 };
 
-const GenerarBoletaBimestralPreescolar = (data, nombreGrado) => {
-  let html = `<!DOCTYPE html>
+const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
+    let html = `<!DOCTYPE html>
   <html lang="en">
   
   <head>
@@ -825,7 +828,7 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado) => {
   </head>
   
   <body style="font-size:15px">
-      <div class="container">
+      <div class="container-fluid">
           <div class="row">
               <div class="col-md-3">
                    <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt=""> 
@@ -839,20 +842,20 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado) => {
                 <div class="col-md-12">
                     <table class="table table-sm table-striped table-bordered">
                       <tbody>`;
-  data.forEach((alumno) => {
-    html += `<tr><th colspan="2" class="text-center"> Alumno : ${alumno.nombreAlumno} - ${alumno.idAlumno}  Conducta: ${alumno.conducta} </th></tr>`;
-    alumno.notas.forEach((notaspacket) => {
-      html += `<tr><th colspan="2" class="text-center"> Área: ${notaspacket.Nombre}</th></tr><tr><th>Indicadores de logro</th><th>Nota</th></tr>`;
-      notaspacket.notas.forEach((indicador) => {
-        html += `         <tr>
+    data.forEach((alumno) => {
+        html += `<tr><th colspan="2" class="text-center"> Alumno : ${alumno.nombreAlumno} - ${alumno.idAlumno}  Conducta: ${alumno.conducta} </th></tr>`;
+        alumno.notas.forEach((notaspacket) => {
+            html += `<tr><th colspan="2" class="text-center"> Área: ${notaspacket.Nombre}</th></tr><tr><th>Indicadores de logro</th><th>Nota</th></tr>`;
+            notaspacket.notas.forEach((indicador) => {
+                html += `         <tr>
                               <td>${indicador.indicador}</td>
                               <td>${indicador.nota}</td>
                           </tr>`;
-      });
+            });
+        });
     });
-  });
 
-  html += `</tbody>
+    html += `</tbody>
                     </table>
                 </div>
             </div>
@@ -860,31 +863,49 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado) => {
   </body>
   </html>
   `;
-  return new Promise((resolver) => {
-    tmpName = "boletaBimestralPreescolar.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
-      },
-      preferCSSPageSize: true,
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
-    });
-  });
+    if (filetype === 'word') {
+
+        console.log('word');
+        return new Promise(async(resolver) => {
+            tmpName = "./public/files/boletaBimestralPreescolar.docx";
+            const fileBuffer = await HTMLtoDOCX(html, null);
+            fs.writeFile(tmpName, fileBuffer, (error) => {
+                if (error) {
+                    console.log("Docx file creation failed");
+                    return;
+                }
+                console.log("Docx file created successfully");
+                resolver();
+            });
+        });
+    } else {
+        return new Promise(async(resolver) => {
+            tmpName = "boletaBimestralPreescolar.pdf";
+            const options = {
+                format: "Letter",
+                path: `./public/files/${tmpName}`,
+                margin: {
+                    top: 10,
+                    right: 10,
+                    bottom: 10,
+                    left: 10,
+                },
+                preferCSSPageSize: true,
+            };
+            const file = { content: html };
+            html_to_pdf.generatePdf(file, options).then((output) => {
+                resolver(output);
+            });
+        });
+    }
+
 };
 
 module.exports = {
-  GenerarPdf,
-  GenerarBoletaFinal,
-  GenerarReporteDeConducta,
-  GenerarMatricula,
-  GenerarMatriculaPorGrado,
-  GenerarBoletaBimestralPreescolar,
+    GenerarPdf,
+    GenerarBoletaFinal,
+    GenerarReporteDeConducta,
+    GenerarMatricula,
+    GenerarMatriculaPorGrado,
+    GenerarBoletaBimestralPreescolar,
 };

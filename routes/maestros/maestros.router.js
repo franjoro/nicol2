@@ -110,10 +110,10 @@ router.get('/indicadores', maestros.indicadores);
 router.post('/indicadores', maestros.newIndicadores);
 
 /* PUT actualizar indicador */
-router.put('/indicadores',  maestros.editIndicadores);
+router.put('/indicadores', maestros.editIndicadores);
 
 /* POST retorna JSON para select de alumnos  */
-router.post('/getEstudiantesAll',  maestros.getEstudiantesAll);
+router.post('/getEstudiantesAll', maestros.getEstudiantesAll);
 
 // =============================================== FIN INDICADORES
 
