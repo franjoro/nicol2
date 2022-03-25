@@ -816,7 +816,12 @@ const GenerarMatriculaPorGrado = (data) => {
   });
 };
 
-const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
+const GenerarBoletaBimestralPreescolar = (
+  data,
+  nombreGrado,
+  filetype,
+  roleBimestre
+) => {
   let html = `<!DOCTYPE html>
   <html lang="en">
   
@@ -828,7 +833,7 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
       <title>Document</title>
   </head>
   
-  <body style="font-size:15px; font-family: Arial, Helvetica, sans-serif">
+  <body style="font-size:18 px; font-family: Arial, Helvetica, sans-serif">
       <div class="container-fluid">
           <div class="row">
               <div class="col-md-3">
@@ -836,7 +841,7 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
               </div>
               <div class="col-md-8">
                   <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
-                  <h4>Boleta bimestral preescolar  ${nombreGrado} - ${new Date().getFullYear()} </h4>
+                  <h5>Boleta de calificaciones preescolar  ${nombreGrado} - ${new Date().getFullYear()}  Bimensual: #${roleBimestre}</h5>
               </div>
             </div>
             <div class="row">
@@ -845,7 +850,7 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
                       <tbody>`;
   data.forEach((alumno) => {
     html += `  <tr>
-                    <th class="text-center col-2">Carnet</th>
+                    <th class="text-center" style="width: 10%; max-width:10%">Carnet</th>
                     <th class="text-center">Nombre del Alumno(a)</th>
                     <th class="text-center">Conducta</th>
                 </tr>
@@ -853,6 +858,9 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
                     <td class="text-center">${alumno.idAlumno}</td>
                     <td class="text-center">${alumno.nombreAlumno}</td>
                     <td class="text-center">${alumno.conducta} </td>
+                </tr>
+                <tr>
+                    <th colspan="3" class="py-3"> </th>
                 </tr>`;
     alumno.notas.forEach((notaspacket) => {
       html += `<tr>
@@ -863,7 +871,7 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
         html += `<tr><th class="text-center" colspan="3">Indicadores de logro pendientes de ingresar</th></tr>`;
       }
       notaspacket.notas.forEach((indicador) => {
-        html += `<tr><td colspan="2">${indicador.indicador}</td><td>${indicador.nota}</td></tr>`;
+        html += `<tr><td colspan="2">${indicador.indicador}</td><td class="text-center">${indicador.nota}</td></tr>`;
       });
     });
   });
@@ -872,6 +880,10 @@ const GenerarBoletaBimestralPreescolar = (data, nombreGrado, filetype) => {
                     </table>
                 </div>
             </div>
+            <hr class="py-3">
+            <p>Ausencias justificadas en agenda :____ Ausencias injustificadas: _____ Llegadas tardías: ____</p>
+            <h4 class="pt-1">Observaciones: </h4>
+            <textarea class="form-control disabled"  cols="30" rows="3"></textarea>
             <hr class="py-5">
             <div class="d-flex justify-content-between">
                    <div class="col-md-6 text-center">
