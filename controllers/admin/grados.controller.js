@@ -265,11 +265,12 @@ grados.generarReporteMatriculaPorGrado = async(req, res) => {
       );
       const arrImagenPromesas = [];
 
-      // info.forEach((element) => {
-      //     arrImagenPromesas.push(getImgMatricula(element.s3Key, element.idAlumno));
-      // });
-      // const imagenes = await Promise.all(arrImagenPromesas);
-      imagenes = [];
+      info.forEach((element) => {
+        arrImagenPromesas.push(
+          getImgMatricula(element.s3Key, element.idAlumno)
+        );
+      });
+      const imagenes = await Promise.all(arrImagenPromesas);
       let dataOrdenada = [];
 
       info.forEach((element) => {
