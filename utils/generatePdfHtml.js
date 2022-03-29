@@ -608,6 +608,7 @@ const GenerarMatriculaPorGrado = (data) => {
       <title>Document</title>
   </head>
   <body style="font-size:15px">
+
       <div class="container-fluid">`;
   data.forEach((element) => {
     const datos = JSON.parse(element.data);
@@ -617,10 +618,10 @@ const GenerarMatriculaPorGrado = (data) => {
                       <div class="col-md-6">
                         <img style="width:350px; height:auto;" src="https://plataforma.cssjb.edu.ni/static/${element.path}" class="mx-auto d-block" />
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-8">
                           <div class="row">
                               <div class="form-group col-md-3">
-                                  <label class="font-weight-bold">Carnet o código identificador
+                                  <label class="font-weight-bold">Carnet
                                   </label>
                                   <p>
                                      ${element.idAlumno}
@@ -639,7 +640,7 @@ const GenerarMatriculaPorGrado = (data) => {
                                   </p>
                               </div>
                               <div class="form-group col-md-3">
-                                  <label class="font-weight-bold">Correo electrónico</label>
+                                  <label class="font-weight-bold">E-mail</label>
                                   <p>
                                   ${datos.EmailMain}
                                   </p>
@@ -748,7 +749,7 @@ const GenerarMatriculaPorGrado = (data) => {
                                       <div class="col-md-6">
                                           <label class="font-weight-bold">Teléfono</label>
                                           <p>
-                                          ${datos.CelTutor}
+                                          ${datos.TelTutor}
                                           </p>
                                       </div>
                                   </div>
@@ -802,7 +803,7 @@ const GenerarMatriculaPorGrado = (data) => {
       format: "Letter",
       path: `./public/files/${tmpName}`,
       margin: {
-        top: 0,
+        top: 100,
         right: 0,
         bottom: 0,
         left: 0,

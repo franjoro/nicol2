@@ -257,35 +257,36 @@ grados.editGuia = async(req, res) => {
 
 grados.generarReporteMatriculaPorGrado = async(req, res) => {
     try {
-        const { idGrado } = req.params;
+      const { idGrado } = req.params;
 
-        const info = await pool.query(
-            "SELECT grado_alumno.idAlumno, s3Key, data FROM `grado_alumno` INNER JOIN matriculas ON grado_alumno.idAlumno = matriculas.idAlumno WHERE grado_alumno.idGrado = ?", [idGrado]
-        );
-        const arrImagenPromesas = [];
+      const info = await pool.query(
+        "SELECT grado_alumno.idAlumno, s3Key, data FROM `grado_alumno` INNER JOIN matriculas ON grado_alumno.idAlumno = matriculas.idAlumno WHERE grado_alumno.idGrado = ?",
+        [idGrado]
+      );
+      const arrImagenPromesas = [];
 
-        info.forEach((element) => {
-            arrImagenPromesas.push(getImgMatricula(element.s3Key, element.idAlumno));
+      // info.forEach((element) => {
+      //     arrImagenPromesas.push(getImgMatricula(element.s3Key, element.idAlumno));
+      // });
+      // const imagenes = await Promise.all(arrImagenPromesas);
+      imagenes = [];
+      let dataOrdenada = [];
+
+      info.forEach((element) => {
+        const obj = {};
+        obj.idAlumno = element.idAlumno;
+        obj.data = element.data;
+        imagenes.forEach((img) => {
+          if (img.idAlumno === element.idAlumno) {
+            obj.path = img.path;
+          }
         });
-        const imagenes = await Promise.all(arrImagenPromesas);
+        dataOrdenada.push(obj);
+      });
 
-        let dataOrdenada = [];
+      await GenerarMatriculaPorGrado(dataOrdenada);
 
-        info.forEach((element) => {
-            const obj = {};
-            obj.idAlumno = element.idAlumno;
-            obj.data = element.data;
-            imagenes.forEach((img) => {
-                if (img.idAlumno === element.idAlumno) {
-                    obj.path = img.path;
-                }
-            });
-            dataOrdenada.push(obj);
-        });
-
-        await GenerarMatriculaPorGrado(dataOrdenada);
-
-        res.json({ status: true });
+      res.json({ status: true });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });
