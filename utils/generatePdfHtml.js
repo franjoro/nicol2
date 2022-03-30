@@ -598,11 +598,10 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
 };
 
 const GenerarMatriculaPorGrado = (data) => {
-  let html = `
-      <div class="container-fluid">`;
+  let html = `<div class="container-fluid"> <style>.contendor{padding-bottom: 4rem !important};</style>`;
   data.forEach((element) => {
     const datos = JSON.parse(element.data);
-    html += ` <div class="card card-header-actions" style="padding-bottom: 6.8rem!important;">
+    html += ` <div class="card card-header-actions contenedor">
               <div class="card-body ">
                   <div class="row">
                       <div class="col-md-4">
