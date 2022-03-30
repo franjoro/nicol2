@@ -598,25 +598,15 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
 };
 
 const GenerarMatriculaPorGrado = (data) => {
-  let html = `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
-      <title>Document</title>
-  </head>
-  <body style="font-size:15px">
-
+  let html = `
       <div class="container-fluid">`;
   data.forEach((element) => {
     const datos = JSON.parse(element.data);
-    html += ` <div class="card card-header-actions" style="padding-bottom: 5rem!important;">
+    html += ` <div class="card card-header-actions" style="padding-bottom: 6.8rem!important;">
               <div class="card-body ">
                   <div class="row">
-                      <div class="col-md-6">
-                        <img style="width:350px; height:auto;" src="https://plataforma.cssjb.edu.ni/static/${element.path}" class="mx-auto d-block" />
+                      <div class="col-md-4">
+                        <img style="width:250px; height:auto;" src="https://plataforma.cssjb.edu.ni/static/${element.path}" class="mx-auto d-block" />
                       </div>
                       <div class="col-md-8">
                           <div class="row">
@@ -762,7 +752,7 @@ const GenerarMatriculaPorGrado = (data) => {
                       <div class="card-body">
                           <div class="row">
                               <div class="col-md-3">
-                                  <label class="font-weight-bold" s>El alumno vive con :
+                                  <label class="font-weight-bold">El alumno vive con :
                                   </label>
                                   <p>
                                   ${datos.ViveCon}
@@ -776,7 +766,7 @@ const GenerarMatriculaPorGrado = (data) => {
                                   </p>
                               </div>
                               <div class="col-md-3">
-                                  <label class="font-weight-bold">Resposabilidad económica</label>
+                                  <label class="font-weight-bold">Responsabilidad económica</label>
                                   <p>
                                   ${datos.ResEcono}
                                   </p>
@@ -794,26 +784,24 @@ const GenerarMatriculaPorGrado = (data) => {
           </div> `;
   });
   html += `
-      </div>
-  </body>
-  </html>`;
+      </div>`;
   return new Promise((resolver) => {
-    tmpName = "reporte_matricula_grado.pdf";
-    const options = {
-      format: "Letter",
-      path: `./public/files/${tmpName}`,
-      margin: {
-        top: 100,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-      preferCSSPageSize: true,
-    };
-    const file = { content: html };
-    html_to_pdf.generatePdf(file, options).then((output) => {
-      resolver(output);
-    });
+    // tmpName = "reporte_matricula_grado.pdf";
+    // const options = {
+    //   format: "Letter",
+    //   path: `./public/files/${tmpName}`,
+    //   margin: {
+    //     top: 100,
+    //     right: 0,
+    //     bottom: 40,
+    //     left: 0,
+    //   },
+    //   preferCSSPageSize: true,
+    // };
+    // const file = { content: html };
+    // html_to_pdf.generatePdf(file, options).then((output) => {
+    // });
+    resolver(html);
   });
 };
 

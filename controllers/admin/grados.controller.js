@@ -285,9 +285,9 @@ grados.generarReporteMatriculaPorGrado = async(req, res) => {
         dataOrdenada.push(obj);
       });
 
-      await GenerarMatriculaPorGrado(dataOrdenada);
-
-      res.json({ status: true });
+     const html = await GenerarMatriculaPorGrado(dataOrdenada);
+     //   res.json({ status: true });
+     res.render("./admin/grados/reporteMatricula", { html });
     } catch (error) {
         console.log(error);
         return res.status(400).json({ status: false, error });
