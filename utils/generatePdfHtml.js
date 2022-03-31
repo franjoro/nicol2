@@ -844,7 +844,7 @@ const GenerarBoletaBimestralPreescolar = (
                 </tr>
                 <tr>
                     <td class="text-center">${alumno.idAlumno}</td>
-                    <td class="text-center">${alumno.nombreAlumno}</td>
+                    <td class="text-center"><h3>${alumno.nombreAlumno}</h3></td>
                     <td class="text-center">${alumno.conducta} </td>
                 </tr>
                 <tr>
@@ -853,7 +853,7 @@ const GenerarBoletaBimestralPreescolar = (
     alumno.notas.forEach((notaspacket) => {
       html += `<tr>
                 <th colspan="2" class="text-center"> ÁREA: ${notaspacket.Nombre}</th>
-                <th>Nota</th>
+                <th class="text-center">Nota</th>
                </tr>`;
       if (!notaspacket.notas.length) {
         html += `<tr><th class="text-center" colspan="3">Indicadores de logro pendientes de ingresar</th></tr>`;
