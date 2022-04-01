@@ -908,7 +908,7 @@ const GenerarBoletaBimestralPreescolar = (
         format: "Letter",
         path: `./public/files/${tmpName}`,
         margin: {
-          top: 10,
+          top: 20,
           right: 10,
           bottom: 10,
           left: 10,
