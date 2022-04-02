@@ -100,44 +100,59 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
       notasOne.notas.forEach((nota, index) => {
         if (index + 1 <= roleBimestre) {
           let color = "black";
-          if (nota.nota < 60) color = "red";
-          if (nota.nota >= 60 && nota.nota <= 69) color = "blue";
-          html += `<td style="color:${color}>${nota.nota}</td><td>${nota.prom}</td>`;
+          if (nota.nota < 60) {
+            color = "red";
+          }
+          if (nota.nota >= 60 && nota.nota <= 69) {
+            color = "blue";
+          }
+          html += `<td style="color:${color}">${nota.nota}</td><td>${nota.prom}</td>`;
         } else {
           html += `<td></td><td></td>`;
         }
       });
       if (roleBimestre == 4) {
         let color = "black";
-        if (notasOne.notaGlobal < 60) color = "red";
-        if (notasOne.notaGlobal >= 60 && notasOne.notaGlobal <= 69)
+        if (notasOne.notaGlobal < 60) {
+          color = "red";
+        }
+        if (notasOne.notaGlobal >= 60 && notasOne.notaGlobal <= 69) {
           color = "blue";
+        }
 
-        html += `<td style="color:${color}>${notasOne.notaGlobal}</td></tr>`;
+        html += `<td style="color:${color}">${notasOne.notaGlobal}</td></tr>`;
       } else {
         html += `<td></td>`;
       }
     });
     let color = "black";
-    if (estudiante.Conducta1.puntaje < 60) color = "red";
+    if (estudiante.Conducta1.puntaje < 60) {
+      color = "red";
+    }
     if (
       estudiante.Conducta1.puntaje >= 60 &&
       estudiante.Conducta1.puntaje <= 69
-    )
-      html += `<tr style="font-size: 20px; color:${color}">
+    ) {
+      color = "blue";
+    }
+    html += `<tr style="font-size: 20px;">
                         <td>Conducta</td>
-                        <td>${estudiante.Conducta1.puntaje}</td>
+                        <td  style="color:${color}">${estudiante.Conducta1.puntaje}</td>
                         <td>${estudiante.Conducta1.prom}</td>
                         `;
 
     if (roleBimestre >= 2) {
       let color = "black";
-      if (estudiante.Conducta2.puntaje < 60) color = "red";
+      if (estudiante.Conducta2.puntaje < 60) {
+        color = "red";
+      }
       if (
         estudiante.Conducta2.puntaje >= 60 &&
         estudiante.Conducta2.puntaje <= 69
-      )
-        html += `  
+      ) {
+        color = "blue";
+      }
+      html += `  
                             <td>${estudiante.Conducta2.puntaje}</td>
                             <td>${estudiante.Conducta2.prom}</td>`;
     } else {
@@ -146,12 +161,16 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
 
     if (roleBimestre >= 3) {
       let color = "black";
-      if (estudiante.Conducta3.puntaje < 60) color = "red";
+      if (estudiante.Conducta3.puntaje < 60) {
+        color = "red";
+      }
       if (
         estudiante.Conducta3.puntaje >= 60 &&
         estudiante.Conducta3.puntaje <= 69
-      )
-        html += `
+      ) {
+        color = "blue";
+      }
+      html += `
                             <td>${estudiante.Conducta3.puntaje}</td>
                             <td>${estudiante.Conducta3.prom}</td>`;
     } else {
@@ -159,12 +178,16 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
     }
     if (roleBimestre >= 4) {
       let color = "black";
-      if (estudiante.Conducta4.puntaje < 60) color = "red";
+      if (estudiante.Conducta4.puntaje < 60) {
+        color = "red";
+      }
       if (
         estudiante.Conducta4.puntaje >= 60 &&
         estudiante.Conducta4.puntaje <= 69
-      )
-        html += `
+      ) {
+        color = "blue";
+      }
+      html += `
                             <td>${estudiante.Conducta4.puntaje}</td>
                             <td>${estudiante.Conducta4.prom}</td>`;
     } else {
