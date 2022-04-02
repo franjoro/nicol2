@@ -99,25 +99,45 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
       html += `<tr style="font-size: 20px;"><td>${notasOne.Nombre}</td> `;
       notasOne.notas.forEach((nota, index) => {
         if (index + 1 <= roleBimestre) {
-          html += `<td>${nota.nota}</td><td>${nota.prom}</td>`;
+          let color = "black";
+          if (nota.nota < 60) color = "red";
+          if (nota.nota >= 60 && nota.nota <= 69) color = "blue";
+          html += `<td style="color:${color}>${nota.nota}</td><td>${nota.prom}</td>`;
         } else {
           html += `<td></td><td></td>`;
         }
       });
       if (roleBimestre == 4) {
-        html += `<td>${notasOne.notaGlobal}</td></tr>`;
+        let color = "black";
+        if (notasOne.notaGlobal < 60) color = "red";
+        if (notasOne.notaGlobal >= 60 && notasOne.notaGlobal <= 69)
+          color = "blue";
+
+        html += `<td style="color:${color}>${notasOne.notaGlobal}</td></tr>`;
       } else {
         html += `<td></td>`;
       }
     });
-    html += `<tr style="font-size: 20px;">
+    let color = "black";
+    if (estudiante.Conducta1.puntaje < 60) color = "red";
+    if (
+      estudiante.Conducta1.puntaje >= 60 &&
+      estudiante.Conducta1.puntaje <= 69
+    )
+      html += `<tr style="font-size: 20px; color:${color}">
                         <td>Conducta</td>
                         <td>${estudiante.Conducta1.puntaje}</td>
                         <td>${estudiante.Conducta1.prom}</td>
                         `;
 
     if (roleBimestre >= 2) {
-      html += `  
+      let color = "black";
+      if (estudiante.Conducta2.puntaje < 60) color = "red";
+      if (
+        estudiante.Conducta2.puntaje >= 60 &&
+        estudiante.Conducta2.puntaje <= 69
+      )
+        html += `  
                             <td>${estudiante.Conducta2.puntaje}</td>
                             <td>${estudiante.Conducta2.prom}</td>`;
     } else {
@@ -125,14 +145,26 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
     }
 
     if (roleBimestre >= 3) {
-      html += `
+      let color = "black";
+      if (estudiante.Conducta3.puntaje < 60) color = "red";
+      if (
+        estudiante.Conducta3.puntaje >= 60 &&
+        estudiante.Conducta3.puntaje <= 69
+      )
+        html += `
                             <td>${estudiante.Conducta3.puntaje}</td>
                             <td>${estudiante.Conducta3.prom}</td>`;
     } else {
       html += `<td></td><td></td>`;
     }
     if (roleBimestre >= 4) {
-      html += `
+      let color = "black";
+      if (estudiante.Conducta4.puntaje < 60) color = "red";
+      if (
+        estudiante.Conducta4.puntaje >= 60 &&
+        estudiante.Conducta4.puntaje <= 69
+      )
+        html += `
                             <td>${estudiante.Conducta4.puntaje}</td>
                             <td>${estudiante.Conducta4.prom}</td>`;
     } else {
@@ -908,9 +940,9 @@ const GenerarBoletaBimestralPreescolar = (
         format: "Letter",
         path: `./public/files/${tmpName}`,
         margin: {
-          top: 20,
+          top: 50,
           right: 10,
-          bottom: 10,
+          bottom: 50,
           left: 10,
         },
         preferCSSPageSize: true,
