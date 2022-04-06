@@ -20,26 +20,44 @@ alumnos.main = async (req, res) => {
 
 
         const arrPromesas = [
-            // DATA ALUMNO
-            pool.query(`SELECT grado_alumno.Conducta${roleBimestre} AS puntaje , grados.id AS idGrado , nombre AS nombreGrado, (SELECT Nombre FROM alumnos WHERE Carnet = idAlumno ) AS Nombre, (SELECT Apellido FROM alumnos WHERE Carnet = idAlumno ) AS Apellido FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno `, [identificador]), 
+          // DATA ALUMNO
+          pool.query(
+            `SELECT grado_alumno.Conducta${roleBimestre} AS puntaje, grados.id AS idGrado, grados.nombre AS nombreGrado, ciclos.isParvularia AS isParvularia, ( SELECT Nombre FROM alumnos WHERE Carnet = idAlumno ) AS Nombre, ( SELECT Apellido FROM alumnos WHERE Carnet = idAlumno ) AS Apellido FROM grados INNER JOIN YEAR ON YEAR.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE YEAR.estado = 1 AND idAlumno = ? GROUP BY idAlumno; `,
+            [identificador]
+          ),
 
-            // CODIGOS APLICADOS
-            pool.query("SELECT Codigo, valor, Observacion FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id WHERE idAlumno = ? AND idBimestre = ? ORDER BY valor ASC" ,[identificador, idBimestre]), 
+          // CODIGOS APLICADOS
+          pool.query(
+            "SELECT Codigo, valor, Observacion FROM codigo_alumno INNER JOIN codigos ON codigo_alumno.idCodigo = codigos.id WHERE idAlumno = ? AND idBimestre = ? ORDER BY valor ASC",
+            [identificador, idBimestre]
+          ),
 
-            // OBSERVACIONES
-            pool.query("SELECT CONCAT(Nombres, ' ', Apellidos ) AS NombreMaestro, descripcion FROM observaciones INNER JOIN maestros ON observaciones.idMaestro = maestros.id WHERE idAlumno = ? AND idBimestre = ? " ,[identificador, idBimestre]) ,
+          // OBSERVACIONES
+          pool.query(
+            "SELECT CONCAT(Nombres, ' ', Apellidos ) AS NombreMaestro, descripcion FROM observaciones INNER JOIN maestros ON observaciones.idMaestro = maestros.id WHERE idAlumno = ? AND idBimestre = ? ",
+            [identificador, idBimestre]
+          ),
 
-            // MATRICULAS
-            pool.query("SELECT data, s3Key FROM matriculas WHERE idAlumno = ? AND idYear = (SELECT year FROM year WHERE estado = 1); " ,[identificador]) ,
-            
+          // MATRICULAS
+          pool.query(
+            "SELECT data, s3Key FROM matriculas WHERE idAlumno = ? AND idYear = (SELECT year FROM year WHERE estado = 1); ",
+            [identificador]
+          ),
         ];
 
-        const {[0]: {[0]: dataAlumno} , [1]: codigosAplicados , [2]: observaciones ,  [3]: matriculas }  = await Promise.all(arrPromesas);
+        const {
+          [0]: { [0]: dataAlumno },
+          [1]: codigosAplicados,
+          [2]: observaciones,
+          [3]: matriculas,
+        } = await Promise.all(arrPromesas);
 
-        
-        if(!dataAlumno) res.json({ErrorStatus:"ALUMNO NO INSCRITO EN GRADO ACTIVO, POR FAVOR COMUNICARSE CON ADMINISTRACIÓN"});
+        if (!dataAlumno)
+          res.json({
+            ErrorStatus:
+              "ALUMNO NO INSCRITO EN GRADO ACTIVO, POR FAVOR COMUNICARSE CON ADMINISTRACIÓN",
+          });
         dataAlumno.carnet = identificador;
-        
         const {path} = await getImgMatricula(matriculas[0].s3Key);
         const {codigoContable} = JSON.parse(matriculas[0].data);
     
