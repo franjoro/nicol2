@@ -22,7 +22,7 @@ alumnos.main = async (req, res) => {
         const arrPromesas = [
           // DATA ALUMNO
           pool.query(
-            `SELECT grado_alumno.Conducta${roleBimestre} AS puntaje, grados.id AS idGrado, grados.nombre AS nombreGrado, ciclos.isParvularia AS isParvularia, ( SELECT Nombre FROM alumnos WHERE Carnet = idAlumno ) AS Nombre, ( SELECT Apellido FROM alumnos WHERE Carnet = idAlumno ) AS Apellido FROM grados INNER JOIN YEAR ON YEAR.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE YEAR.estado = 1 AND idAlumno = ? GROUP BY idAlumno; `,
+            `SELECT grado_alumno.Conducta${roleBimestre} AS puntaje, grados.id AS idGrado, grados.nombre AS nombreGrado, ciclos.isParvularia AS isParvularia, ( SELECT Nombre FROM alumnos WHERE Carnet = idAlumno ) AS Nombre, ( SELECT Apellido FROM alumnos WHERE Carnet = idAlumno ) AS Apellido FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno; `,
             [identificador]
           ),
 
