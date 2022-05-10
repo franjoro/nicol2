@@ -519,253 +519,234 @@ notas.getBoletaBimestral = async(req, res) => {
     }
 };
 
-notas.getBoletaBimestralPreescolar = async (req, res) => {
-  try {
-    const { idBimestre, idGrado, nombreGrado, filetype } = req.params;
+notas.getBoletaBimestralPreescolar = async(req, res) => {
+    try {
+        const { idBimestre, idGrado, nombreGrado, filetype } = req.params;
 
-    const {
-      [0]: { roleBimestre },
-    } = await pool.query(
-      "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?",
-      [idBimestre]
-    );
+        const {
+            [0]: { roleBimestre },
+        } = await pool.query(
+            "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]
+        );
 
-    const columm = `Conducta${roleBimestre}`;
+        const columm = `Conducta${roleBimestre}`;
 
-    const queryPromesas = [
-      /* NOTAS */
-      pool.query(
-        "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;",
-        [idGrado, idBimestre]
-      ),
-      /* MATERIAS */
-      pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+        const queryPromesas = [
+            /* NOTAS */
+            pool.query(
+                "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;", [idGrado, idBimestre]
+            ),
+            /* MATERIAS */
+            pool.query(
+                "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ", [idGrado]
+            ),
 
-      /* ESTUDIANTES */
-      pool.query(
-        `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ?  ORDER BY Nombre`,
-        [idGrado]
-      ),
-    ];
-    const {
-      [0]: notas,
-      [1]: materias,
-      [2]: estudiantes /* Select todas las materias de ese grado */,
-    } = await Promise.all(queryPromesas);
-    const dataOrdenada = [];
-    estudiantes.forEach((estudiante) => {
-      const materiasArr = [];
-      let obj = {
-        idAlumno: estudiante.idAlumno,
-        nombreAlumno: estudiante.Nombre,
-        conducta: estudiante.conducta,
-      };
-      materias.forEach((materia) => {
-        let objInsede = {};
-        objInsede.idUnion = materia.idUnion;
-        objInsede.Nombre = materia.Nombre;
-        const arrNota = [];
-        notas.forEach((nota) => {
-          if (
-            nota.idUnion == materia.idUnion &&
-            nota.idAlumno == estudiante.idAlumno
-          ) {
-            arrNota.push({
-              idnota: nota.id,
-              nota: nota.nota,
-              indicador: nota.indicador,
+            /* ESTUDIANTES */
+            pool.query(
+                `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ?  ORDER BY Nombre`, [idGrado]
+            ),
+        ];
+        const {
+            [0]: notas, [1]: materias, [2]: estudiantes /* Select todas las materias de ese grado */ ,
+        } = await Promise.all(queryPromesas);
+        const dataOrdenada = [];
+        estudiantes.forEach((estudiante) => {
+            const materiasArr = [];
+            let obj = {
+                idAlumno: estudiante.idAlumno,
+                nombreAlumno: estudiante.Nombre,
+                conducta: estudiante.conducta,
+            };
+            materias.forEach((materia) => {
+                let objInsede = {};
+                objInsede.idUnion = materia.idUnion;
+                objInsede.Nombre = materia.Nombre;
+                const arrNota = [];
+                notas.forEach((nota) => {
+                    if (
+                        nota.idUnion == materia.idUnion &&
+                        nota.idAlumno == estudiante.idAlumno
+                    ) {
+                        arrNota.push({
+                            idnota: nota.id,
+                            nota: nota.nota,
+                            indicador: nota.indicador,
+                        });
+                    }
+                });
+                objInsede.notas = arrNota;
+                materiasArr.push(objInsede);
             });
-          }
+            obj.notas = materiasArr;
+            dataOrdenada.push(obj);
         });
-        objInsede.notas = arrNota;
-        materiasArr.push(objInsede);
-      });
-      obj.notas = materiasArr;
-      dataOrdenada.push(obj);
-    });
-    await GenerarBoletaBimestralPreescolar(
-      dataOrdenada,
-      nombreGrado,
-      filetype,
-      roleBimestre
-    );
-    res.json({ status: true });
-    // const util = require('util');
-    // console.log(util.inspect(dataOrdenada, false, null, true));
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ status: false, error });
-  }
+        await GenerarBoletaBimestralPreescolar(
+            dataOrdenada,
+            nombreGrado,
+            filetype,
+            roleBimestre
+        );
+        res.json({ status: true });
+        // const util = require('util');
+        // console.log(util.inspect(dataOrdenada, false, null, true));
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error });
+    }
 };
 
-notas.getNotasPreescolarByAlumno = async (req, res) => {
-  try {
-    const { idBimestre, idGrado, idAlumno } = req.params;
+notas.getNotasPreescolarByAlumno = async(req, res) => {
+    try {
+        const { idBimestre, idGrado, idAlumno } = req.params;
 
-    const {
-      [0]: { roleBimestre },
-    } = await pool.query(
-      "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?",
-      [idBimestre]
-    );
+        const {
+            [0]: { roleBimestre },
+        } = await pool.query(
+            "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]
+        );
 
-    const columm = `Conducta${roleBimestre}`;
+        const columm = `Conducta${roleBimestre}`;
 
-    const queryPromesas = [
-      /* NOTAS */
-      pool.query(
-        "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;",
-        [idGrado, idBimestre]
-      ),
-      /* MATERIAS */
-      pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+        const queryPromesas = [
+            /* NOTAS */
+            pool.query(
+                "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;", [idGrado, idBimestre]
+            ),
+            /* MATERIAS */
+            pool.query(
+                "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ", [idGrado]
+            ),
 
-      /* ESTUDIANTES */
-      pool.query(
-        `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? ORDER BY Nombre`,
-        [idGrado, idAlumno]
-      ),
-    ];
-    const {
-      [0]: notas,
-      [1]: materias,
-      [2]: estudiantes /* Select todas las materias de ese grado */,
-    } = await Promise.all(queryPromesas);
-    const dataOrdenada = [];
-    estudiantes.forEach((estudiante) => {
-      const materiasArr = [];
-      let obj = {
-        idAlumno: estudiante.idAlumno,
-        nombreAlumno: estudiante.Nombre,
-        conducta: estudiante.conducta,
-      };
-      materias.forEach((materia) => {
-        let objInsede = {};
-        objInsede.idUnion = materia.idUnion;
-        objInsede.Nombre = materia.Nombre;
-        const arrNota = [];
-        notas.forEach((nota) => {
-          if (
-            nota.idUnion == materia.idUnion &&
-            nota.idAlumno == estudiante.idAlumno
-          ) {
-            arrNota.push({
-              idnota: nota.id,
-              nota: nota.nota,
-              indicador: nota.indicador,
+            /* ESTUDIANTES */
+            pool.query(
+                `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? ORDER BY Nombre`, [idGrado, idAlumno]
+            ),
+        ];
+        const {
+            [0]: notas, [1]: materias, [2]: estudiantes /* Select todas las materias de ese grado */ ,
+        } = await Promise.all(queryPromesas);
+        const dataOrdenada = [];
+        estudiantes.forEach((estudiante) => {
+            const materiasArr = [];
+            let obj = {
+                idAlumno: estudiante.idAlumno,
+                nombreAlumno: estudiante.Nombre,
+                conducta: estudiante.conducta,
+            };
+            materias.forEach((materia) => {
+                let objInsede = {};
+                objInsede.idUnion = materia.idUnion;
+                objInsede.Nombre = materia.Nombre;
+                const arrNota = [];
+                notas.forEach((nota) => {
+                    if (
+                        nota.idUnion == materia.idUnion &&
+                        nota.idAlumno == estudiante.idAlumno
+                    ) {
+                        arrNota.push({
+                            idnota: nota.id,
+                            nota: nota.nota,
+                            indicador: nota.indicador,
+                        });
+                    }
+                });
+                objInsede.notas = arrNota;
+                materiasArr.push(objInsede);
             });
-          }
+            obj.notas = materiasArr;
+            dataOrdenada.push(obj);
         });
-        objInsede.notas = arrNota;
-        materiasArr.push(objInsede);
-      });
-      obj.notas = materiasArr;
-      dataOrdenada.push(obj);
-    });
-    const data = dataOrdenada[0];
-    res.json(data);
-    // const util = require('util');
-    // console.log(util.inspect(dataOrdenada, false, null, true));
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ status: false, error });
-  }
+        const data = dataOrdenada[0];
+        res.json(data);
+        // const util = require('util');
+        // console.log(util.inspect(dataOrdenada, false, null, true));
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error });
+    }
 };
 
-notas.getBoletaBimestralPreescolarPorAlumno = async (req, res) => {
-  try {
-    const { idBimestre, idAlumno } = req.params;
+notas.getBoletaBimestralPreescolarPorAlumno = async(req, res) => {
+    try {
+        const { idBimestre, idAlumno } = req.params;
 
-    const {
-      [0]: { roleBimestre },
-    } = await pool.query(
-      "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?",
-      [idBimestre]
-    );
+        const {
+            [0]: { roleBimestre },
+        } = await pool.query(
+            "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]
+        );
 
-    const {
-      [0]: { idGrado, nombreGrado },
-    } = await pool.query(
-      "SELECT grados.id AS idGrado, grados.nombre AS nombreGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno",
-      [idAlumno]
-    );
+        const {
+            [0]: { idGrado, nombreGrado },
+        } = await pool.query(
+            "SELECT grados.id AS idGrado, grados.nombre AS nombreGrado FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno", [idAlumno]
+        );
 
-    const columm = `Conducta${roleBimestre}`;
+        const columm = `Conducta${roleBimestre}`;
 
-    const queryPromesas = [
-      /* NOTAS */
-      pool.query(
-        "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;",
-        [idGrado, idBimestre]
-      ),
-      /* MATERIAS */
-      pool.query(
-        "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
-        [idGrado]
-      ),
+        const queryPromesas = [
+            /* NOTAS */
+            pool.query(
+                "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;", [idGrado, idBimestre]
+            ),
+            /* MATERIAS */
+            pool.query(
+                "SELECT materia_grado.id AS idUnion , Nombre FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ", [idGrado]
+            ),
 
-      /* ESTUDIANTES */
-      pool.query(
-        `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ? AND idAlumno = ?  ORDER BY Nombre`,
-        [idGrado, idAlumno]
-      ),
-    ];
-    const {
-      [0]: notas,
-      [1]: materias,
-      [2]: estudiantes /* Select todas las materias de ese grado */,
-    } = await Promise.all(queryPromesas);
-    const dataOrdenada = [];
-    estudiantes.forEach((estudiante) => {
-      const materiasArr = [];
-      let obj = {
-        idAlumno: estudiante.idAlumno,
-        nombreAlumno: estudiante.Nombre,
-        conducta: estudiante.conducta,
-      };
-      materias.forEach((materia) => {
-        let objInsede = {};
-        objInsede.idUnion = materia.idUnion;
-        objInsede.Nombre = materia.Nombre;
-        const arrNota = [];
-        notas.forEach((nota) => {
-          if (
-            nota.idUnion == materia.idUnion &&
-            nota.idAlumno == estudiante.idAlumno
-          ) {
-            arrNota.push({
-              idnota: nota.id,
-              nota: nota.nota,
-              indicador: nota.indicador,
+            /* ESTUDIANTES */
+            pool.query(
+                `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columm} AS conducta FROM grado_alumno WHERE idGrado = ? AND idAlumno = ?  ORDER BY Nombre`, [idGrado, idAlumno]
+            ),
+        ];
+        const {
+            [0]: notas, [1]: materias, [2]: estudiantes /* Select todas las materias de ese grado */ ,
+        } = await Promise.all(queryPromesas);
+        const dataOrdenada = [];
+        estudiantes.forEach((estudiante) => {
+            const materiasArr = [];
+            let obj = {
+                idAlumno: estudiante.idAlumno,
+                nombreAlumno: estudiante.Nombre,
+                conducta: estudiante.conducta,
+            };
+            materias.forEach((materia) => {
+                let objInsede = {};
+                objInsede.idUnion = materia.idUnion;
+                objInsede.Nombre = materia.Nombre;
+                const arrNota = [];
+                notas.forEach((nota) => {
+                    if (
+                        nota.idUnion == materia.idUnion &&
+                        nota.idAlumno == estudiante.idAlumno
+                    ) {
+                        arrNota.push({
+                            idnota: nota.id,
+                            nota: nota.nota,
+                            indicador: nota.indicador,
+                        });
+                    }
+                });
+                objInsede.notas = arrNota;
+                materiasArr.push(objInsede);
             });
-          }
+            obj.notas = materiasArr;
+            dataOrdenada.push(obj);
         });
-        objInsede.notas = arrNota;
-        materiasArr.push(objInsede);
-      });
-      obj.notas = materiasArr;
-      dataOrdenada.push(obj);
-    });
 
-    await GenerarBoletaBimestralPreescolar(
-      dataOrdenada,
-      nombreGrado,
-      "",
-      roleBimestre
-    );
-    res.json({ status: true });
-    // const util = require("util");
-    // console.log(util.inspect(dataOrdenada, false, null, true));
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ status: false, error });
-  }
+        await GenerarBoletaBimestralPreescolar(
+            dataOrdenada,
+            nombreGrado,
+            "",
+            roleBimestre
+        );
+        res.json({ status: true });
+        // const util = require("util");
+        // console.log(util.inspect(dataOrdenada, false, null, true));
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ status: false, error });
+    }
 };
 
 notas.getConsolidadoBimestral = async(req, res) => {
@@ -873,7 +854,10 @@ notas.getConsolidadoBimestralExcel = async(req, res) => {
 
             /* ESTUDIANTES */
             pool.query(
-                `SELECT idAlumno , (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre, ${columna} AS conducta FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre `, [idGrado]
+                `SELECT idAlumno , 
+                (SELECT CONCAT(Apellido,' ',Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre,
+                (SELECT Genero FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Genero,
+                 ${columna} AS conducta FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno  ORDER BY Nombre `, [idGrado]
             ),
         ];
         const {
@@ -889,6 +873,7 @@ notas.getConsolidadoBimestralExcel = async(req, res) => {
                 idAlumno: estudiante.idAlumno,
                 nombreAlumno: estudiante.Nombre,
                 puntaje: estudiante.conducta,
+                Genero: estudiante.Genero,
             };
 
             materias.forEach((materia) => {
