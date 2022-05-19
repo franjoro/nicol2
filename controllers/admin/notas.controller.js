@@ -918,7 +918,6 @@ notas.generateFichaByHtml = async(req, res) => {
     try {
         const { html, header, landscape, observaciones } = req.body;
         const pdf = await GenerarPdf(html, header, landscape, observaciones);
-        console.log(pdf);
         res.json({ status: true });
     } catch (error) {
         console.log(error);
@@ -945,7 +944,7 @@ notas.getNombreGradoPorIdAlumno = async(req, res) => {
         } = await pool.query(
             "SELECT grados.nombre AS nombreGrado FROM grado_alumno INNER JOIN grados ON grado_alumno.idGrado = grados.id WHERE grado_alumno.idAlumno = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1); ", [idAlumno]
         );
-        console.log(nombreGrado);
+
         res.json({ nombreGrado });
     } catch (error) {
         console.log(error);

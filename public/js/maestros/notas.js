@@ -22,6 +22,7 @@ $("#btnGuardar").click(async () => {
         });
         const { isConfirmed } = await alertas.ConfirmAlert("¿Actualizar notas?", "Las notas ingresadas podran ser vistas por el administrador, los docentes y alumnos.");
         if (isConfirmed) {
+            $("#btnGuardar").css("display", "none");
             dataarr = JSON.stringify(dataarr);
             await $.ajax({
                 type: "POST",

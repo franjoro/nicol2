@@ -618,7 +618,6 @@ maestros.notasAddParv = async(req, res) => {
             }
         });
 
-        console.log(arrQueries);
         await Promise.all(arrQueries);
         res.json({ status: true });
     } catch (error) {
