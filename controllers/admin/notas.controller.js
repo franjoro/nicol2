@@ -795,7 +795,6 @@ notas.getConsolidadoBimestral = async(req, res) => {
                 nombreAlumno: estudiante.Nombre,
                 puntaje: estudiante.puntaje,
             };
-
             materias.forEach((materia) => {
                 /* MUESTRA LAS NOTA SUMADA POR MATERIA */
                 let objInsede = {};

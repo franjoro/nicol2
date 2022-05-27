@@ -200,7 +200,7 @@ Excel.getConsolidadoBimestralExcel = (datos, roleBimestre, nombreGrado) => {
                     }
                 }
 
-                if (element.promedio >= 76 && element.promedio <= 89) {
+                if (element.promedio >= 76 && element.promedio < 90) {
                     if (element.Genero == 0) {
                         cualidadesPromedioH[1] = cualidadesPromedioH[1] + 1;
                     } else {
@@ -208,7 +208,7 @@ Excel.getConsolidadoBimestralExcel = (datos, roleBimestre, nombreGrado) => {
                     }
                 }
 
-                if (element.promedio >= 60 && element.promedio <= 75) {
+                if (element.promedio >= 60 && element.promedio < 76) {
                     if (element.Genero == 0) {
                         cualidadesPromedioH[2] = cualidadesPromedioH[2] + 1;
                     } else {
@@ -216,7 +216,7 @@ Excel.getConsolidadoBimestralExcel = (datos, roleBimestre, nombreGrado) => {
                     }
                 }
 
-                if (element.promedio <= 59) {
+                if (element.promedio < 60) {
                     if (element.Genero == 0) {
                         cualidadesPromedioH[3] = cualidadesPromedioH[3] + 1;
                     } else {
@@ -227,9 +227,10 @@ Excel.getConsolidadoBimestralExcel = (datos, roleBimestre, nombreGrado) => {
                 ws.cell(filaFinal, columnaFinal + 1)
                     .number(Number(element.promedio))
                     .style(styleTextNotas("black"));
+                let color = element.puntaje >= 60 ? "black" : "red";
                 ws.cell(filaFinal, columnaFinal + 2)
                     .number(element.puntaje)
-                    .style(styleTextNotas("black"));
+                    .style(styleTextNotas(color));
                 ws.cell(filaFinal, columnaFinal + 3)
                     .number(notasAprobadas)
                     .style(styleTextNotas("black"));

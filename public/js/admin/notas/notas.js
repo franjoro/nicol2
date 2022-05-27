@@ -259,7 +259,10 @@ const fillNotasByGrado = async(idGrado) => {
                     if (nota.nota >= 60 && nota.nota <= 69) color = "blue";
                     html += `<td style="color:${color}">${nota.nota}</td>`;
                 });
-                html += `<td>${estudiante.puntaje}</td><td>${estudiante.promedio}</td></tr>`;
+                let color = "black";
+                if (estudiante.puntaje < 60) color = "red";
+                if (estudiante.puntaje >= 60 && estudiante.puntaje <= 69) color = "blue";
+                html += `<td style="color:${color}" >${estudiante.puntaje}</td><td>${estudiante.promedio}</td></tr>`;
             });
             html += `</tbody></table>`;
         }
@@ -601,48 +604,48 @@ $("#btnReporteGenerado").click(async() => {
     }
 });
 
-$("#btnBoletaBimestralPreescolarWord").click(async () => {
-  try {
-    const idGrado = $("#selectGradoReportePreescolar").val();
-    const nombreGrado = $("#selectGradoReportePreescolar option:selected")
-      .text()
-      .trim();
-    const idBimestre = $("#idBimestre").val();
-    alertas.loaderAlert();
-    const query = await $.ajax({
-      url: `/admin/notas/getBoletaBimestralPreescolar/${idGrado}/${idBimestre}/${nombreGrado}/word`,
-    });
+$("#btnBoletaBimestralPreescolarWord").click(async() => {
+    try {
+        const idGrado = $("#selectGradoReportePreescolar").val();
+        const nombreGrado = $("#selectGradoReportePreescolar option:selected")
+            .text()
+            .trim();
+        const idBimestre = $("#idBimestre").val();
+        alertas.loaderAlert();
+        const query = await $.ajax({
+            url: `/admin/notas/getBoletaBimestralPreescolar/${idGrado}/${idBimestre}/${nombreGrado}/word`,
+        });
 
-    if (query.status) {
-      swal.close();
-      window.open(`/admin/notas/getReportPreescolarWord`);
+        if (query.status) {
+            swal.close();
+            window.open(`/admin/notas/getReportPreescolarWord`);
+        }
+    } catch (error) {
+        console.log(error);
+        alertas.newErrorMessage("Error al generar documento");
     }
-  } catch (error) {
-    console.log(error);
-    alertas.newErrorMessage("Error al generar documento");
-  }
 });
 
-$("#btnBoletaBimestralPreescolarPdf").click(async () => {
-  try {
-    const idGrado = $("#selectGradoReportePreescolar").val();
-    const nombreGrado = $("#selectGradoReportePreescolar option:selected")
-      .text()
-      .trim();
-    const idBimestre = $("#idBimestre").val();
-    alertas.loaderAlert();
-    const query = await $.ajax({
-      url: `/admin/notas/getBoletaBimestralPreescolar/${idGrado}/${idBimestre}/${nombreGrado}/pdf`,
-    });
+$("#btnBoletaBimestralPreescolarPdf").click(async() => {
+    try {
+        const idGrado = $("#selectGradoReportePreescolar").val();
+        const nombreGrado = $("#selectGradoReportePreescolar option:selected")
+            .text()
+            .trim();
+        const idBimestre = $("#idBimestre").val();
+        alertas.loaderAlert();
+        const query = await $.ajax({
+            url: `/admin/notas/getBoletaBimestralPreescolar/${idGrado}/${idBimestre}/${nombreGrado}/pdf`,
+        });
 
-    if (query.status) {
-      swal.close();
-      window.open(`/admin/notas/getReportPreescolar`);
+        if (query.status) {
+            swal.close();
+            window.open(`/admin/notas/getReportPreescolar`);
+        }
+    } catch (error) {
+        console.log(error);
+        alertas.newErrorMessage("Error al generar documento");
     }
-  } catch (error) {
-    console.log(error);
-    alertas.newErrorMessage("Error al generar documento");
-  }
 });
 
 $("#btnBoletaBimestralPreescolarPorAlumno").click(async() => {
