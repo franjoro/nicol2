@@ -44,70 +44,108 @@ maestros.conducta = async(req, res) => {
 
 
 
-maestros.conductaAlumnos = async(req, res) => {
-    try {
-        const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
+maestros.conductaAlumnos = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
 
-        const { idGrado } = req.params;
-        const arrayPromesas = [
-            await pool.query("SELECT Nombre FROM grados WHERE id = ?", [idGrado]), // Obtiene el nombre del grado;
-            await pool.query("SELECT idAlumno, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet  WHERE  grado_alumno.idGrado = ? GROUP BY Carnet", [idGrado]), // Obtiene los alumnos;
-            await pool.query("SELECT id, Codigo , valor , IF(valor >0 , 'success' , 'danger') AS color FROM codigos ORDER BY valor") // Obtiene todos los códigos existentes
-        ];
-        const {
-            [0]: {
-                [0]: { Nombre }
-            }, [1]: alumnos, [2]: codigos
-        } = await Promise.all(arrayPromesas);
-        res.render('./maestros/alumnosConducta', { Nombre, alumnos, codigos, identificador, idGrado, permisosSend, usuario });
-
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    const { idGrado } = req.params;
+    const arrayPromesas = [
+      await pool.query("SELECT Nombre FROM grados WHERE id = ?", [idGrado]), // Obtiene el nombre del grado;
+      await pool.query(
+        "SELECT idAlumno, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet  WHERE  grado_alumno.idGrado = ?;",
+        [idGrado]
+      ), // Obtiene los alumnos;
+      await pool.query(
+        "SELECT id, Codigo , valor , IF(valor >0 , 'success' , 'danger') AS color FROM codigos ORDER BY valor"
+      ), // Obtiene todos los códigos existentes
+    ];
+    const {
+      [0]: {
+        [0]: { Nombre },
+      },
+      [1]: alumnos,
+      [2]: codigos,
+    } = await Promise.all(arrayPromesas);
+    res.render("./maestros/alumnosConducta", {
+      Nombre,
+      alumnos,
+      codigos,
+      identificador,
+      idGrado,
+      permisosSend,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.addCodigo = async (req, res) => {
+  try {
+    const { identificador } = getUserDataByToken(req.cookies.token).data;
+    const { idCodigo, idAlumno, descripcion, idGrado } = req.body;
+    const {
+      [0]: {
+        [0]: { id, Role },
+      },
+      [1]: {
+        [0]: { valor, Codigo },
+      },
+      [2]: {
+        [0]: { Email },
+      },
+    } = await Promise.all([
+      pool.query("SELECT id , Role FROM bimestres WHERE Estado = 1"),
+      pool.query("SELECT valor, Codigo FROM codigos WHERE id = ?", idCodigo),
+      pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno),
+    ]);
 
+    const columna = `Conducta${Role}`;
+    let {
+      [0]: { puntaje },
+    } = await pool.query(
+      `SELECT ${columna} AS puntaje FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? `,
+      [idGrado, idAlumno]
+    );
+    let newPuntaje = parseInt(puntaje, 10) + parseInt(valor, 10);
+    if (newPuntaje >= 100) newPuntaje = 100;
+    const promesas = [
+      pool.query(
+        "INSERT INTO codigo_alumno(idCodigo, idAlumno , idMaestro , idBimestre , Observacion) VALUES(?,?,?,?,?)",
+        [idCodigo, idAlumno, identificador, id, descripcion]
+      ),
+      pool.query(
+        `UPDATE grado_alumno SET  ${columna} = ? WHERE idGrado = ? AND idAlumno = ? `,
+        [newPuntaje, idGrado, idAlumno]
+      ),
+    ];
+    await Promise.all(promesas);
+    res.json({ status: true });
+    // sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p><br><h6><b>ESTE MENSAJE SE GENERA AUTOMATICAMENTE. FAVOR NO RESPONDER</b></h6>`);
 
-maestros.addCodigo = async(req, res) => {
-    try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
-        const { idCodigo, idAlumno, descripcion, idGrado } = req.body;
-        const {
-            [0]: {
-                [0]: { id, Role }
-            }, [1]: {
-                [0]: { valor, Codigo }
-            }, [2]: {
-                [0]: { Email }
-            }
-        } = await Promise.all([
-            pool.query("SELECT id , Role FROM bimestres WHERE Estado = 1"),
-            pool.query("SELECT valor, Codigo FROM codigos WHERE id = ?", idCodigo),
-            pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno),
-        ]);
-        const columna = `Conducta${Role}`;
-        let {
-            [0]: { puntaje }
-        } = await pool.query(`SELECT ${columna} AS puntaje FROM grado_alumno WHERE idGrado = ? AND idAlumno = ? `, [idGrado, idAlumno]);
-        let newPuntaje = parseInt(puntaje, 10) + parseInt(valor, 10);
-        if (newPuntaje >= 100) newPuntaje = 100;
-        const promesas = [
-            pool.query("INSERT INTO codigo_alumno(idCodigo, idAlumno , idMaestro , idBimestre , Observacion) VALUES(?,?,?,?,?)", [
-                idCodigo, idAlumno, identificador, id, descripcion
-            ]),
-            pool.query(`UPDATE grado_alumno SET  ${columna} = ? WHERE idGrado = ? AND idAlumno = ? `, [
-                newPuntaje, idGrado, idAlumno
-            ]),
-        ];
-        await Promise.all(promesas);
-        res.json({ status: true });
-        sendEmail(Email, `Código de conducta aplicado #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de código asignado</h5><p>Código aplicado : ${Codigo}  - Valor: ${valor}  - Nuevo puntaje : ${puntaje} </p> <p>Carnet Alumno : ${idAlumno}</p><br><h6><b>ESTE MENSAJE SE GENERA AUTOMATICAMENTE. FAVOR NO RESPONDER</b></h6>`);
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
+    const {
+      [0]: { sumaCodigos },
+    } = await pool.query(
+      "SELECT SUM(valor) AS sumaCodigos FROM `codigo_alumno` INNER JOIN codigos ON codigos.id = codigo_alumno.idCodigo WHERE idAlumno = ? AND idBimestre=? GROUP BY idAlumno",
+      [idAlumno, id]
+    );
+
+    const shouldBe = parseInt(100 + Number(sumaCodigos));
+    if (newPuntaje != shouldBe) {
+      console.log("Error de sumatorio de codigos");
+      await pool.query(
+        `UPDATE grado_alumno SET  ${columna} = ? WHERE idGrado = ? AND idAlumno = ? `,
+        [shouldBe, idGrado, idAlumno]
+      );
     }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
 
