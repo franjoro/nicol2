@@ -396,436 +396,552 @@ maestros.notasViewMain = async(req, res) => {
 };
 
 
-maestros.notasActividades = async(req, res) => {
-    try {
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
+maestros.notasActividades = async (req, res) => {
+  try {
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
 
-        const { idUnion } = req.params;
-        const {
-            [0]: { id, Role, idYear }
-        } = await pool.query("SELECT id, Role, idYear FROM bimestres WHERE Estado = 1");
-        const {
-            [0]: dataGradoMateria
-        } = await pool.query("SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia , idGrado FROM materia_grado WHERE id = ?", [idUnion]);
+    const { idUnion } = req.params;
+    const {
+      [0]: { id, Role, idYear },
+    } = await pool.query(
+      "SELECT id, Role, idYear FROM bimestres WHERE Estado = 1"
+    );
+    const { [0]: dataGradoMateria } = await pool.query(
+      "SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia , idGrado FROM materia_grado WHERE id = ?",
+      [idUnion]
+    );
 
+    const {
+      [0]: { isParvularia },
+    } = await pool.query(
+      "SELECT isParvularia FROM grados INNER JOIN ciclos ON ciclos.id = grados.idCiclo WHERE grados.id = ?",
+      [dataGradoMateria.idGrado]
+    );
 
-        const {
-            [0]: { isParvularia }
-        } = await pool.query("SELECT isParvularia FROM grados INNER JOIN ciclos ON ciclos.id = grados.idCiclo WHERE grados.id = ?", [dataGradoMateria.idGrado]);
+    if (!isParvularia) {
+      const arrayPromesas = [];
+      for (let index = 1; index <= 3; index++) {
+        arrayPromesas.push(
+          pool.query(
+            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `,
+            [index, id, idUnion]
+          )
+        );
+      }
+      const actividades = await Promise.all(arrayPromesas);
+      const { [0]: bloqueos } = await pool.query(
+        `SELECT  EstadoAct1, EstadoAct2, EstadoAct3 FROM materia_grado WHERE id= ? `,
+        [idUnion]
+      );
+      res.render("./maestros/notasActividades", {
+        Role,
+        idYear,
+        actividades,
+        bloqueos,
+        idUnion,
+        dataGradoMateria,
+        permisosSend,
+        usuario,
+      });
+    } else {
+      const arrPromesas = [
+        pool.query(
+          "SELECT indicadores_materia.id AS idUnionMateriaIndicador, indicadoresparvularia.indicador AS textIndicador FROM `indicadores_materia` INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE indicadores_materia.idUnion = ? AND idBimestre = ? GROUP BY indicadores_materia.idIndicador",
+          [idUnion, id]
+        ), // Obtiene información del indicador de logros
+        pool.query(
+          "SELECT Carnet, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet WHERE idGrado = ?  ",
+          [dataGradoMateria.idGrado]
+        ), // Obtiene alumnos del grado
+        pool.query(
+          "SELECT * FROM notas_parvularia WHERE idUnionMateriaGrado  = ? ",
+          [idUnion]
+        ), // Obtiene las notas de los alumnos de parvularia
+      ];
+      const dataOrdenada = [];
 
-
-        if (!isParvularia) {
-            const arrayPromesas = [];
-            for (let index = 1; index <= 3; index++) {
-                arrayPromesas.push(
-                    pool.query(`SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `, [index, id, idUnion])
-                );
+      const {
+        [0]: indicadores,
+        [1]: alumnos,
+        [2]: notas,
+      } = await Promise.all(arrPromesas);
+      alumnos.forEach((alumno) => {
+        const arrExist = [];
+        const arrIdNota = [];
+        indicadores.forEach(() => {
+          arrExist.push(false);
+          arrIdNota.push(false);
+        });
+        let notaObtenida = {};
+        notaObtenida.Nota = [];
+        notaObtenida.Nombre = alumno.Nombre;
+        notaObtenida.Apellido = alumno.Apellido;
+        notaObtenida.Carnet = alumno.Carnet;
+        notaObtenida.isExist = arrExist;
+        notaObtenida.idNota = arrIdNota;
+        if (notas.length) {
+          const arrNota = [];
+          const arrIdNota = [];
+          const arrExist = [];
+          const boolean = [];
+          indicadores.forEach(() => {
+            arrNota.push(0);
+            arrIdNota.push(0);
+            arrExist.push(false);
+            boolean.push(false);
+          });
+          notas.some((notaElement) => {
+            if (notaElement.idAlumno == alumno.Carnet) {
+              const posicion = indicadores.findIndex(
+                (x) =>
+                  x.idUnionMateriaIndicador ==
+                  notaElement.idUnionMateriaIndicador
+              );
+              arrNota[posicion] = notaElement.NotaRole;
+              arrIdNota[posicion] = notaElement.id;
+              arrExist[posicion] = true;
+              boolean[posicion] = true;
             }
-            const actividades = await Promise.all(arrayPromesas);
-            const {
-                [0]: bloqueos
-            } = await pool.query(`SELECT  EstadoAct1, EstadoAct2, EstadoAct3 FROM materia_grado WHERE id= ? `, [idUnion]);
-            res.render('./maestros/notasActividades', { Role, idYear, actividades, bloqueos, idUnion, dataGradoMateria, permisosSend, usuario });
-        } else {
-
-
-            const arrPromesas = [
-                pool.query("SELECT indicadores_materia.id AS idUnionMateriaIndicador, indicadoresparvularia.indicador AS textIndicador FROM `indicadores_materia` INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE indicadores_materia.idUnion = ? AND idBimestre = ? GROUP BY indicadores_materia.idIndicador", [idUnion, id]), // Obtiene información del indicador de logros
-                pool.query("SELECT Carnet, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet WHERE idGrado = ? GROUP BY Carnet ", [dataGradoMateria.idGrado]), // Obtiene alumnos del grado
-                pool.query("SELECT * FROM notas_parvularia WHERE idUnionMateriaGrado  = ? ", [idUnion]), // Obtiene las notas de los alumnos de parvularia
-            ];
-            const dataOrdenada = [];
-
-
-            const {
-                [0]: indicadores, [1]: alumnos, [2]: notas
-            } = await Promise.all(arrPromesas);
-            alumnos.forEach(alumno => {
-                const arrExist = [];
-                const arrIdNota = [];
-                indicadores.forEach(() => {
-                    arrExist.push(false);
-                    arrIdNota.push(false);
-                });
-                let notaObtenida = {};
-                notaObtenida.Nota = [];
-                notaObtenida.Nombre = alumno.Nombre;
-                notaObtenida.Apellido = alumno.Apellido;
-                notaObtenida.Carnet = alumno.Carnet;
-                notaObtenida.isExist = arrExist;
-                notaObtenida.idNota = arrIdNota;
-                if (notas.length) {
-                    const arrNota = [];
-                    const arrIdNota = [];
-                    const arrExist = [];
-                    const boolean = [];
-                    indicadores.forEach(() => {
-                        arrNota.push(0);
-                        arrIdNota.push(0);
-                        arrExist.push(false);
-                        boolean.push(false);
-                    });
-                    notas.some((notaElement) => {
-                        if (notaElement.idAlumno == alumno.Carnet) {
-                            const posicion = indicadores.findIndex(x => x.idUnionMateriaIndicador == notaElement.idUnionMateriaIndicador);
-                            arrNota[posicion] = notaElement.NotaRole;
-                            arrIdNota[posicion] = notaElement.id;
-                            arrExist[posicion] = true;
-                            boolean[posicion] = true;
-                        }
-                        boolean.push(false);
-                    });
-                    if (boolean.includes(true)) {
-                        if (indicadores.length != arrNota.length) {
-                            for (let index = (arrNota.length + 1); index <= indicadores.length; index++) {
-                                arrNota.push(0);
-                                arrIdNota.push(false);
-                                arrExist.push(false);
-                            }
-                        }
-                        notaObtenida.Nota = arrNota;
-                        notaObtenida.isExist = arrExist;
-                        notaObtenida.idNota = arrIdNota;
-                    } else {
-                        const arrNota = [];
-                        indicadores.forEach(() => {
-                            arrNota.push(0);
-                        });
-                        notaObtenida.Nota = arrNota;
-                    }
-
-                } else {
-                    const arrNota = [];
-                    indicadores.forEach(() => {
-                        arrNota.push(0);
-                    });
-                    notaObtenida.Nota = arrNota;
-                }
-                dataOrdenada.push(notaObtenida);
-            });
-            res.render('./maestros/notasAlumnosParvularia', { Role, idUnion, dataGradoMateria, dataOrdenada, indicadores, permisosSend, usuario });
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-
-
-maestros.notasAlumnos = async(req, res) => {
-    try {
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-        const { idUnion, Role } = req.params;
-
-        const {
-            [0]: { id }
-        } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
-
-        const {
-            [0]: dataGradoMateria
-        } = await pool.query("SELECT idGrado, (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion]);
-
-        const arrPromesas = [
-            pool.query("SELECT actividades.id AS idActividad, Titulo, COUNT(acumulados.id) AS cantidad FROM actividades INNER JOIN acumulados ON acumulados.idActividad = actividades.id  WHERE unionMateriaGrado = ? AND Role = ? AND Bimestre = ?", [idUnion, Role, id]), // Obtiene información de la actividad
-            pool.query("SELECT Carnet, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet WHERE idGrado = ? GROUP BY Carnet ORDER BY Apellido", [dataGradoMateria.idGrado]), // Obtiene alumnos del grado
-        ];
-
-        const {
-            [0]: {
-                [0]: { Titulo, cantidad, idActividad }
-            }, [1]: alumnos
-        } = await Promise.all(arrPromesas);
-
-        const acumulados = await pool.query("SELECT id, Porcentaje FROM acumulados WHERE idActividad = ? ", [idActividad]);
-
-        const notasAcumulados = await pool.query("SELECT notas.id AS idNota , Nota, idAlumno, acumulados.id AS idAcumulado, Porcentaje FROM notas INNER JOIN acumulados ON acumulados.id = notas.idAcumulado WHERE acumulados.idActividad = ? ", [idActividad]);
-        const dataOrdenada = [];
-
-        alumnos.forEach(alumno => {
-
-            const arrExist = [];
-            const arrIdNota = [];
-            acumulados.forEach(() => {
-                arrExist.push(false);
+            boolean.push(false);
+          });
+          if (boolean.includes(true)) {
+            if (indicadores.length != arrNota.length) {
+              for (
+                let index = arrNota.length + 1;
+                index <= indicadores.length;
+                index++
+              ) {
+                arrNota.push(0);
                 arrIdNota.push(false);
-            });
-            let notaObtenida = {};
-            notaObtenida.Nota = [];
-            notaObtenida.Nombre = alumno.Nombre;
-            notaObtenida.Apellido = alumno.Apellido;
-            notaObtenida.Carnet = alumno.Carnet;
+                arrExist.push(false);
+              }
+            }
+            notaObtenida.Nota = arrNota;
             notaObtenida.isExist = arrExist;
             notaObtenida.idNota = arrIdNota;
-            if (notasAcumulados.length) {
-                const arrNota = [];
-                const arrIdNota = [];
-                const arrExist = [];
-                const boolean = [];
-                notasAcumulados.some((notaElement) => {
-                    if (notaElement.idAlumno == alumno.Carnet) {
-                        arrNota.push(notaElement.Nota);
-                        arrIdNota.push(notaElement.idNota);
-                        arrExist.push(true);
-                        boolean.push(true);
-                    }
-                    boolean.push(false);
-                });
-                if (boolean.includes(true)) {
-                    if (acumulados.length != arrNota.length) {
-                        for (let index = (arrNota.length + 1); index <= acumulados.length; index++) {
-                            arrNota.push(0);
-                            arrIdNota.push(false);
-                            arrExist.push(false);
-                        }
-                    }
-                    notaObtenida.Nota = arrNota;
-                    notaObtenida.isExist = arrExist;
-                    notaObtenida.idNota = arrIdNota;
-                } else {
-                    const arrNota = [];
-                    acumulados.forEach(() => {
-                        arrNota.push(0);
-                    });
-                    notaObtenida.Nota = arrNota;
-                }
-            } else {
-                const arrNota = [];
-                acumulados.forEach(() => {
-                    arrNota.push(0);
-                });
-                notaObtenida.Nota = arrNota;
-            }
-            dataOrdenada.push(notaObtenida);
-        });
-        res.render('./maestros/notasAlumnos', { Role, idUnion, dataGradoMateria, Titulo, cantidad, dataOrdenada, acumulados, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-
-maestros.notasAdd = async(req, res) => {
-    try {
-        const { data } = req.body;
-        const arrdata = JSON.parse(data);
-        const arrQueries = [];
-
-        arrdata.forEach(valores => {
-            if (valores.exist) {
-                arrQueries.push(
-                    pool.query("UPDATE notas SET Nota = ? WHERE id=? AND idAlumno  = ? AND idAcumulado = ?", [valores.nota, valores.idnota, valores.alumno, valores.idacumulado])
-                );
-            } else {
-                arrQueries.push(
-                    pool.query("INSERT INTO notas(Nota,idAlumno, idAcumulado) VALUES(?,?,?)", [valores.nota, valores.alumno, valores.idacumulado])
-                );
-            }
-        });
-
-        await Promise.all(arrQueries);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-maestros.notasAddParv = async(req, res) => {
-    try {
-        const { data, idGradoMateria } = req.body;
-        const arrdata = JSON.parse(data);
-        const arrQueries = [];
-
-        arrdata.forEach(valores => {
-            if (valores.exist) {
-                arrQueries.push(
-                    pool.query("UPDATE notas_parvularia SET NotaRole = ? WHERE id=  ? AND idAlumno  = ?", [valores.nota, valores.idnota, valores.alumno])
-                );
-            } else {
-                if (valores.nota) {
-                    arrQueries.push(
-                        pool.query("INSERT INTO notas_parvularia(NotaRole,idAlumno, idUnionMateriaIndicador ,idUnionMateriaGrado ) VALUES(?,?,?,?)", [valores.nota, valores.alumno, valores.idunion, idGradoMateria])
-                    );
-                }
-            }
-        });
-
-        await Promise.all(arrQueries);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-
-maestros.matriculaView = async(req, res) => {
-    try {
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-        if (!permisosSend.matricula) return res.send("NOT_ALLOWED");
-        const {
-            [0]: { year }
-        } = await pool.query("SELECT (year + 1 ) AS year FROM year WHERE estado = 1 ");
-        const grados = await pool.query("SELECT id, nombre FROM grados WHERE idYear = ?", [year]);
-
-
-        res.render('./maestros/matricula', { permisosSend, year, grados, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-maestros.matriculaRegtistro = async(req, res) => {
-    try {
-        const { carnet, idYear, idGrado, Nombres, Apellidos, Sexo, FechaNac, EmailMain } = req.body;
-
-        const promesas = [];
-        const {
-            [0]: { cantidad }
-        } = await pool.query("SELECT COUNT(*) AS cantidad FROM alumnos WHERE Carnet = ? ", [carnet]);
-        if (cantidad) {
-            //Alumno existente
-            promesas.push(
-                /* Registro de matricula*/
-                pool.query("INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ", [
-                    carnet, idYear, JSON.stringify(req.body)
-                ]),
-                /* Registro de alumno en grado */
-                pool.query("INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ", [idGrado, carnet])
-            );
+          } else {
+            const arrNota = [];
+            indicadores.forEach(() => {
+              arrNota.push(0);
+            });
+            notaObtenida.Nota = arrNota;
+          }
         } else {
-            // Alumno no existe
-            const carnetT = carnet.trim();
-            await pool.query("INSERT INTO alumnos(Carnet, Nombre , Apellido, Genero , FechaNac , Email) VALUES(?,?,?,?,?,?)", [carnetT, Nombres, Apellidos, Sexo, FechaNac, EmailMain]);
-            adddUsuarioFunction({ user: carnetT, passwordPlain: carnetT, role: 2 });
-
-            promesas.push(
-                /* Registro de matricula*/
-                pool.query("INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ", [
-                    carnetT, idYear, JSON.stringify(req.body)
-                ]),
-                /* Registro de alumno en grado */
-                pool.query("INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ", [idGrado, carnetT])
-            );
+          const arrNota = [];
+          indicadores.forEach(() => {
+            arrNota.push(0);
+          });
+          notaObtenida.Nota = arrNota;
         }
-        const {
-            [0]: { insertId }
-        } = await Promise.all(promesas);
-
-        res.json({ status: true, insertId });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
+        dataOrdenada.push(notaObtenida);
+      });
+      res.render("./maestros/notasAlumnosParvularia", {
+        Role,
+        idUnion,
+        dataGradoMateria,
+        dataOrdenada,
+        indicadores,
+        permisosSend,
+        usuario,
+      });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.notasAlumnos = async (req, res) => {
+  try {
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
+    const { idUnion, Role } = req.params;
 
+    const {
+      [0]: { id },
+    } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
 
-maestros.getDataAlumno = async(req, res) => {
-    try {
-        const { carnet } = req.params;
-        const data = await pool.query("SELECT * FROM alumnos WHERE Carnet = ?", [carnet]);
-        res.json(data);
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    const { [0]: dataGradoMateria } = await pool.query(
+      "SELECT idGrado, (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?",
+      [idUnion]
+    );
+
+    const arrPromesas = [
+      pool.query(
+        "SELECT actividades.id AS idActividad, Titulo, COUNT(acumulados.id) AS cantidad FROM actividades INNER JOIN acumulados ON acumulados.idActividad = actividades.id  WHERE unionMateriaGrado = ? AND Role = ? AND Bimestre = ?",
+        [idUnion, Role, id]
+      ), // Obtiene información de la actividad
+      pool.query(
+        "SELECT Carnet, Nombre, Apellido FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet WHERE idGrado = ?  ORDER BY Apellido",
+        [dataGradoMateria.idGrado]
+      ), // Obtiene alumnos del grado
+    ];
+
+    const {
+      [0]: {
+        [0]: { Titulo, cantidad, idActividad },
+      },
+      [1]: alumnos,
+    } = await Promise.all(arrPromesas);
+
+    const acumulados = await pool.query(
+      "SELECT id, Porcentaje FROM acumulados WHERE idActividad = ? ",
+      [idActividad]
+    );
+
+    const notasAcumulados = await pool.query(
+      "SELECT notas.id AS idNota , Nota, idAlumno, acumulados.id AS idAcumulado, Porcentaje FROM notas INNER JOIN acumulados ON acumulados.id = notas.idAcumulado WHERE acumulados.idActividad = ? ",
+      [idActividad]
+    );
+    const dataOrdenada = [];
+
+    alumnos.forEach((alumno) => {
+      const arrExist = [];
+      const arrIdNota = [];
+      acumulados.forEach(() => {
+        arrExist.push(false);
+        arrIdNota.push(false);
+      });
+      let notaObtenida = {};
+      notaObtenida.Nota = [];
+      notaObtenida.Nombre = alumno.Nombre;
+      notaObtenida.Apellido = alumno.Apellido;
+      notaObtenida.Carnet = alumno.Carnet;
+      notaObtenida.isExist = arrExist;
+      notaObtenida.idNota = arrIdNota;
+      if (notasAcumulados.length) {
+        const arrNota = [];
+        const arrIdNota = [];
+        const arrExist = [];
+        const boolean = [];
+        notasAcumulados.some((notaElement) => {
+          if (notaElement.idAlumno == alumno.Carnet) {
+            arrNota.push(notaElement.Nota);
+            arrIdNota.push(notaElement.idNota);
+            arrExist.push(true);
+            boolean.push(true);
+          }
+          boolean.push(false);
+        });
+        if (boolean.includes(true)) {
+          if (acumulados.length != arrNota.length) {
+            for (
+              let index = arrNota.length + 1;
+              index <= acumulados.length;
+              index++
+            ) {
+              arrNota.push(0);
+              arrIdNota.push(false);
+              arrExist.push(false);
+            }
+          }
+          notaObtenida.Nota = arrNota;
+          notaObtenida.isExist = arrExist;
+          notaObtenida.idNota = arrIdNota;
+        } else {
+          const arrNota = [];
+          acumulados.forEach(() => {
+            arrNota.push(0);
+          });
+          notaObtenida.Nota = arrNota;
+        }
+      } else {
+        const arrNota = [];
+        acumulados.forEach(() => {
+          arrNota.push(0);
+        });
+        notaObtenida.Nota = arrNota;
+      }
+      dataOrdenada.push(notaObtenida);
+    });
+    res.render("./maestros/notasAlumnos", {
+      Role,
+      idUnion,
+      dataGradoMateria,
+      Titulo,
+      cantidad,
+      dataOrdenada,
+      acumulados,
+      permisosSend,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.notasAdd = async (req, res) => {
+  try {
+    const { data } = req.body;
+    const arrdata = JSON.parse(data);
+    const arrQueries = [];
 
-maestros.uploadImg = async(req, res) => {
-    try {
-        const { idAlumno, idMatricula } = req.body;
-        const ext = formatExtension(req.files.imagen.name.split("."));
-        const fileContent = Buffer.from(req.files.imagen.data, "binary");
-        const s3key = await upload(fileContent, `alumnos/${idAlumno}/${Date.now()}.${ext}`);
-        await pool.query("UPDATE matriculas SET s3Key = ? WHERE id = ?", [s3key.key, idMatricula]);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    arrdata.forEach((valores) => {
+      if (valores.exist) {
+        arrQueries.push(
+          pool.query(
+            "UPDATE notas SET Nota = ? WHERE id=? AND idAlumno  = ? AND idAcumulado = ?",
+            [valores.nota, valores.idnota, valores.alumno, valores.idacumulado]
+          )
+        );
+      } else {
+        arrQueries.push(
+          pool.query(
+            "INSERT INTO notas(Nota,idAlumno, idAcumulado) VALUES(?,?,?)",
+            [valores.nota, valores.alumno, valores.idacumulado]
+          )
+        );
+      }
+    });
+
+    await Promise.all(arrQueries);
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
-maestros.delete = async(req, res) => {
-    try {
-        const { id, tabla, column } = req.body;
+maestros.notasAddParv = async (req, res) => {
+  try {
+    const { data, idGradoMateria } = req.body;
+    const arrdata = JSON.parse(data);
+    const arrQueries = [];
 
-        if (!id || !tabla || !column) return res.json({ status: false, error: "PARAMS_NOT_COMPLETE" });
+    arrdata.forEach((valores) => {
+      if (valores.exist) {
+        arrQueries.push(
+          pool.query(
+            "UPDATE notas_parvularia SET NotaRole = ? WHERE id=  ? AND idAlumno  = ?",
+            [valores.nota, valores.idnota, valores.alumno]
+          )
+        );
+      } else {
+        if (valores.nota) {
+          arrQueries.push(
+            pool.query(
+              "INSERT INTO notas_parvularia(NotaRole,idAlumno, idUnionMateriaIndicador ,idUnionMateriaGrado ) VALUES(?,?,?,?)",
+              [valores.nota, valores.alumno, valores.idunion, idGradoMateria]
+            )
+          );
+        }
+      }
+    });
 
-        const stament = `DELETE FROM ${tabla} WHERE ${column} = ${id}`;
-
-        await pool.query(stament);
-
-        res.json({ status: true });
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ status: false, error });
-    }
+    await Promise.all(arrQueries);
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
-maestros.indicadores = async(req, res) => {
-    try {
-        const indicadores = await pool.query("SELECT id, indicador FROM indicadoresparvularia");
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
+maestros.matriculaView = async (req, res) => {
+  try {
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
+    if (!permisosSend.matricula) return res.send("NOT_ALLOWED");
+    const {
+      [0]: { year },
+    } = await pool.query(
+      "SELECT (year + 1 ) AS year FROM year WHERE estado = 1 "
+    );
+    const grados = await pool.query(
+      "SELECT id, nombre FROM grados WHERE idYear = ?",
+      [year]
+    );
 
-        res.render("./maestros/indicadores.ejs", { indicadores, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({ status: false, error });
-    }
+    res.render("./maestros/matricula", { permisosSend, year, grados, usuario });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
-maestros.newIndicadores = async(req, res) => {
-    try {
-        const { indicador } = req.body;
-        const { insertId } = await pool.query("INSERT INTO indicadoresparvularia(indicador) VALUES(?)", [indicador]);
-        res.json({ status: true, insertId });
-    } catch (error) {
-        res.json({ status: false, error }).status(400);
+maestros.matriculaRegtistro = async (req, res) => {
+  try {
+    const {
+      carnet,
+      idYear,
+      idGrado,
+      Nombres,
+      Apellidos,
+      Sexo,
+      FechaNac,
+      EmailMain,
+    } = req.body;
+
+    const promesas = [];
+    const {
+      [0]: { cantidad },
+    } = await pool.query(
+      "SELECT COUNT(*) AS cantidad FROM alumnos WHERE Carnet = ? ",
+      [carnet]
+    );
+    if (cantidad) {
+      //Alumno existente
+      promesas.push(
+        /* Registro de matricula*/
+        pool.query(
+          "INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ",
+          [carnet, idYear, JSON.stringify(req.body)]
+        ),
+        /* Registro de alumno en grado */
+        pool.query(
+          "INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ",
+          [idGrado, carnet]
+        )
+      );
+    } else {
+      // Alumno no existe
+      const carnetT = carnet.trim();
+      await pool.query(
+        "INSERT INTO alumnos(Carnet, Nombre , Apellido, Genero , FechaNac , Email) VALUES(?,?,?,?,?,?)",
+        [carnetT, Nombres, Apellidos, Sexo, FechaNac, EmailMain]
+      );
+      adddUsuarioFunction({ user: carnetT, passwordPlain: carnetT, role: 2 });
+
+      promesas.push(
+        /* Registro de matricula*/
+        pool.query(
+          "INSERT INTO matriculas(idAlumno, idYear, s3Key, data) VALUES (?,?,' ', ?) ",
+          [carnetT, idYear, JSON.stringify(req.body)]
+        ),
+        /* Registro de alumno en grado */
+        pool.query(
+          "INSERT INTO grado_alumno(idGrado, idAlumno, Conducta1, Conducta2, Conducta3, Conducta4) VALUES(?, ?, 100 , 100 ,100 , 100) ",
+          [idGrado, carnetT]
+        )
+      );
     }
+    const {
+      [0]: { insertId },
+    } = await Promise.all(promesas);
+
+    res.json({ status: true, insertId });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.getDataAlumno = async (req, res) => {
+  try {
+    const { carnet } = req.params;
+    const data = await pool.query("SELECT * FROM alumnos WHERE Carnet = ?", [
+      carnet,
+    ]);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.uploadImg = async (req, res) => {
+  try {
+    const { idAlumno, idMatricula } = req.body;
+    const ext = formatExtension(req.files.imagen.name.split("."));
+    const fileContent = Buffer.from(req.files.imagen.data, "binary");
+    const s3key = await upload(
+      fileContent,
+      `alumnos/${idAlumno}/${Date.now()}.${ext}`
+    );
+    await pool.query("UPDATE matriculas SET s3Key = ? WHERE id = ?", [
+      s3key.key,
+      idMatricula,
+    ]);
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.delete = async (req, res) => {
+  try {
+    const { id, tabla, column } = req.body;
+
+    if (!id || !tabla || !column)
+      return res.json({ status: false, error: "PARAMS_NOT_COMPLETE" });
+
+    const stament = `DELETE FROM ${tabla} WHERE ${column} = ${id}`;
+
+    await pool.query(stament);
+
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.indicadores = async (req, res) => {
+  try {
+    const indicadores = await pool.query(
+      "SELECT id, indicador FROM indicadoresparvularia"
+    );
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
+
+    res.render("./maestros/indicadores.ejs", {
+      indicadores,
+      permisosSend,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.newIndicadores = async (req, res) => {
+  try {
+    const { indicador } = req.body;
+    const { insertId } = await pool.query(
+      "INSERT INTO indicadoresparvularia(indicador) VALUES(?)",
+      [indicador]
+    );
+    res.json({ status: true, insertId });
+  } catch (error) {
+    res.json({ status: false, error }).status(400);
+  }
 };
 
 const formatExtension = (ext) => {
-    ext = ext[ext.length - 1].toLowerCase();
-    if (ext == "jpg") ext = "jpeg";
-    return ext;
+  ext = ext[ext.length - 1].toLowerCase();
+  if (ext == "jpg") ext = "jpeg";
+  return ext;
 };
 
-maestros.editIndicadores = async(req, res) => {
-    try {
-        const { indicador, id } = req.body;
-        await pool.query("UPDATE indicadoresparvularia SET indicador = ? WHERE id = ? ", [indicador, id]);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+maestros.editIndicadores = async (req, res) => {
+  try {
+    const { indicador, id } = req.body;
+    await pool.query(
+      "UPDATE indicadoresparvularia SET indicador = ? WHERE id = ? ",
+      [indicador, id]
+    );
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
-
-maestros.getEstudiantesAll = async(req, res) => {
-    const { searchTerm } = req.body;
-    let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%' GROUP BY Carnet  ORDER By Nombre LIMIT 5`;
-    if (!searchTerm) query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos GROUP BY Carnet ORDER BY Nombre LIMIT 5`;
-    try {
-        const data = await pool.query(query);
-        return res.json({ results: data });
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({ error });
-    }
+maestros.getEstudiantesAll = async (req, res) => {
+  const { searchTerm } = req.body;
+  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%'   ORDER By Nombre LIMIT 5`;
+  if (!searchTerm)
+    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos ORDER BY Nombre LIMIT 5`;
+  try {
+    const data = await pool.query(query);
+    return res.json({ results: data });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error });
+  }
 };
 
 

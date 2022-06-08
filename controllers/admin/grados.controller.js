@@ -49,19 +49,23 @@ grados.detalleGrado = async(req, res) => {
 
         const { idGrado } = req.params;
         const promesas = [
-            pool.query(
-                "SELECT nombre , (SELECT Nombre FROM ciclos WHERE id = grados.idCiclo) as ciclo , idYear , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = grados.idMaestro) AS NombreMaestro FROM grados WHERE id = ? ", [idGrado]
-            ), // Datos del grado
-            pool.query("SELECT Role FROM bimestres WHERE Estado = 1"), // Bimestre activo
-            pool.query(
-                "SELECT id AS idMateria , (SELECT Nombre FROM modelomaterias WHERE id = materia_grado.idModeloMateria) AS NombreMateria , EstadoAct1 , EstadoAct2 , EstadoAct3 FROM materia_grado WHERE idGrado  = ?", [idGrado]
-            ), // Trae todas las materias
-            pool.query(
-                "SELECT id AS idMaestroMateria , idUnionGradoMateria AS idMateria , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = maestros_materias.idMaestro) AS NombreMaestro  FROM maestros_materias WHERE idGrado  = ?", [idGrado]
-            ), // Trae todas los maestros asignados
-            pool.query(
-                "SELECT Carnet , Nombre , Apellido, grado_alumno.id AS idGradoAlumno FROM alumnos INNER JOIN grado_alumno  ON grado_alumno.idAlumno = alumnos.Carnet  WHERE idGrado = ? GROUP BY Carnet ORDER BY Apellido ASC ", [idGrado]
-            ), // Trae todos los alumnos inscritos
+          pool.query(
+            "SELECT nombre , (SELECT Nombre FROM ciclos WHERE id = grados.idCiclo) as ciclo , idYear , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = grados.idMaestro) AS NombreMaestro FROM grados WHERE id = ? ",
+            [idGrado]
+          ), // Datos del grado
+          pool.query("SELECT Role FROM bimestres WHERE Estado = 1"), // Bimestre activo
+          pool.query(
+            "SELECT id AS idMateria , (SELECT Nombre FROM modelomaterias WHERE id = materia_grado.idModeloMateria) AS NombreMateria , EstadoAct1 , EstadoAct2 , EstadoAct3 FROM materia_grado WHERE idGrado  = ?",
+            [idGrado]
+          ), // Trae todas las materias
+          pool.query(
+            "SELECT id AS idMaestroMateria , idUnionGradoMateria AS idMateria , (SELECT CONCAT(Nombres, ' ', Apellidos) FROM maestros WHERE id = maestros_materias.idMaestro) AS NombreMaestro  FROM maestros_materias WHERE idGrado  = ?",
+            [idGrado]
+          ), // Trae todas los maestros asignados
+          pool.query(
+            "SELECT Carnet , Nombre , Apellido, grado_alumno.id AS idGradoAlumno FROM alumnos INNER JOIN grado_alumno  ON grado_alumno.idAlumno = alumnos.Carnet  WHERE idGrado = ?  ORDER BY Apellido ASC ",
+            [idGrado]
+          ), // Trae todos los alumnos inscritos
         ];
         const {
             [0]: {

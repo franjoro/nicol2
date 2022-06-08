@@ -138,9 +138,9 @@ estudiantes.edit = async (req, res) => {
 estudiantes.getEstudiantes = async (req, res) => {
   const { searchTerm } = req.body;
   const { idGrado } = req.params;
-  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%' GROUP BY Carnet  ORDER By Nombre LIMIT 5`;
+  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%'  ORDER By Nombre LIMIT 5`;
   if (!searchTerm)
-    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos GROUP BY Carnet ORDER BY Nombre LIMIT 5`;
+    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos ORDER BY Nombre LIMIT 5`;
   try {
     const data = await pool.query(query, [idGrado]);
     return res.json({ results: data });
@@ -196,9 +196,9 @@ estudiantes.updateMatricula = async (req, res) => {
 
 estudiantes.getEstudiantesAll = async (req, res) => {
   const { searchTerm } = req.body;
-  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%' OR Apellido like '%${searchTerm}%' OR Carnet like '%${searchTerm}%'  GROUP BY Carnet  ORDER By Nombre LIMIT 15`;
+  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos WHERE Nombre like '%${searchTerm}%' OR Apellido like '%${searchTerm}%' OR Carnet like '%${searchTerm}%'  ORDER By Nombre LIMIT 15`;
   if (!searchTerm)
-    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos GROUP BY Carnet ORDER BY Nombre LIMIT 15`;
+    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", Nombre , " " , Apellido ) AS text FROM alumnos  ORDER BY Nombre LIMIT 15`;
   try {
     const data = await pool.query(query);
     return res.json({ results: data });
@@ -211,9 +211,9 @@ estudiantes.getEstudiantesAll = async (req, res) => {
 estudiantes.getEstudiantesAllPreescolar = async (req, res) => {
   const { searchTerm } = req.body;
 
-  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", alumnos.Nombre , " " , Apellido ) AS text FROM alumnos alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet INNER JOIN grados ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE ciclos.isParvularia = 1 AND( alumnos.Nombre like '%${searchTerm}%' OR Apellido like '%${searchTerm}%' OR Carnet like '%${searchTerm}%' )  GROUP BY Carnet  ORDER By alumnos.Nombre LIMIT 15`;
+  let query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", alumnos.Nombre , " " , Apellido ) AS text FROM alumnos alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet INNER JOIN grados ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE ciclos.isParvularia = 1 AND( alumnos.Nombre like '%${searchTerm}%' OR Apellido like '%${searchTerm}%' OR Carnet like '%${searchTerm}%' )    ORDER By alumnos.Nombre LIMIT 15`;
   if (!searchTerm)
-    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", alumnos.Nombre , " " , Apellido ) AS text FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet INNER JOIN grados ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE ciclos.isParvularia = 1 GROUP BY Carnet ORDER BY alumnos.Nombre LIMIT 15;`;
+    query = `SELECT Carnet AS id , CONCAT(Carnet , " - ", alumnos.Nombre , " " , Apellido ) AS text FROM alumnos INNER JOIN grado_alumno ON grado_alumno.idAlumno = alumnos.Carnet INNER JOIN grados ON grado_alumno.idGrado = grados.id INNER JOIN ciclos ON grados.idCiclo = ciclos.id WHERE ciclos.isParvularia = 1  ORDER BY alumnos.Nombre LIMIT 15;`;
 
   try {
     const data = await pool.query(query);
