@@ -306,7 +306,7 @@ estudiantes.perfilAcademico = async (req, res) => {
     } = await Promise.all([
       // TRAER ID GRADO DEL ALUMNO
       pool.query(
-        "SELECT grados.id AS idGrado, grados.nombre FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? GROUP BY idAlumno",
+        "SELECT grados.id AS idGrado, grados.nombre FROM grados INNER JOIN year ON year.year = grados.idYear INNER JOIN grado_alumno ON grado_alumno.idGrado = grados.id WHERE year.estado = 1 AND idAlumno = ? ",
         [idAlumno]
       ),
       // TRAER ROLE DEL BIMESTRE

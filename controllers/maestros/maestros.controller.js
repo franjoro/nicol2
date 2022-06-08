@@ -130,7 +130,7 @@ maestros.addCodigo = async (req, res) => {
     const {
       [0]: { sumaCodigos },
     } = await pool.query(
-      "SELECT SUM(valor) AS sumaCodigos FROM `codigo_alumno` INNER JOIN codigos ON codigos.id = codigo_alumno.idCodigo WHERE idAlumno = ? AND idBimestre=? GROUP BY idAlumno",
+      "SELECT SUM(valor) AS sumaCodigos FROM `codigo_alumno` INNER JOIN codigos ON codigos.id = codigo_alumno.idCodigo WHERE idAlumno = ? AND idBimestre=? ",
       [idAlumno, id]
     );
 
@@ -148,43 +148,52 @@ maestros.addCodigo = async (req, res) => {
   }
 };
 
+maestros.addObservacion = async (req, res) => {
+  try {
+    const { identificador } = getUserDataByToken(req.cookies.token).data;
+    const { idAlumno, descripcion } = req.body;
+    const {
+      [0]: { id },
+    } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
 
-maestros.addObservacion = async(req, res) => {
-    try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
-        const { idAlumno, descripcion } = req.body;
-        const {
-            [0]: { id }
-        } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
+    const promesas = [
+      pool.query(
+        "INSERT INTO observaciones(  idMaestro , idAlumno , idBimestre , descripcion ) VALUES(?,?,?,?)",
+        [identificador, idAlumno, id, descripcion]
+      ),
+    ];
 
-        const promesas = [
-            pool.query("INSERT INTO observaciones(  idMaestro , idAlumno , idBimestre , descripcion ) VALUES(?,?,?,?)", [
-                identificador, idAlumno, id, descripcion
-            ])
-        ];
+    await Promise.all(promesas);
 
-        await Promise.all(promesas);
+    res.json({ status: true });
 
-        res.json({ status: true });
-
-        const {
-            [0]: { Email }
-        } = await pool.query("SELECT Email FROM alumnos WHERE Carnet = ?", idAlumno);
-        sendEmail(Email, `Observación del maestro aplicada  #${Date.now()}`, '', `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de observación aplicada</h5><p>Por favor acceda a su usuario en la plataforma de registro acádemico para visualizar la observación <p>Carnet Alumno : ${idAlumno}</p>`);
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    const {
+      [0]: { Email },
+    } = await pool.query(
+      "SELECT Email FROM alumnos WHERE Carnet = ?",
+      idAlumno
+    );
+    sendEmail(
+      Email,
+      `Observación del maestro aplicada  #${Date.now()}`,
+      "",
+      `<h3>Colegio Salesiano San Juan Bosco</h3> <br> <h5>Notificación automática de observación aplicada</h5><p>Por favor acceda a su usuario en la plataforma de registro acádemico para visualizar la observación <p>Carnet Alumno : ${idAlumno}</p>`
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.perfil = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
 
-
-maestros.perfil = async(req, res) => {
-    try {
-        const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-
-        const asignaciones = await pool.query(`
+    const asignaciones = await pool.query(
+      `
         SELECT
     modelomaterias.Nombre,
     grados.nombre AS Grado,
@@ -196,186 +205,239 @@ maestros.perfil = async(req, res) => {
     INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
     INNER JOIN grados ON grados.id = materia_grado.idGrado
     WHERE
-    maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
-        res.render('./maestros/perfilAcademico', { asignaciones, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `,
+      [identificador]
+    );
+    res.render("./maestros/perfilAcademico", {
+      asignaciones,
+      permisosSend,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.perfilActividades = async (req, res) => {
+  try {
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
+    const { idUnion } = req.params;
+    const {
+      [0]: {
+        [0]: { id, Role, idYear },
+      },
+      [1]: { [0]: dataGradoMateria },
+    } = await Promise.all([
+      /* BIMESTRE */
+      pool.query("SELECT id, Role, idYear FROM bimestres WHERE Estado = 1"),
+      /* Datos del grado y la materia */
+      pool.query(
+        "SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , idGrado, (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?",
+        [idUnion]
+      ),
+    ]);
 
-maestros.perfilActividades = async(req, res) => {
-    try {
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-        const { idUnion } = req.params;
-        const {
-            [0]: {
-                [0]: { id, Role, idYear }
-            }, [1]: {
-                [0]: dataGradoMateria
-            }
-        } = await Promise.all([
-            /* BIMESTRE */
-            pool.query("SELECT id, Role, idYear FROM bimestres WHERE Estado = 1"),
-            /* Datos del grado y la materia */
-            pool.query("SELECT (SELECT Nombre FROM grados WHERE id = idGrado) AS Grado , idGrado, (SELECT Nombre FROM modelomaterias WHERE id = idModeloMateria) AS Materia FROM materia_grado WHERE id = ?", [idUnion])
-        ]);
+    const {
+      [0]: { isParvularia },
+    } = await pool.query(
+      "SELECT isParvularia FROM grados INNER JOIN ciclos ON ciclos.id = grados.idCiclo WHERE grados.id = ?",
+      [dataGradoMateria.idGrado]
+    );
 
-
-        const {
-            [0]: { isParvularia }
-        } = await pool.query("SELECT isParvularia FROM grados INNER JOIN ciclos ON ciclos.id = grados.idCiclo WHERE grados.id = ?", [dataGradoMateria.idGrado]);
-
-        if (!isParvularia) {
-            const arrayPromesas = [];
-            for (let index = 1; index <= 3; index++) {
-                arrayPromesas.push(
-                    pool.query(`SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `, [index, id, idUnion])
-                );
-            }
-            const actividades = await Promise.all(arrayPromesas);
-            const {
-                [0]: bloqueos
-            } = await pool.query(`SELECT  EstadoAct1, EstadoAct2, EstadoAct3 FROM materia_grado WHERE id= ? `, [idUnion]);
-            res.render('./maestros/perfilAcademicoActividades', { Role, idYear, actividades, bloqueos, idUnion, dataGradoMateria, permisosSend, usuario });
-        } else {
-            const indicadoresInMateria = await pool.query("SELECT indicador , indicadores_materia.id AS idMateriaIndicador  FROM indicadores_materia INNER JOIN indicadoresparvularia ON indicadoresparvularia.id = indicadores_materia.idIndicador WHERE idBimestre = ? AND idUnion = ? GROUP BY  indicadores_materia.idIndicador", [id, idUnion]);
-            res.render('./maestros/perfilAcademicoParvularia', { permisosSend, usuario, dataGradoMateria, Role, idYear, indicadoresInMateria, idUnion, idBimestre: id });
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-maestros.addPerfilView = async(req, res) => {
-    try {
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-
-        const { idUnion, Role } = req.params;
-        let textoRole = "";
-        if (Role == 1) textoRole = "Actividad 1 (30%)";
-        if (Role == 2) textoRole = "Actividad 2 (30%)";
-        if (Role == 3) textoRole = "Examen (40%)";
-        res.render('./maestros/perfilAcademicoAdd', { idUnion, Role, textoRole, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-maestros.editPerfilView = async(req, res) => {
-    try {
-        const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-
-        const { idUnion, Role, idActividad } = req.params;
-        let textoRole = "";
-        if (Role == 1) textoRole = "Actividad 1 (30%)";
-        if (Role == 2) textoRole = "Actividad 2 (30%)";
-        if (Role == 3) textoRole = "Examen (40%)";
-
-
-        const arrPro = [
-            pool.query("SELECT Titulo, Descripcion FROM actividades WHERE id = ?", [idActividad]),
-            pool.query("SELECT id, Descripcion, Porcentaje FROM acumulados WHERE idActividad = ?", [idActividad]),
-        ];
-
-        const {
-            [0]: {
-                [0]: headerInfo
-            }, [1]: acumuladosInfo
-        } = await Promise.all(arrPro);
-        res.render('./maestros/perfilAcademicoEdit', { idUnion, Role, textoRole, permisosSend, usuario, headerInfo, acumuladosInfo, idActividad });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-
-maestros.addPerfil = async(req, res) => {
-    try {
-        const { identificador } = getUserDataByToken(req.cookies.token).data;
-        const { idUnion, Role } = req.params;
-        const { titulo, descripcion, cantidadAcumulados } = req.body;
-        const {
-            [0]: { id }
-        } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
-        const { insertId } = await pool.query("INSERT INTO actividades(Titulo, Descripcion , Role, Bimestre, idMaestro, unionMateriaGrado ) VALUES(?,?,?,?,?,?)", [
-            titulo,
-            descripcion,
-            Role,
-            id,
-            identificador,
-            idUnion
-        ]);
-        const arrayAcumulados = req.body["acumulados[]"];
-        const arraValor = req.body["valor[]"];
-        const arrPromesas = [];
-        for (let index = 0; index < cantidadAcumulados; index++) {
-            arrPromesas.push(
-                pool.query("INSERT INTO acumulados(Descripcion , Porcentaje, idActividad) VALUES(?,?,?) ", [arrayAcumulados[index], arraValor[index], insertId])
-            );
-        }
-        await Promise.all(arrPromesas);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
-};
-
-
-maestros.editPerfil = async(req, res) => {
-    try {
-        const { idActividad } = req.params;
-        const { titulo, descripcion, acumulados } = req.body;
-        const acumuladosJson = JSON.parse(acumulados);
-        const arrPromesas = [];
-        arrPromesas.push(
-            pool.query("UPDATE actividades SET Titulo = ? ,  Descripcion = ? WHERE id = ? ", [titulo, descripcion, idActividad])
+    if (!isParvularia) {
+      const arrayPromesas = [];
+      for (let index = 1; index <= 3; index++) {
+        arrayPromesas.push(
+          pool.query(
+            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `,
+            [index, id, idUnion]
+          )
         );
-        acumuladosJson.forEach((element) => {
-            arrPromesas.push(
-                pool.query("UPDATE acumulados SET Descripcion = ? WHERE id = ? ", [element.value, element.id])
-            );
-        });
-
-        await Promise.all(arrPromesas);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
+      }
+      const actividades = await Promise.all(arrayPromesas);
+      const { [0]: bloqueos } = await pool.query(
+        `SELECT  EstadoAct1, EstadoAct2, EstadoAct3 FROM materia_grado WHERE id= ? `,
+        [idUnion]
+      );
+      res.render("./maestros/perfilAcademicoActividades", {
+        Role,
+        idYear,
+        actividades,
+        bloqueos,
+        idUnion,
+        dataGradoMateria,
+        permisosSend,
+        usuario,
+      });
+    } else {
+      const indicadoresInMateria = await pool.query(
+        "SELECT indicador , indicadores_materia.id AS idMateriaIndicador  FROM indicadores_materia INNER JOIN indicadoresparvularia ON indicadoresparvularia.id = indicadores_materia.idIndicador WHERE idBimestre = ? AND idUnion = ? GROUP BY  indicadores_materia.idIndicador",
+        [id, idUnion]
+      );
+      res.render("./maestros/perfilAcademicoParvularia", {
+        permisosSend,
+        usuario,
+        dataGradoMateria,
+        Role,
+        idYear,
+        indicadoresInMateria,
+        idUnion,
+        idBimestre: id,
+      });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
-maestros.deletePerfil = async(req, res) => {
-    try {
-        const { idActividad } = req.body;
-        console.log(req.body);
-        await pool.query("DELETE FROM actividades WHERE id = ?", [idActividad]);
-        res.json({ status: true });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+maestros.addPerfilView = async (req, res) => {
+  try {
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
+
+    const { idUnion, Role } = req.params;
+    let textoRole = "";
+    if (Role == 1) textoRole = "Actividad 1 (30%)";
+    if (Role == 2) textoRole = "Actividad 2 (30%)";
+    if (Role == 3) textoRole = "Examen (40%)";
+    res.render("./maestros/perfilAcademicoAdd", {
+      idUnion,
+      Role,
+      textoRole,
+      permisosSend,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.editPerfilView = async (req, res) => {
+  try {
+    const { Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
+    const permisosSend = JSON.parse(Permisos);
 
+    const { idUnion, Role, idActividad } = req.params;
+    let textoRole = "";
+    if (Role == 1) textoRole = "Actividad 1 (30%)";
+    if (Role == 2) textoRole = "Actividad 2 (30%)";
+    if (Role == 3) textoRole = "Examen (40%)";
 
-maestros.notasViewMain = async(req, res) => {
-    try {
-        const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
+    const arrPro = [
+      pool.query("SELECT Titulo, Descripcion FROM actividades WHERE id = ?", [
+        idActividad,
+      ]),
+      pool.query(
+        "SELECT id, Descripcion, Porcentaje FROM acumulados WHERE idActividad = ?",
+        [idActividad]
+      ),
+    ];
 
-        const asignaciones = await pool.query(`
+    const {
+      [0]: { [0]: headerInfo },
+      [1]: acumuladosInfo,
+    } = await Promise.all(arrPro);
+    res.render("./maestros/perfilAcademicoEdit", {
+      idUnion,
+      Role,
+      textoRole,
+      permisosSend,
+      usuario,
+      headerInfo,
+      acumuladosInfo,
+      idActividad,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.addPerfil = async (req, res) => {
+  try {
+    const { identificador } = getUserDataByToken(req.cookies.token).data;
+    const { idUnion, Role } = req.params;
+    const { titulo, descripcion, cantidadAcumulados } = req.body;
+    const {
+      [0]: { id },
+    } = await pool.query("SELECT id FROM bimestres WHERE Estado = 1");
+    const { insertId } = await pool.query(
+      "INSERT INTO actividades(Titulo, Descripcion , Role, Bimestre, idMaestro, unionMateriaGrado ) VALUES(?,?,?,?,?,?)",
+      [titulo, descripcion, Role, id, identificador, idUnion]
+    );
+    const arrayAcumulados = req.body["acumulados[]"];
+    const arraValor = req.body["valor[]"];
+    const arrPromesas = [];
+    for (let index = 0; index < cantidadAcumulados; index++) {
+      arrPromesas.push(
+        pool.query(
+          "INSERT INTO acumulados(Descripcion , Porcentaje, idActividad) VALUES(?,?,?) ",
+          [arrayAcumulados[index], arraValor[index], insertId]
+        )
+      );
+    }
+    await Promise.all(arrPromesas);
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.editPerfil = async (req, res) => {
+  try {
+    const { idActividad } = req.params;
+    const { titulo, descripcion, acumulados } = req.body;
+    const acumuladosJson = JSON.parse(acumulados);
+    const arrPromesas = [];
+    arrPromesas.push(
+      pool.query(
+        "UPDATE actividades SET Titulo = ? ,  Descripcion = ? WHERE id = ? ",
+        [titulo, descripcion, idActividad]
+      )
+    );
+    acumuladosJson.forEach((element) => {
+      arrPromesas.push(
+        pool.query("UPDATE acumulados SET Descripcion = ? WHERE id = ? ", [
+          element.value,
+          element.id,
+        ])
+      );
+    });
+
+    await Promise.all(arrPromesas);
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.deletePerfil = async (req, res) => {
+  try {
+    const { idActividad } = req.body;
+    console.log(req.body);
+    await pool.query("DELETE FROM actividades WHERE id = ?", [idActividad]);
+    res.json({ status: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
+};
+
+maestros.notasViewMain = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
+
+    const asignaciones = await pool.query(
+      `
         SELECT
         grados.nombre AS Grado,
         modelomaterias.Nombre,
@@ -387,14 +449,15 @@ maestros.notasViewMain = async(req, res) => {
         INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
         INNER JOIN grados ON grados.id = materia_grado.idGrado
             WHERE
-        maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) ;`, [identificador]);
-        res.render('./maestros/mainNotas', { asignaciones, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+        maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) ;`,
+      [identificador]
+    );
+    res.render("./maestros/mainNotas", { asignaciones, permisosSend, usuario });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
-
 
 maestros.notasActividades = async (req, res) => {
   try {
@@ -944,14 +1007,15 @@ maestros.getEstudiantesAll = async (req, res) => {
   }
 };
 
+maestros.viewNotasGrados = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
 
-
-maestros.viewNotasGrados = async(req, res) => {
-    try {
-        const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
-
-        const asignaciones = await pool.query(`
+    const asignaciones = await pool.query(
+      `
         SELECT
     modelomaterias.Nombre,
     grados.nombre AS Grado,
@@ -963,111 +1027,123 @@ maestros.viewNotasGrados = async(req, res) => {
     INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria
     INNER JOIN grados ON grados.id = materia_grado.idGrado
     WHERE
-    maestros_materias.idMaestro =? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `, [identificador]);
-        res.render('./maestros/viewgrades', { asignaciones, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    maestros_materias.idMaestro =? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) `,
+      [identificador]
+    );
+    res.render("./maestros/viewgrades", {
+      asignaciones,
+      permisosSend,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
+maestros.guia = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
+    const dataOrdenada = [];
 
-maestros.guia = async(req, res) => {
-    try {
-        const { identificador, Permisos, usuario } = getUserDataByToken(
-            req.cookies.token
-        ).data;
-        const permisosSend = JSON.parse(Permisos);
-        const dataOrdenada = [];
+    const {
+      [0]: { idGrado, cantidad },
+    } = await pool.query(
+      `SELECT id AS idGrado , COUNT(*) AS cantidad FROM grados WHERE idMaestro = ?  `,
+      [identificador]
+    );
 
-        const {
-            [0]: { idGrado, cantidad },
-        } = await pool.query(
-            `SELECT id AS idGrado , COUNT(*) AS cantidad FROM grados WHERE idMaestro = ?  `, [identificador]
-        );
+    if (cantidad) {
+      const {
+        [0]: { idBimestre },
+      } = await pool.query(
+        "SELECT id AS idBimestre FROM bimestres WHERE estado = 1"
+      );
+      // RoleBimestre
+      const {
+        [0]: { roleBimestre },
+      } = await pool.query(
+        "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?",
+        [idBimestre]
+      );
 
-        if (cantidad) {
-            const {
-                [0]: { idBimestre },
-            } = await pool.query(
-                "SELECT id AS idBimestre FROM bimestres WHERE estado = 1"
-            );
-            // RoleBimestre
-            const {
-                [0]: { roleBimestre },
-            } = await pool.query(
-                "SELECT Role AS roleBimestre FROM bimestres WHERE id = ?", [idBimestre]
-            );
+      const columna = `Conducta${roleBimestre}`;
 
-            const columna = `Conducta${roleBimestre}`;
+      const queryPromesas = [
+        /* NOTAS */
+        pool.query(
+          "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role",
+          [idGrado, idBimestre]
+        ),
+        /* MATERIAS */
+        pool.query(
+          "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ",
+          [idGrado]
+        ),
 
-            const queryPromesas = [
-                /* NOTAS */
-                pool.query(
-                    "SELECT actividades.Role AS RoleActivida, materia_grado.id AS idUnion, notas.Nota AS nota, notas.idAlumno AS idAlumno FROM actividades INNER JOIN acumulados ON actividades.id = acumulados.idActividad INNER JOIN notas ON notas.idAcumulado = acumulados.id INNER JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE materia_grado.idGrado = ? AND Bimestre = ? ORDER BY actividades.Role", [idGrado, idBimestre]
-                ),
-                /* MATERIAS */
-                pool.query(
-                    "SELECT materia_grado.id AS idUnion , Siglas FROM materia_grado INNER JOIN modelomaterias ON modelomaterias.id = materia_grado.idModeloMateria WHERE idGrado = ? ", [idGrado]
-                ),
-
-                /* ESTUDIANTES */
-                pool.query(
-                    `SELECT idAlumno, 
+        /* ESTUDIANTES */
+        pool.query(
+          `SELECT idAlumno, 
               ( SELECT CONCAT(Apellido, ' ', Nombre) FROM alumnos WHERE Carnet = grado_alumno.idAlumno ) AS Nombre,
                ${columna} AS puntaje
-                FROM grado_alumno WHERE idGrado = ? GROUP BY idAlumno ORDER BY Nombre;`, [idGrado]
-                ),
-            ];
+                FROM grado_alumno WHERE idGrado = ?  ORDER BY Nombre;`,
+          [idGrado]
+        ),
+      ];
 
-            const {
-                [0]: notas, [1]: materias, [2]: estudiantes /* Select todas las materias de ese grado */ ,
-            } = await Promise.all(queryPromesas);
+      const {
+        [0]: notas,
+        [1]: materias,
+        [2]: estudiantes /* Select todas las materias de ese grado */,
+      } = await Promise.all(queryPromesas);
 
-            estudiantes.forEach((estudiante) => {
-                const materiasArr = [];
-                let notaPromedio = 0;
+      estudiantes.forEach((estudiante) => {
+        const materiasArr = [];
+        let notaPromedio = 0;
 
-                let obj = {
-                    idAlumno: estudiante.idAlumno,
-                    nombreAlumno: estudiante.Nombre,
-                    puntaje: estudiante.puntaje,
-                };
+        let obj = {
+          idAlumno: estudiante.idAlumno,
+          nombreAlumno: estudiante.Nombre,
+          puntaje: estudiante.puntaje,
+        };
 
-                materias.forEach((materia) => {
-                    /* MUESTRA LAS NOTA SUMADA POR MATERIA */
-                    let objInsede = {};
-                    objInsede.idUnion = materia.idUnion;
-                    objInsede.Nombre = materia.Siglas;
-                    let sumaNota = 0;
-                    notas.forEach((nota) => {
-                        if (
-                            nota.idUnion == materia.idUnion &&
-                            nota.idAlumno == estudiante.idAlumno
-                        ) {
-                            sumaNota = Number(nota.nota) + Number(sumaNota);
-                        }
-                    });
+        materias.forEach((materia) => {
+          /* MUESTRA LAS NOTA SUMADA POR MATERIA */
+          let objInsede = {};
+          objInsede.idUnion = materia.idUnion;
+          objInsede.Nombre = materia.Siglas;
+          let sumaNota = 0;
+          notas.forEach((nota) => {
+            if (
+              nota.idUnion == materia.idUnion &&
+              nota.idAlumno == estudiante.idAlumno
+            ) {
+              sumaNota = Number(nota.nota) + Number(sumaNota);
+            }
+          });
 
-                    objInsede.nota = sumaNota;
-                    notaPromedio = notaPromedio + sumaNota;
-                    materiasArr.push(objInsede);
-                });
-                obj.notas = materiasArr;
-                obj.promedio = (notaPromedio / materias.length).toFixed(2);
-                dataOrdenada.push(obj);
-            });
-        }
-        res.render("./maestros/guia", {
-            data: dataOrdenada,
-            permisosSend,
-            usuario,
-            cantidad,
+          objInsede.nota = sumaNota;
+          notaPromedio = notaPromedio + sumaNota;
+          materiasArr.push(objInsede);
         });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
+        obj.notas = materiasArr;
+        obj.promedio = (notaPromedio / materias.length).toFixed(2);
+        dataOrdenada.push(obj);
+      });
     }
+    res.render("./maestros/guia", {
+      data: dataOrdenada,
+      permisosSend,
+      usuario,
+      cantidad,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
 
 
