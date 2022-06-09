@@ -21,28 +21,23 @@ maestros.blank = (req, res) => {
 
 
 
-maestros.conducta = async(req, res) => {
-    try {
-        const { identificador, Permisos, usuario } = getUserDataByToken(req.cookies.token).data;
-        const permisosSend = JSON.parse(Permisos);
+maestros.conducta = async (req, res) => {
+  try {
+    const { identificador, Permisos, usuario } = getUserDataByToken(
+      req.cookies.token
+    ).data;
+    const permisosSend = JSON.parse(Permisos);
+    const asignaciones = await pool.query(
+      `SELECT idGrado , nombre FROM grados INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id WHERE maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) GROUP BY idGrado, nombre;`,
+      [identificador]
+    );
 
-        const asignaciones = await pool.query(`
-        SELECT 
-        idGrado ,
-        nombre
-             FROM grados 
-        INNER JOIN maestros_materias ON maestros_materias.idGrado = grados.id
-             WHERE maestros_materias.idMaestro = ? AND grados.idYear = (SELECT year FROM year WHERE year.estado = 1 ) 
-             GROUP BY nombre`, [identificador]);
-
-        res.render('./maestros/conducta', { asignaciones, permisosSend, usuario });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ status: false, error });
-    }
+    res.render("./maestros/conducta", { asignaciones, permisosSend, usuario });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: false, error });
+  }
 };
-
-
 
 maestros.conductaAlumnos = async (req, res) => {
   try {
@@ -251,7 +246,7 @@ maestros.perfilActividades = async (req, res) => {
       for (let index = 1; index <= 3; index++) {
         arrayPromesas.push(
           pool.query(
-            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `,
+            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad  FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ?  GROUP BY idActividad;`,
             [index, id, idUnion]
           )
         );
@@ -272,8 +267,9 @@ maestros.perfilActividades = async (req, res) => {
         usuario,
       });
     } else {
+      console.log(id, idUnion);
       const indicadoresInMateria = await pool.query(
-        "SELECT indicador , indicadores_materia.id AS idMateriaIndicador  FROM indicadores_materia INNER JOIN indicadoresparvularia ON indicadoresparvularia.id = indicadores_materia.idIndicador WHERE idBimestre = ? AND idUnion = ? GROUP BY  indicadores_materia.idIndicador",
+        "SELECT indicador , indicadores_materia.id AS idMateriaIndicador  FROM indicadores_materia INNER JOIN indicadoresparvularia ON indicadoresparvularia.id = indicadores_materia.idIndicador WHERE idBimestre = ? AND idUnion = ? ",
         [id, idUnion]
       );
       res.render("./maestros/perfilAcademicoParvularia", {
@@ -487,7 +483,7 @@ maestros.notasActividades = async (req, res) => {
       for (let index = 1; index <= 3; index++) {
         arrayPromesas.push(
           pool.query(
-            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `,
+            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? GROUP BY idActividad `,
             [index, id, idUnion]
           )
         );
@@ -510,7 +506,7 @@ maestros.notasActividades = async (req, res) => {
     } else {
       const arrPromesas = [
         pool.query(
-          "SELECT indicadores_materia.id AS idUnionMateriaIndicador, indicadoresparvularia.indicador AS textIndicador FROM `indicadores_materia` INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE indicadores_materia.idUnion = ? AND idBimestre = ? GROUP BY indicadores_materia.idIndicador",
+          "SELECT indicadores_materia.id AS idUnionMateriaIndicador, indicadoresparvularia.indicador AS textIndicador FROM `indicadores_materia` INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE indicadores_materia.idUnion = ? AND idBimestre = ? ",
           [idUnion, id]
         ), // Obtiene información del indicador de logros
         pool.query(
@@ -630,9 +626,11 @@ maestros.notasAlumnos = async (req, res) => {
       [idUnion]
     );
 
+    console.log(idUnion, Role, id);
+
     const arrPromesas = [
       pool.query(
-        "SELECT actividades.id AS idActividad, Titulo, COUNT(acumulados.id) AS cantidad FROM actividades INNER JOIN acumulados ON acumulados.idActividad = actividades.id  WHERE unionMateriaGrado = ? AND Role = ? AND Bimestre = ?",
+        "SELECT actividades.id AS idActividad, Titulo, (SELECT COUNT(*) FROM acumulados WHERE idActividad = actividades.id ) AS cantidad FROM actividades WHERE unionMateriaGrado = ? AND Role = ? AND Bimestre = ?;",
         [idUnion, Role, id]
       ), // Obtiene información de la actividad
       pool.query(
@@ -1052,7 +1050,7 @@ maestros.guia = async (req, res) => {
     const {
       [0]: { idGrado, cantidad },
     } = await pool.query(
-      `SELECT id AS idGrado , COUNT(*) AS cantidad FROM grados WHERE idMaestro = ?  `,
+      `SELECT id AS idGrado , COUNT(*) AS cantidad FROM grados WHERE idMaestro = ?  GROUP BY idGrado `,
       [identificador]
     );
 
