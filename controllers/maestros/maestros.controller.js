@@ -246,7 +246,7 @@ maestros.perfilActividades = async (req, res) => {
       for (let index = 1; index <= 3; index++) {
         arrayPromesas.push(
           pool.query(
-            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad  FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ?  GROUP BY idActividad;`,
+            `SELECT actividades.id AS idActividad  FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? `,
             [index, id, idUnion]
           )
         );
@@ -267,7 +267,6 @@ maestros.perfilActividades = async (req, res) => {
         usuario,
       });
     } else {
-      console.log(id, idUnion);
       const indicadoresInMateria = await pool.query(
         "SELECT indicador , indicadores_materia.id AS idMateriaIndicador  FROM indicadores_materia INNER JOIN indicadoresparvularia ON indicadoresparvularia.id = indicadores_materia.idIndicador WHERE idBimestre = ? AND idUnion = ? ",
         [id, idUnion]
@@ -416,7 +415,6 @@ maestros.editPerfil = async (req, res) => {
 maestros.deletePerfil = async (req, res) => {
   try {
     const { idActividad } = req.body;
-    console.log(req.body);
     await pool.query("DELETE FROM actividades WHERE id = ?", [idActividad]);
     res.json({ status: true });
   } catch (error) {
@@ -477,13 +475,12 @@ maestros.notasActividades = async (req, res) => {
       "SELECT isParvularia FROM grados INNER JOIN ciclos ON ciclos.id = grados.idCiclo WHERE grados.id = ?",
       [dataGradoMateria.idGrado]
     );
-
     if (!isParvularia) {
       const arrayPromesas = [];
       for (let index = 1; index <= 3; index++) {
         arrayPromesas.push(
           pool.query(
-            `SELECT COUNT(*) AS cantidad , actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ? GROUP BY idActividad `,
+            `SELECT  actividades.id AS idActividad   FROM actividades RIGHT JOIN materia_grado ON materia_grado.id = actividades.unionMateriaGrado WHERE Role = ? AND Bimestre = ?  AND  unionMateriaGrado  = ?  `,
             [index, id, idUnion]
           )
         );
@@ -626,7 +623,6 @@ maestros.notasAlumnos = async (req, res) => {
       [idUnion]
     );
 
-    console.log(idUnion, Role, id);
 
     const arrPromesas = [
       pool.query(

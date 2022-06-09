@@ -49,7 +49,7 @@
                                                     desea editar el perfil acádemico
                                                 </p>
                                             <%}else { %>
-                                                <%   if(!actividades[0][0].cantidad )   {     %>
+                                                <%   if(!actividades[0].length )   {     %>
                                                     <p> <b> Estado:</b> Pendiente de ingreso</p>
                                                     <a class="btn btn-green btn-block me-2" href="/maestros/addPerfil/<%=idUnion%>/1"><i
                                                             class="me-2" data-feather="folder-plus"></i> Ingresar perfil
@@ -80,7 +80,7 @@
                                                     desea editar el perfil acádemico
                                                 </p>
                                             <%}else { %>
-                                                <%   if(! actividades[1][0].cantidad )   {     %>
+                                                <%   if(! actividades[1].length)   {     %>
                                                     <p> <b> Estado:</b> Pendiente de ingreso</p>
                                                     <a class="btn btn-green btn-block me-2" href="/maestros/addPerfil/<%=idUnion%>/2"><i
                                                             class="me-2" data-feather="folder-plus"></i> Ingresar perfil
@@ -110,7 +110,7 @@
                                                     desea editar el perfil acádemico
                                                 </p>
                                             <%}else { %>
-                                                <%   if(!actividades[2][0].cantidad )   {     %>
+                                                <%   if(!actividades[2].length )   {     %>
                                                     <p> <b> Estado:</b> Pendiente de ingreso</p>
                                                     <a class="btn btn-green btn-block me-2" href="/maestros/addPerfil/<%=idUnion%>/3"><i
                                                             class="me-2" data-feather="folder-plus"></i> Ingresar perfil
