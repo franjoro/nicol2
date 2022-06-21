@@ -563,7 +563,7 @@ notas.getBoletaBimestralPreescolar = async (req, res) => {
     const queryPromesas = [
       /* NOTAS */
       pool.query(
-        "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;",
+        "SELECT NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado =? AND indicadores_materia.idBimestre = ? GROUP BY indicador, idAlumno, nota, idUnionMateriaGrado, idIndicador;",
         [idGrado, idBimestre]
       ),
       /* MATERIAS */
@@ -602,7 +602,6 @@ notas.getBoletaBimestralPreescolar = async (req, res) => {
             nota.idAlumno == estudiante.idAlumno
           ) {
             arrNota.push({
-              idnota: nota.id,
               nota: nota.nota,
               indicador: nota.indicador,
             });
@@ -729,7 +728,7 @@ notas.getBoletaBimestralPreescolarPorAlumno = async (req, res) => {
     const queryPromesas = [
       /* NOTAS */
       pool.query(
-        "SELECT notas_parvularia.id, NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado = ? AND indicadores_materia.idBimestre = ? ;",
+        "SELECT NotaRole AS nota, idAlumno, idUnionMateriaGrado AS idUnion, idIndicador, indicador FROM notas_parvularia INNER JOIN indicadores_materia ON indicadores_materia.id = notas_parvularia.idUnionMateriaIndicador INNER JOIN materia_grado ON notas_parvularia.idUnionMateriaGrado = materia_grado.id INNER JOIN indicadoresparvularia ON indicadores_materia.idIndicador = indicadoresparvularia.id WHERE materia_grado.idGrado =? AND indicadores_materia.idBimestre = ? GROUP BY indicador, idAlumno, nota, idUnionMateriaGrado, idIndicador;",
         [idGrado, idBimestre]
       ),
       /* MATERIAS */
