@@ -655,11 +655,11 @@ $("#btnBoletaBimestralPreescolarPdfPaquete").click(async() => {
             .text()
             .trim();
         const idBimestre = $("#idBimestre").val();
-        alertas.loaderAlert();
+        alertas.loaderAlertLong();
         const query = await $.ajax({
             url: `/admin/notas/getBoletaBimestralPreescolarPaquete/${idGrado}/${idBimestre}/${nombreGrado}`,
         });
-
+        console.log(query);
         if (query.status) {
             swal.close();
             window.open(`/admin/notas/filesPreescolar`);

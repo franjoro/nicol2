@@ -963,16 +963,16 @@ const GenerarBoletaBimestralPreescolar = (
 };
 
 const BoletaBimestralPreescolarPaquete = (
-    data,
+    alumno,
     nombreGrado,
     roleBimestre
 ) => {
     const files = [];
     const options = [];
 
-    data.forEach((alumno) => {
+    // data.forEach((alumno) => {
 
-        let html = `<!DOCTYPE html>
+    let html = `<!DOCTYPE html>
   <html lang="en">
   
   <head>
@@ -998,7 +998,7 @@ const BoletaBimestralPreescolarPaquete = (
                 <div class="col-md-12">
                     <table class="table table-sm table-striped table-bordered">
                       <tbody>`;
-        html += `  <tr>
+    html += `  <tr>
                     <th class="text-center" style="width: 10%; max-width:10%">Carnet</th>
                     <th class="text-center">Nombre del Alumno(a)</th>
                     <th class="text-center">Conducta</th>
@@ -1011,19 +1011,19 @@ const BoletaBimestralPreescolarPaquete = (
                 <tr>
                     <th colspan="3" class="py-3"> </th>
                 </tr>`;
-        alumno.notas.forEach((notaspacket) => {
-            html += `<tr>
+    alumno.notas.forEach((notaspacket) => {
+        html += `<tr>
                 <th colspan="2" class="text-center"> ÁREA: ${notaspacket.Nombre}</th>
                 <th class="text-center">Nota</th>
                </tr>`;
-            if (!notaspacket.notas.length) {
-                html += `<tr><th class="text-center" colspan="3">Indicadores de logro pendientes de ingresar</th></tr>`;
-            }
-            notaspacket.notas.forEach((indicador) => {
-                html += `<tr><td colspan="2">${indicador.indicador}</td><td class="text-center">${indicador.nota}</td></tr>`;
-            });
+        if (!notaspacket.notas.length) {
+            html += `<tr><th class="text-center" colspan="3">Indicadores de logro pendientes de ingresar</th></tr>`;
+        }
+        notaspacket.notas.forEach((indicador) => {
+            html += `<tr><td colspan="2">${indicador.indicador}</td><td class="text-center">${indicador.nota}</td></tr>`;
         });
-        html += `</tbody>
+    });
+    html += `</tbody>
                     </table>
                 </div>
             </div>
@@ -1046,36 +1046,30 @@ const BoletaBimestralPreescolarPaquete = (
   </body>
   </html>
   `;
-        files.push({ content: html });
-    });
+    // files.push({ content: html });
+    // });
 
     return new Promise(async(resolver) => {
-        const paths = [];
+        // const paths = [];
 
-        data.forEach((alumno, index) => {
-            tmpName = `./public/files/preescolar/${alumno.idAlumno}.pdf`;
-            paths.push(tmpName);
-            const options = {
-                format: "Letter",
-                path: tmpName,
-                margin: {
-                    top: 50,
-                    right: 10,
-                    bottom: 50,
-                    left: 10,
-                },
-                preferCSSPageSize: true,
-            };
-            html_to_pdf.generatePdf(files[index], options).then((output) => {
-                resolver(output);
-            });
-        })
-
-        const zip = new AdmZip();
-        paths.forEach(path => {
-            zip.addLocalFile(path);
+        tmpName = `./public/files/preescolar/${alumno.idAlumno}.pdf`;
+        // paths.push(tmpName);
+        const options = {
+            format: "Letter",
+            path: tmpName,
+            margin: {
+                top: 50,
+                right: 10,
+                bottom: 50,
+                left: 10,
+            },
+            preferCSSPageSize: true,
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(tmpName);
         });
-        zip.writeZip("./public/files/preescolar/files.zip");
+
     });
 
 };

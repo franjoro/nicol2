@@ -11,6 +11,7 @@ const {
     getConsolidadoBimestralExcel,
 } = require("../../utils/reports/reportesNotas");
 const { getUserDataByToken } = require("../../middlewares/auth");
+const AdmZip = require("adm-zip");
 
 notas.main = async(req, res) => {
     try {
@@ -656,12 +657,26 @@ notas.getBoletaBimestralPreescolarPaquete = async(req, res) => {
             obj.notas = materiasArr;
             dataOrdenada.push(obj);
         });
-        await BoletaBimestralPreescolarPaquete(
-            dataOrdenada,
-            nombreGrado,
-            roleBimestre
-        );
-        res.json({ status: true });
+        const paths = [];
+
+        for (student of dataOrdenada) {
+            const path = await BoletaBimestralPreescolarPaquete(
+                student,
+                nombreGrado,
+                roleBimestre
+            );
+            paths.push(path);
+        }
+        res.json({ status: true, paths });
+
+        const zip = new AdmZip();
+        paths.forEach(path => {
+            zip.addLocalFile(path);
+        });
+
+        zip.writeZip("./public/files/preescolar/files.zip");
+
+
         // const util = require('util');
         // console.log(util.inspect(dataOrdenada, false, null, true));
     } catch (error) {
