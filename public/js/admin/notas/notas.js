@@ -317,11 +317,10 @@ const fillBoletaFinal = async(idAlumno) => {
                 <td>${alumno.Conducta3.prom}</td>
                 <td>${alumno.Conducta4.puntaje}</td>
                 <td>${alumno.Conducta4.prom}</td>
-                <td>${
-                  Number(alumno.Conducta1.prom) +
-                  Number(alumno.Conducta2.prom) +
-                  Number(alumno.Conducta3.prom) +
-                  Number(alumno.Conducta4.prom)
+                <td>${Number(alumno.Conducta1.prom) +
+                Number(alumno.Conducta2.prom) +
+                Number(alumno.Conducta3.prom) +
+                Number(alumno.Conducta4.prom)
                 }</td>
             </tr>
             </tbody></table>`;
@@ -446,14 +445,14 @@ $("#btnReporteFinal").click(() => {
             <tbody>
                 <tr>
                     <td>Carnet: <span class="font-weight-bold">${$(
-                      "#selectEstudiantesBoleta"
-                    ).val()}</span></td>
+        "#selectEstudiantesBoleta"
+    ).val()}</span></td>
                     <td>Nombre: <span class="font-weight-bold">${$(
-                      "#selectEstudiantesBoleta"
-                    )
-                      .text()
-                      .split("-")[2]
-                      .trim()}</span></td>
+        "#selectEstudiantesBoleta"
+    )
+            .text()
+            .split("-")[2]
+            .trim()}</span></td>
                 </tr>
             </tbody>
         </table>`;
@@ -479,13 +478,13 @@ $("#btnReporteBimestral").click(async() => {
             <tbody>
                 <tr>
                     <td>Carnet: <span class="font-weight-bold">${$(
-                      "#selectBoletaAcumulados"
-                    ).val()}</span></td>
+        "#selectBoletaAcumulados"
+    ).val()}</span></td>
                     <td>Nombre: <span class="font-weight-bold">${selector[2].trim()}</span></td>
                     <td>Grado: <span class="font-weight-bold">${nombreGrado}</span></td>
                     <td>Bimestre: <span class="font-weight-bold">${$(
-                      "#roleBimestre"
-                    ).val()}</span></td>
+        "#roleBimestre"
+    ).val()}</span></td>
                     <td>Conducta: <span class="font-weight-bold">${global_boletaBimestral_conducta}</span></td>
                 </tr>
             </tbody>
@@ -506,10 +505,10 @@ $("#btnReporteConsolidadoAnual").click(() => {
             <tbody>
                 <tr>
                     <td>Grado: <span class="font-weight-bold">${$(
-                      "#selectConsolidado option:selected"
-                    )
-                      .text()
-                      .trim()}</span></td>
+        "#selectConsolidado option:selected"
+    )
+            .text()
+            .trim()}</span></td>
                 </tr>
             </tbody>
         </table>`;
@@ -529,13 +528,13 @@ $("#btnReporteConsolidadoBimestral").click(() => {
             <tbody>
                 <tr>
                     <td>Grado: <span class="font-weight-bold">${$(
-                      "#selectNotaGrado option:selected"
-                    )
-                      .text()
-                      .trim()}</span></td>
+        "#selectNotaGrado option:selected"
+    )
+            .text()
+            .trim()}</span></td>
                     <td>Bimestre: <span class="font-weight-bold">${$(
-                      "#roleBimestre"
-                    ).val()}</span></td>
+                "#roleBimestre"
+            ).val()}</span></td>
                 </tr>
             </tbody>
         </table>`;
@@ -641,6 +640,29 @@ $("#btnBoletaBimestralPreescolarPdf").click(async() => {
         if (query.status) {
             swal.close();
             window.open(`/admin/notas/getReportPreescolar`);
+        }
+    } catch (error) {
+        console.log(error);
+        alertas.newErrorMessage("Error al generar documento");
+    }
+});
+
+
+$("#btnBoletaBimestralPreescolarPdfPaquete").click(async() => {
+    try {
+        const idGrado = $("#selectGradoReportePreescolar").val();
+        const nombreGrado = $("#selectGradoReportePreescolar option:selected")
+            .text()
+            .trim();
+        const idBimestre = $("#idBimestre").val();
+        alertas.loaderAlertLong();
+        const query = await $.ajax({
+            url: `/admin/notas/getBoletaBimestralPreescolarPaquete/${idGrado}/${idBimestre}/${nombreGrado}`,
+        });
+        console.log(query);
+        if (query.status) {
+            swal.close();
+            window.open(`/admin/notas/filesPreescolar`);
         }
     } catch (error) {
         console.log(error);

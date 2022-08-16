@@ -31,6 +31,9 @@ router.get('/getBoletaBimestral/:idAlumno/:idBimestre', notas.getBoletaBimestral
 /* GET obtener boleta preescolar   */
 router.get('/getBoletaBimestralPreescolar/:idGrado/:idBimestre/:nombreGrado/:filetype', notas.getBoletaBimestralPreescolar);
 
+/* GET obtener boleta preescolar paquete   */
+router.get('/getBoletaBimestralPreescolarPaquete/:idGrado/:idBimestre/:nombreGrado/', notas.getBoletaBimestralPreescolarPaquete);
+
 /* GET notas preescolar por alumno JSON  */
 router.get('/getNotasPreescolarByAlumno/:idGrado/:idBimestre/:idAlumno', notas.getNotasPreescolarByAlumno);
 
@@ -63,6 +66,10 @@ router.get('/getReportPreescolar', notas.openReportePreescolar);
 
 /* GET Reporte generado por HTML en notas de preescolar */
 router.get('/getReportPreescolarWord', notas.openReportePreescolarWord);
+
+
+/* GET Reporte generado por pdf en paquete en notas de preescolar */
+router.get('/filesPreescolar', notas.filesPreescolar);
 
 
 // REPORTES EXCEL

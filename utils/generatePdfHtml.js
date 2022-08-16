@@ -1,7 +1,7 @@
 const html_to_pdf = require("html-pdf-node");
 const fs = require("fs");
 const HTMLtoDOCX = require("html-to-docx");
-
+const AdmZip = require("adm-zip");
 
 const GenerarPdf = (data, header, landscape = false, observaciones = "") => {
     if (landscape) landscape = true;
@@ -262,9 +262,8 @@ const GenerarReporteDeConducta = (
            <table class="table">
                 <tr>
                     <td>Carnet: ${datosAlumno.Carnet} </td>
-                    <td>Nombre: ${
-                      datosAlumno.Nombre + " " + datosAlumno.Apellido
-                    } </td>
+                    <td>Nombre: ${datosAlumno.Nombre + " " + datosAlumno.Apellido
+        } </td>
                     <td>Puntaje: ${datosAlumno.puntaje} </td>
                     <td>Bimestre: ${roleBimestre} </td>
                     <td>Grado: ${nombreGrado} </td>
@@ -416,9 +415,8 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                        <div class="form-group col-md-3">
                            <label>Carnet o código identificador</label>
                            <input type="text" class="form-control" id="carnet" name="carnet"
-                               autocomplete="off" disabled value="${
-                                 datos.carnet
-                               }">
+                               autocomplete="off" disabled value="${datos.carnet
+        }">
                        </div>
                        <div class="form-group col-md-3">
                            <label>Nombres</label>
@@ -455,9 +453,8 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                        <div class="form-group col-md-2">
                            <label>Código contable</label>
                            <input type="text" class="form-control" id="codigoContable" name="codigoContable"
-                               autocomplete="off"  value="${
-                                 datos.codigoContable
-                               }">
+                               autocomplete="off"  value="${datos.codigoContable
+        }">
                        </div>
                    </div>
                    <hr>
@@ -472,23 +469,20 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                        <div class="col-md-12">
                                            <label>Nombre</label>
                                            <input type="text" class="form-control" id="NombreMadre" name="NombreMadre"
-                                               autocomplete="off"  value="${
-                                                 datos.NombreMadre
-                                               }">
+                                               autocomplete="off"  value="${datos.NombreMadre
+        }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Cédula</label>
                                            <input type="text" class="form-control" id="CedulaMadre" name="CedulaMadre"
-                                               autocomplete="off"  value="${
-                                                 datos.CedulaMadre
-                                               }">
+                                               autocomplete="off"  value="${datos.CedulaMadre
+        }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Teléfono</label>
                                            <input type="tel" class="form-control" id="TelMadre" name="TelMadre"
-                                               autocomplete="off"  value="${
-                                                 datos.TelMadre
-                                               }">
+                                               autocomplete="off"  value="${datos.TelMadre
+        }">
                                        </div>
                                    </div>
                                </div>
@@ -504,23 +498,20 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                        <div class="col-md-12">
                                            <label>Nombre</label>
                                            <input type="text" class="form-control" id="NombrePadre" name="NombrePadre"
-                                               autocomplete="off"  value="${
-                                                 datos.NombrePadre
-                                               }">
+                                               autocomplete="off"  value="${datos.NombrePadre
+        }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Cédula</label>
                                            <input type="text" class="form-control" id="CedulaPadre" name="CedulaPadre"
-                                               autocomplete="off"  value="${
-                                                 datos.CedulaPadre
-                                               }">
+                                               autocomplete="off"  value="${datos.CedulaPadre
+        }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Teléfono</label>
                                            <input type="tel" class="form-control" id="TelPadre" name="TelPadre"
-                                               autocomplete="off"  value="${
-                                                 datos.TelPadre
-                                               }">
+                                               autocomplete="off"  value="${datos.TelPadre
+        }">
                                        </div>
                                    </div>
                                </div>
@@ -536,23 +527,20 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                        <div class="col-md-12">
                                            <label>Nombre</label>
                                            <input type="text" class="form-control" id="NombreTutor" name="NombreTutor"
-                                               autocomplete="off"  value="${
-                                                 datos.NombreTutor
-                                               }">
+                                               autocomplete="off"  value="${datos.NombreTutor
+        }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Cédula</label>
                                            <input type="text" class="form-control" id="CedulaTutor" name="CedulaTutor"
-                                               autocomplete="off"  value="${
-                                                 datos.CedulaTutor
-                                               }">
+                                               autocomplete="off"  value="${datos.CedulaTutor
+        }">
                                        </div>
                                        <div class="col-md-6">
                                            <label>Teléfono</label>
                                            <input type="tel" class="form-control" id="TelTutor" name="TelTutor"
-                                               autocomplete="off"  value="${
-                                                 datos.TelTutor
-                                               }">
+                                               autocomplete="off"  value="${datos.TelTutor
+        }">
                                        </div>
                                    </div>
                                </div>
@@ -569,9 +557,8 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>El alumno vive con : </label>
                                    <select name="ViveCon" id="ViveCon"  class="form-control">
-                                       <option selected  value="${
-                                         datos.ViveCon
-                                       }">${datos.ViveCon}</option>
+                                       <option selected  value="${datos.ViveCon
+        }">${datos.ViveCon}</option>
                                        <option value="Ambos padres">Ambos padres</option>
                                        <option value="Solo con papá">Solo con papá</option>
                                        <option value="Solo con mamá">Solo con mamá</option>
@@ -581,9 +568,8 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>Situación de los padres </label>
                                    <select name="SiticionPadres"  id="SiticionPadres" class="form-control">
-                                       <option selected value="${
-                                         datos.SiticionPadres
-                                       }">${datos.SiticionPadres}</option>
+                                       <option selected value="${datos.SiticionPadres
+        }">${datos.SiticionPadres}</option>
                                        <option value="Padres Divorciados">Padres Divorciados</option>
                                        <option value="Padres en unión sentimental">Padres en unión sentimental</option>
                                        <option value="Padres en unión civil">Padres en unión civil</option>
@@ -595,9 +581,8 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>Resposabilidad económica</label>
                                    <select name="ResEcono"  id="ResEcono" class="form-control">
-                                       <option selected value="${
-                                         datos.ResEcono
-                                       }">${datos.ResEcono}</option>
+                                       <option selected value="${datos.ResEcono
+        }">${datos.ResEcono}</option>
                                        <option value="Ambos padres">Ambos padres</option>
                                        <option value="Solo de papá">Solo de papá</option>
                                        <option value="Solo de mamá">Solo de mamá</option>
@@ -607,9 +592,8 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
                                <div class="col-md-3">
                                    <label>Condición de salud diagnosticada</label>
                                    <input type="text" class="form-control"  id="condicionMedica" name="condicionMedica"
-                                   autocomplete="off" value="${
-                                     datos.condicionMedica
-                                   }">
+                                   autocomplete="off" value="${datos.condicionMedica
+        }">
                                </div>
                                <hr> `;
 
@@ -978,6 +962,118 @@ const GenerarBoletaBimestralPreescolar = (
     }
 };
 
+const BoletaBimestralPreescolarPaquete = (
+    alumno,
+    nombreGrado,
+    roleBimestre
+) => {
+    const files = [];
+    const options = [];
+
+    // data.forEach((alumno) => {
+
+    let html = `<!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+      <title>Document</title>
+  </head>
+  
+  <body style="font-size:18 px; font-family: Arial, Helvetica, sans-serif">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-3">
+                   <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt=""> 
+              </div>
+              <div class="col-md-8">
+                  <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
+                  <h5>Boleta de calificaciones preescolar  ${nombreGrado} - ${new Date().getFullYear()}  Bimensual: #${roleBimestre}</h5>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm table-striped table-bordered">
+                      <tbody>`;
+    html += `  <tr>
+                    <th class="text-center" style="width: 10%; max-width:10%">Carnet</th>
+                    <th class="text-center">Nombre del Alumno(a)</th>
+                    <th class="text-center">Conducta</th>
+                </tr>
+                <tr>
+                    <td class="text-center">${alumno.idAlumno}</td>
+                    <td class="text-center"><h3>${alumno.nombreAlumno}</h3></td>
+                    <td class="text-center">${alumno.conducta} </td>
+                </tr>
+                <tr>
+                    <th colspan="3" class="py-3"> </th>
+                </tr>`;
+    alumno.notas.forEach((notaspacket) => {
+        html += `<tr>
+                <th colspan="2" class="text-center"> ÁREA: ${notaspacket.Nombre}</th>
+                <th class="text-center">Nota</th>
+               </tr>`;
+        if (!notaspacket.notas.length) {
+            html += `<tr><th class="text-center" colspan="3">Indicadores de logro pendientes de ingresar</th></tr>`;
+        }
+        notaspacket.notas.forEach((indicador) => {
+            html += `<tr><td colspan="2">${indicador.indicador}</td><td class="text-center">${indicador.nota}</td></tr>`;
+        });
+    });
+    html += `</tbody>
+                    </table>
+                </div>
+            </div>
+            <hr class="py-3">
+            <p>Ausencias justificadas en agenda :____ Ausencias injustificadas: _____ Llegadas tardías: ____</p>
+            <h4 class="pt-1">Observaciones: </h4>
+            <textarea class="form-control disabled"  cols="30" rows="3"></textarea>
+            <hr class="py-5">
+            <div class="d-flex justify-content-between">
+                   <div class="col-md-6 text-center">
+                       <h4 >_____________</h4>                        
+                        <h4>Profesor Guía</h4>
+                   </div>
+                   <div class="col-md-6 text-center">
+                       <h4>_____________</h4>                        
+                       <h4>Director</h4>
+                   </div>
+                </div>
+      </div>
+  </body>
+  </html>
+  `;
+    // files.push({ content: html });
+    // });
+
+    return new Promise(async(resolver) => {
+        // const paths = [];
+
+        tmpName = `./public/files/preescolar/${alumno.idAlumno}.pdf`;
+        // paths.push(tmpName);
+        const options = {
+            format: "Letter",
+            path: tmpName,
+            margin: {
+                top: 50,
+                right: 10,
+                bottom: 50,
+                left: 10,
+            },
+            preferCSSPageSize: true,
+        };
+        const file = { content: html };
+        html_to_pdf.generatePdf(file, options).then((output) => {
+            resolver(tmpName);
+        });
+
+    });
+
+};
+
 module.exports = {
     GenerarPdf,
     GenerarBoletaFinal,
@@ -985,4 +1081,5 @@ module.exports = {
     GenerarMatricula,
     GenerarMatriculaPorGrado,
     GenerarBoletaBimestralPreescolar,
+    BoletaBimestralPreescolarPaquete
 };
