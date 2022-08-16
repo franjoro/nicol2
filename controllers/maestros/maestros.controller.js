@@ -887,10 +887,13 @@ maestros.matriculaRegtistro = async (req, res) => {
 maestros.getDataAlumno = async (req, res) => {
   try {
     const { carnet } = req.params;
-    const data = await pool.query("SELECT * FROM alumnos WHERE Carnet = ?", [
-      carnet,
-    ]);
-    res.json(data);
+    const { [0]: data } = await pool.query(
+      "SELECT data FROM matriculas WHERE idAlumno = ? LIMIT 1",
+      [carnet]
+    );
+    const newdata = [JSON.parse(data.data)];
+
+    res.json(newdata);
   } catch (error) {
     console.log(error);
     res.status(400).json({ status: false, error });

@@ -31,12 +31,29 @@ $("#carnet").on("blur", async function () {
     const carnet = $(this).val();
     const data = await $.ajax({ url: "/maestros/matricula/" + carnet });
     if (data.length) {
-        const { Nombre, Apellido, Email, FechaNac, Genero } = data[0];
-        $("#Nombres").val(Nombre);
-        $("#Apellidos").val(Apellido);
-        $("#EmailMain").val(Email);
-        $("#FechaNac").val(FechaNac);
-        $("#Sexo").val(Genero);
+      const dataSet = data[0];
+      console.log(dataSet);
+      $("#Nombres").val(dataSet.Nombres);
+      $("#Apellidos").val(dataSet.Apellidos);
+      $("#EmailMain").val(dataSet.EmailMain);
+      $("#Direccion").val(dataSet.Direccion);
+      $("#Sexo").val(dataSet.Sexo);
+      $("#FechaNac").val(dataSet.FechaNac);
+      $("#Tel").val(dataSet.Tel);
+      $("#codigoContable").val(dataSet.codigoContable);
+      $("#NombreMadre").val(dataSet.NombreMadre);
+      $("#CedulaMadre").val(dataSet.CedulaMadre);
+      $("#TelMadre").val(dataSet.TelMadre);
+      $("#NombrePadre").val(dataSet.NombrePadre);
+      $("#CedulaPadre").val(dataSet.CedulaPadre);
+      $("#TelPadre").val(dataSet.TelPadre);
+      $("#NombreTutor").val(dataSet.NombreTutor);
+      $("#CedulaTutor").val(dataSet.CedulaTutor);
+      $("#TelTutor").val(dataSet.TelTutor);
+      $("#ViveCon").val(dataSet.ViveCon);
+      $("#SiticionPadres").val(dataSet.SiticionPadres);
+      $("#ResEcono").val(dataSet.ResEcono);
+      $("#condicionMedica").val(dataSet.condicionMedica);
     }
 });
 
