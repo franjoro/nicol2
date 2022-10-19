@@ -189,11 +189,12 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
             }
             html += `
                             <td style="color:${color}">${estudiante.Conducta4.puntaje}</td>
-                            <td>${estudiante.Conducta4.prom}</td>`;
+                            <td>${estudiante.Conducta4.prom}</td> 
+                            <td>${estudiante.ConductaFinal}</td> `;
         } else {
             html += `<td></td><td></td>`;
         }
-        html += `<td></td> </tr>`;
+        html += `</tr>`;
         html += `</tbody></table>
                 <hr>
                 <h4>Observaciones: </h4>

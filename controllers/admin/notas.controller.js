@@ -149,7 +149,7 @@ notas.getConsolidadoAnual = async(req, res) => {
                     estudiante.Conducta2 * 0.3 +
                     estudiante.Conducta3 * 0.2 +
                     estudiante.Conducta4 * 0.3
-                ).toFixed(2),
+                ).toFixed(0),
             };
 
             materias.forEach((materia) => {
@@ -179,12 +179,12 @@ notas.getConsolidadoAnual = async(req, res) => {
                 });
                 const notaGlobal =
                     roleOneNota * 0.2 + roleTwo * 0.3 + RoleTree * 0.2 + RoleFour * 0.3;
-                objInsede.notaGlobal = notaGlobal.toFixed(2);
+                objInsede.notaGlobal = notaGlobal.toFixed(0);
                 notaPromedio = notaPromedio + notaGlobal;
                 materiasArr.push(objInsede);
             });
             obj.notas = materiasArr;
-            obj.notaPromedio = (notaPromedio / materias.length).toFixed(2);
+            obj.notaPromedio = (notaPromedio / materias.length).toFixed(0);
             dataOrdenada.push(obj);
         });
 
@@ -366,6 +366,7 @@ notas.getBoletaFinalByGrado = async(req, res) => {
                     puntaje: estudiante.Conducta4,
                     prom: (estudiante.Conducta4 * 0.3).toFixed(2),
                 },
+                ConductaFinal: Number(estudiante.Conducta1 * 0.2 + estudiante.Conducta2 * 0.3 + estudiante.Conducta3 * 0.2 + estudiante.Conducta4 * 0.3).toFixed(2),
             };
             materias.forEach((materia) => {
                 /* MUESTRA LAS NOTAS SUMADAS POR ROLE */
