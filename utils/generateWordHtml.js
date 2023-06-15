@@ -21,7 +21,7 @@ const htmlString = `<!DOCTYPE html>
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <!-- <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt=""> -->
+                <!-- <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;" alt=""> -->
             </div>
             <div class="col-md-8">
                 <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>

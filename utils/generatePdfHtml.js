@@ -19,7 +19,7 @@ const GenerarPdf = (data, header, landscape = false, observaciones = "") => {
          <div class="container-fluid pt-5">
              <div class="row">
                  <div class="col-md-3">
-                     <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt="">
+                     <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;" alt="">
                  </div>
                  <div class="col-md-8">
                      <h2 class="pt-3">Colegio Salesiano San Juan Bosco</h2>
@@ -64,7 +64,7 @@ const GenerarBoletaFinal = (data, nombreGrado, roleBimestre, year) => {
         <div class="container-fluid pt-5" style="height:1590px;">
             <div class="row">
                 <div class="col-md-3">
-                 <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;"> 
+                 <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;"> 
                 </div>
                 <div class="col-md-8">
                     <h2>Colegio Salesiano San Juan Bosco</h2>
@@ -255,7 +255,7 @@ const GenerarReporteDeConducta = (
     <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
-            <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt="">
+            <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;" alt="">
         </div>
         <div class="col-md-8">
             <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
@@ -393,7 +393,7 @@ const GenerarMatricula = (datos, img, arrFamiliares, existFamiliares) => {
      <div class="container-fluid">
      <div class="row">
          <div class="col-md-3">
-             <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt="">
+             <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;" alt="">
          </div>
          <div class="col-md-8">
              <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
@@ -865,7 +865,7 @@ const GenerarBoletaBimestralPreescolar = (
       <div class="container-fluid">
           <div class="row">
               <div class="col-md-3">
-                   <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt=""> 
+                   <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;" alt=""> 
               </div>
               <div class="col-md-8">
                   <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
@@ -988,7 +988,7 @@ const BoletaBimestralPreescolarPaquete = (
       <div class="container-fluid">
           <div class="row">
               <div class="col-md-3">
-                   <img src="https://drive.google.com/uc?export=view&id=1XeCSMVhFpRZypwV8xY4eKo2OpSFV7MOa" style="width: 100%;" alt=""> 
+                   <img src="https://public-nicol2.s3.us-east-2.amazonaws.com/logo_blue.svg" style="width: 100%;" alt=""> 
               </div>
               <div class="col-md-8">
                   <h1 class="pt-3">Colegio Salesiano San Juan Bosco</h1>
